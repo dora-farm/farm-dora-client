@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Footer from './Footer';
 import Header from './Header';
+import UserSidebar from './UserSidebar';
 
 function Layout() {
   const [maincategories, setMainCategories] = useState([]);
@@ -43,7 +44,7 @@ function Layout() {
         subCategories={subCategories} 
         loading={loading} 
       />
-      <main className="flex-grow mx-auto w-full max-w-[1300px] px-4">
+      <main className="flex mx-auto w-full max-w-[1300px] px-4">
         <Outlet />
       </main>
       <Footer />

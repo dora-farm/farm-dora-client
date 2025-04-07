@@ -11,10 +11,10 @@ function UserSidebar() {
             </span>
             <nav className="mt-6 flex flex-col">
                 <Link to="/mypage" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">마이페이지</Link>
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">짬한 상품</button>
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">장바구니</button>
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 리뷰 보기</button>
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 문의 보기</button>
+                <Link to="/Wishlist" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">찜한 상품</Link>
+                <Link to="/cart" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">장바구니</Link>
+                <Link to="/myreviews" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 리뷰 보기</Link>
+                <Link to="/myinquireies" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 문의 보기</Link>
             </nav>
 
             {/*쇼핑 정보*/}
@@ -22,8 +22,8 @@ function UserSidebar() {
               쇼핑정보
             </span>
             <nav className="mt-6 flex flex-col">
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">주문 내역</button>
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">배송지 관리</button>
+                <Link to="/orders" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">주문 내역</Link>
+                <Link to="/manageaddress" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">배송지 관리</Link>
             </nav>
 
             {/*개인정보*/}
@@ -31,8 +31,8 @@ function UserSidebar() {
               개인정보
             </span>
             <nav className="mt-6 flex flex-col">
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">회원정보 수정</button>
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">회원 탈퇴</button>
+                <Link to="/editprofile" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">회원정보 수정</Link>
+                <Link to="/deleteaccount" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">회원 탈퇴</Link>
             </nav>
         </div>
     )
