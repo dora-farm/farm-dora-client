@@ -4,4 +4,4 @@ function MyReviews() {
     )
 }
 
-export default MyReviews
+export default MyReviews;

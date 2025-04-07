@@ -4,4 +4,4 @@ function DeleteAccount() {
     )
 }
 
-export default DeleteAccount; 
+export default DeleteAccount;

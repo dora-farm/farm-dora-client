@@ -1,0 +1,22 @@
+[
+    {
+      "type_big_id": 1,
+      "name": "지역 특산물"
+    },
+    {
+      "type_big_id": 2, 
+      "name": "쌀/잡곡"
+    },
+    {
+      "type_big_id": 3,
+      "name": "과일/채소"
+    },
+    {
+      "type_big_id": 4,
+      "name": "축산물"
+    },
+    {
+      "type_big_id": 5,
+      "name": "가공식품"
+    }
+]
