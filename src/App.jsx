@@ -31,14 +31,14 @@ function App() {
 
             <Route element={<UserLayout/>}>
               <Route path="/mypage" element={<MyPage/>} />
-              <Route path="/wishlist" element={<Wishlist/>} />
-              <Route path="/cart" element={<Cart/>} />
-              <Route path="/myreviews" element={<MyReviews/>} />
-              <Route path="/myinquireies" element={<MyInquireies/>} />
-              <Route path="/orders" element={<Orders/>} />
-              <Route path="/manageaddress" element={<ManageAddress/>} />
-              <Route path="/editprofile" element={<EditProfile/>} />
-              <Route path="/deleteaccount" element={<DeleteAccount/>} />
+              <Route path="/mypage/wishlist" element={<Wishlist/>} />
+              <Route path="/mypage/cart" element={<Cart/>} />
+              <Route path="/mypage/myreviews" element={<MyReviews/>} />
+              <Route path="/mypage/myinquireies" element={<MyInquireies/>} />
+              <Route path="/mypage/orders" element={<Orders/>} />
+              <Route path="/mypage/manageaddress" element={<ManageAddress/>} />
+              <Route path="/mypage/editprofile" element={<EditProfile/>} />
+              <Route path="/mypage/deleteaccount" element={<DeleteAccount/>} />
             </Route>
             {/* <Route path="/category" element={<Category />} /> */}
             <Route path="/event" element={<Event/>} />
