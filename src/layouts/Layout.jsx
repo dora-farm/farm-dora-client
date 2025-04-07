@@ -1,6 +1,6 @@
 import Footer from './Footer'
 import Header from './Header'
-import Sidebar from "./Sidebar.jsx";
+import UserSidebar from "./UserSidebar.jsx";
 
 function Layout({children}) {
     return (
@@ -8,7 +8,7 @@ function Layout({children}) {
             <Header/>
             <main className="flex-grow mx-auto w-full max-w-[1300px] px-4">
                 {/*{children}*/}
-                <Sidebar></Sidebar>
+                <UserSidebar></UserSidebar>
             </main>
             <Footer/>
         </div>

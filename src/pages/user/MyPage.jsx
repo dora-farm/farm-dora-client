@@ -1,7 +1,7 @@
-function Mypage() {
+function MyPage() {
   return (
     <div>Mypage</div>
   )
 }
 
-export default Mypage
+export default MyPage
