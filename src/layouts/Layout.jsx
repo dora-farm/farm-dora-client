@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Footer from './Footer';
 import Header from './Header';
+import SellerSidebar from './SellerSidebar';
 
 function Layout() {
   const [maincategories, setMainCategories] = useState([]);
@@ -44,6 +45,7 @@ function Layout() {
         loading={loading} 
       />
       <main className="flex-grow mx-auto w-full max-w-[1300px] px-4">
+        <SellerSidebar></SellerSidebar>
         <Outlet />
       </main>
       <Footer />

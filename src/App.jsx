@@ -7,11 +7,11 @@ import Wishlist from './pages/user/Wishlist';
 import Mypage from './pages/user/Mypage';
 import Cart from './pages/user/Cart';
 import Live from './pages/live/live';
-import LiveSetup from './pages/live/LiveSetup';
+import LiveSetup from './pages/seller/LiveSetup';
 import StreamView from './pages/live/StreamView';
 import Event from './pages/event/Event';
 import ChatSupport from './pages/support/ChatSupport';
-import Category from './pages/category/Category';
+// import Category from './pages/category/Category';
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
             <Route path="/wishlist" element={<Wishlist/>} />
             <Route path="/mypage" element={<Mypage/>} />
             <Route path="/cart" element={<Cart/>} />
-            <Route path="/category" element={<Category />} />
+            {/* <Route path="/category" element={<Category />} /> */}
             <Route path="/event" element={<Event/>} />
             <Route path="/support" element={<ChatSupport/>} />
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
