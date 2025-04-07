@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from "react-router-dom";
 
 function UserSidebar() {
     return (
@@ -9,7 +10,7 @@ function UserSidebar() {
               활동 정보
             </span>
             <nav className="mt-6 flex flex-col">
-                <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">마이페이지</button>
+                <Link to="/mypage" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">마이페이지</Link>
                 <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">짬한 상품</button>
                 <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">장바구니</button>
                 <button className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 리뷰 보기</button>
