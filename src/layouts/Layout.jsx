@@ -44,7 +44,7 @@ function Layout() {
         subCategories={subCategories} 
         loading={loading} 
       />
-      <main className="flex-grow mx-auto w-full max-w-[1300px] px-4">
+      <main className="flex flex-grow mx-auto w-full max-w-[1300px] px-4">
         <SellerSidebar></SellerSidebar>
         <Outlet />
       </main>

@@ -1,9 +1,9 @@
 import React from 'react'
 
-function AddItem() {
+function Refund() {
   return (
-    <div>AddItem</div>
+    <div>Refund</div>
   )
 }
 
-export default AddItem
+export default Refund
