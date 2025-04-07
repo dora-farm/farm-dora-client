@@ -1,0 +1,191 @@
+[
+    {
+      "id": 1,
+      "name": "충청남도 논산 딸기",
+      "price": 25000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 5,
+      "description": "제주도에서 재배된 새콤달콤한 감귤입니다.",
+      "liked": true
+    },
+    {
+      "id": 2,
+      "name": "제주 감귤",
+      "price": 15000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 12,
+      "description": "제주도에서 재배된 새콤달콤한 감귤입니다.",
+      "liked": false
+    },
+    {
+      "id": 3,
+      "name": "경상북도 청송 사과",
+      "price": 18000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 10,
+      "description": "경북 청송에서 재배된 아삭아삭한 사과입니다.",
+      "liked": true
+    },
+    {
+      "id": 4,
+      "name": "전라남도 나주 배",
+      "price": 22000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 11,
+      "description": "전남 나주에서 재배된 달콤한 배입니다.",
+      "liked": false
+    },
+    {
+      "id": 5,
+      "name": "강원도 횡성 한우",
+      "price": 85000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 14,
+      "description": "강원도 횡성에서 키운 최상급 한우입니다.",
+      "liked": true
+    },
+    {
+      "id": 6,
+      "name": "제주 흑돼지",
+      "price": 32000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 15,
+      "description": "제주도에서 자란 흑돼지입니다.",
+      "liked": false
+    },
+    {
+      "id": 7,
+      "name": "토종 닭",
+      "price": 15000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 16,
+      "description": "국내산 토종 닭입니다. 육질이 쫄깃합니다.",
+      "liked": true
+    },
+    {
+      "id": 8,
+      "name": "포천 이천쌀",
+      "price": 28000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 6,
+      "description": "경기도 이천에서 재배된 고품질 쌀입니다.",
+      "liked": false
+    },
+    {
+      "id": 9,
+      "name": "국산 찹쌀",
+      "price": 12000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 8,
+      "description": "국내산 찰진 찹쌀입니다.",
+      "liked": true
+    },
+    {
+      "id": 10,
+      "name": "국산 현미",
+      "price": 10000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 7,
+      "description": "영양이 풍부한 국내산 현미입니다.",
+      "liked": false
+    },
+    {
+      "id": 11,
+      "name": "강원도 감자",
+      "price": 8000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 1,
+      "description": "강원도에서 재배된 영양 감자입니다.",
+      "liked": true
+    },
+    {
+      "id": 12,
+      "name": "전라도 고구마",
+      "price": 9500,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 4,
+      "description": "전라도에서 재배된 달콤한 고구마입니다.",
+      "liked": false
+    },
+    {
+      "id": 13,
+      "name": "경상도 김치",
+      "price": 15000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 18,
+      "description": "경상도 스타일의 시원한 김치입니다.",
+      "liked": true
+    },
+    {
+      "id": 14,
+      "name": "전통 된장",
+      "price": 12000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 19,
+      "description": "전통 방식으로 숙성시킨 된장입니다.",
+      "liked": false
+    },
+    {
+      "id": 15,
+      "name": "명품 고추장",
+      "price": 13000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 19,
+      "description": "전통 비법으로 만든 맛있는 고추장입니다.",
+      "liked": true
+    },
+    {
+      "id": 16,
+      "name": "토종 오리고기",
+      "price": 25000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 17,
+      "description": "국내산 토종 오리고기입니다.",
+      "liked": false
+    },
+    {
+      "id": 17,
+      "name": "제주도 흙당근",
+      "price": 6500,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 2,
+      "description": "제주도에서 재배된 신선한 흙당근입니다.",
+      "liked": true
+    },
+    {
+      "id": 18,
+      "name": "경상도 양파",
+      "price": 4500,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 3,
+      "description": "경상도에서 재배된 아삭한 양파입니다.",
+      "liked": false
+    },
+    {
+      "id": 19,
+      "name": "제주 흑미",
+      "price": 9000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 9,
+      "description": "제주도에서 재배된 영양 가득한 흑미입니다.",
+      "liked": true
+    },
+    {
+      "id": 20,
+      "name": "전라도 젓갈",
+      "price": 11000,
+      "is_main": "/api/placeholder/200/200",
+      "type_id": 20,
+      "description": "전라도 특산품 젓갈입니다. 깊은 맛이 일품입니다.",
+      "liked": false
+    },
+    {
+        "id": 21,
+        "name": "국산 현미",
+        "price": 10000,
+        "is_main": "/api/placeholder/200/200",
+        "type_id": 7,
+        "description": "영양이 풍부한 국내산 현미입니다.",
+        "liked": false
+      }
+  ]

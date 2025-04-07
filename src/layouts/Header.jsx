@@ -1,52 +1,81 @@
+import { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
+import { KeyboardArrowDown, Search, FavoriteBorder, PersonOutlineOutlined, ShoppingBagOutlined } from '@mui/icons-material';
 
-function Header() {
+function Header({ maincategories, subCategories, loading }) {
+  const navigate = useNavigate();
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const categoryRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  // 카테고리 토글(열기/닫기)
+  const toggleCategory = () => {
+    setIsCategoryOpen(!isCategoryOpen);
+  };
+
+  // 마우스가 드롭다운 영역을 벗어났을 때 닫기
+  const handleMouseLeave = () => {
+    setIsCategoryOpen(false);
+  };
+
+  // 카테고리에 마우스 올렸을 때 처리 함수
+  const handleCategoryHover = (typeBigId) => {
+    setActiveCategory(typeBigId);
+  };
+
+  // 메인 카테고리 선택 처리
+  const handleCategorySelect = (typeBigId) => {
+    navigate(`/category?type_big_id=${typeBigId}`);
+    setIsCategoryOpen(false);  // 드롭다운 닫기
+  };
+
+  // 서브 카테고리 선택 처리
+  const handleSubCategorySelect = (typeBigId, typeId) => {
+    navigate(`/category?type_big_id=${typeBigId}&type_id=${typeId}`);
+    setIsCategoryOpen(false);  // 드롭다운 닫기
+  };
+
+  // 현재 활성화된 카테고리의 소분류 가져오기
+  const getActiveSubCategories = () => {
+    return subCategories.filter(subCategory => subCategory.type_big_id === activeCategory);
+  };
+
   return (
     <header className="w-full bg-white border-b">
-      {/* 상단 헤더 */}
       <div className="mx-auto max-w-[1300px] px-4">
         <div className="flex items-center justify-between py-4">
-          {/* 로고 */}
           <div className="">
-            <a href="/">
+            <Link to="/">
               <img src={logo} alt="로고" className='w-40 h-15'/>
-            </a>
+            </Link>
           </div>
           
-          {/* 검색창 */}
           <div className="relative flex-grow max-w-md mx-10">
             <input 
               type="text" 
-              className="w-full py-2 pl-4 pr-10 border rounded-full border-green-500 focus:outline-none"
+              className="w-full py-2 pl-4 pr-10 border rounded-full border-green focus:outline-none"
+              placeholder="검색어를 입력해주세요"
             />
             <button className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <Search/>
             </button>
           </div>
           
-          {/* 오른쪽 메뉴들 */}
           <div className="flex items-center space-x-6">
-            <a href="/login" className="text-sm">로그인</a>
-            <a href="/join" className="text-sm">회원가입</a>
-
-            <a href="/wishlist">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </a>
-            <a href="/mypage">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </a>
-            <a href="/cart" className="relative">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-            </a>
+            <Link to="/login" className="text-sm">로그인</Link>
+            <Link to="/join" className="text-sm">회원가입</Link>
+            <Link to="/wishlist">
+              <FavoriteBorder/>
+            </Link> 
+            <Link to="/mypage">
+              <PersonOutlineOutlined/>
+            </Link>
+            <Link to="/cart" className="relative">
+              <ShoppingBagOutlined/>
+              <span className="absolute -top-2 -right-2 bg-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -55,17 +84,81 @@ function Header() {
       <div className="border-t">
         <nav className="mx-auto max-w-[1300px] px-4">
           <ul className="flex items-center py-3 space-x-8">
-            <li>
-              <button className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                카테고리
+            <li className="relative" ref={categoryRef}>
+              <button 
+                className={`flex items-center ${isCategoryOpen ? 'text-green' : ''}`}
+                onClick={toggleCategory}  // 클릭 이벤트로 토글
+              >
+                <span className='ml-2'>카테고리</span>
+                <KeyboardArrowDown
+                  className={`h-4 w-4 ml-1 transition-transform ${isCategoryOpen ? 'rotate-180' : 'rotate-0'}`} />
               </button>
+              
+              {/* 카테고리 드롭다운 */}
+              {isCategoryOpen && !loading && (
+                <div 
+                  className="absolute top-full left-0 z-50 mt-1 bg-white shadow-lg border rounded w-[600px] flex divide-x"
+                  ref={dropdownRef}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {/* 왼쪽 메인 카테고리 - 고정 높이 */}
+                  <div className="py-2 w-1/2 h-80 overflow-y-auto">
+                  {maincategories.map((maincategory) => (
+                    <div
+                      key={maincategory.type_big_id} 
+                      className={`block px-4 py-2 cursor-pointer ${
+                        activeCategory === maincategory.type_big_id ? 'bg-green text-white' : 'hover:bg-green hover:text-white'
+                      }`}
+                      onClick={() => handleCategorySelect(maincategory.type_big_id)}
+                      onMouseEnter={() => handleCategoryHover(maincategory.type_big_id)}
+                    >
+                      {maincategory.name}
+                    </div>
+                  ))}
+                  </div>
+                  
+                  {/* 오른쪽 서브 카테고리 - 동적 높이 */}
+                  <div className="py-2 w-1/2 max-h-80 overflow-y-auto">
+                    {activeCategory && getActiveSubCategories().map((subCategory) => (
+                      <div
+                        key={subCategory.type_id} 
+                        className="block px-4 py-2 hover:bg-green hover:text-white cursor-pointer"
+                        onClick={() => handleSubCategorySelect(activeCategory, subCategory.type_id)}
+                      >
+                        {subCategory.name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </li>
-            <li><a href="/event">이벤트</a></li>
-            <li><a href="/live">LIVE</a></li>
-            <li><a href="/support">고객센터</a></li>
+            <li className="relative group">
+              <Link 
+                to="/event" 
+                className="block py-1 relative"
+              >
+                이벤트
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-green transform translate-y-2 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"></span>
+              </Link>
+            </li>
+            <li className="relative group">
+              <Link
+                to="/live" 
+                className="block py-1 relative"
+              >
+                LIVE
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-green transform translate-y-2 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"></span>
+              </Link>
+            </li>
+            <li className="relative group">
+              <Link 
+                to="/support" 
+                className="block py-1 relative"
+              >
+                고객센터
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-green transform translate-y-2 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"></span>
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>

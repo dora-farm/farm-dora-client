@@ -1,0 +1,102 @@
+[
+    {
+      "type_id": 1,
+      "type_big_id": 1,
+      "name": "강원도"
+    },
+    {
+      "type_id": 2,
+      "type_big_id": 1,
+      "name": "제주도"
+    },
+    {
+      "type_id": 3,
+      "type_big_id": 1,
+      "name": "경상도"
+    },
+    {
+      "type_id": 4,
+      "type_big_id": 1,
+      "name": "전라도"
+    },
+    {
+      "type_id": 5,
+      "type_big_id": 1,
+      "name": "충청도"
+    },
+    {
+      "type_id": 6,
+      "type_big_id": 2,
+      "name": "쌀"
+    },
+    {
+      "type_id": 7,
+      "type_big_id": 2,
+      "name": "현미"
+    },
+    {
+      "type_id": 8,
+      "type_big_id": 2,
+      "name": "찹쌀"
+    },
+    {
+      "type_id": 9,
+      "type_big_id": 2,
+      "name": "흑미"
+    },
+    {
+      "type_id": 10,
+      "type_big_id": 3,
+      "name": "사과"
+    },
+    {
+      "type_id": 11,
+      "type_big_id": 3,
+      "name": "배"
+    },
+    {
+      "type_id": 12,
+      "type_big_id": 3,
+      "name": "감귤"
+    },
+    {
+      "type_id": 13,
+      "type_big_id": 3,
+      "name": "토마토"
+    },
+    {
+      "type_id": 14,
+      "type_big_id": 4,
+      "name": "한우"
+    },
+    {
+      "type_id": 15,
+      "type_big_id": 4,
+      "name": "돼지고기"
+    },
+    {
+      "type_id": 16,
+      "type_big_id": 4,
+      "name": "닭고기"
+    },
+    {
+      "type_id": 17,
+      "type_big_id": 4,
+      "name": "오리고기"
+    },
+    {
+      "type_id": 18,
+      "type_big_id": 5,
+      "name": "김치"
+    },
+    {
+      "type_id": 19,
+      "type_big_id": 5,
+      "name": "장류"
+    },
+    {
+      "type_id": 20,
+      "type_big_id": 5,
+      "name": "젓갈"
+    }
+]
