@@ -11,7 +11,7 @@ export default {
           DEFAULT: "#1CA673", // 주요 색상(초록) (사용예시: className="bg-green")
         },
         brown: {
-          DEFAULT: "#490401", // 주요 색상(판매자 쪽 짙은 갈색) (사용예시: className="bg-brown")
+          DEFAULT: "#332e2b", // 주요 색상(판매자 쪽 짙은 갈색) (사용예시: className="bg-brown")
           light: "#FEFAE0", // 옅은 갈색 (사용예시: className="bg-brown-light")
         },
         gray: {
