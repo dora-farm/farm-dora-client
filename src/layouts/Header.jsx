@@ -69,7 +69,7 @@ function Header({ maincategories, subCategories, loading }) {
             <Link to="/wishlist">
               <FavoriteBorder/>
             </Link> 
-            <Link to="/mypage">
+            <Link to="/my/user">
               <PersonOutlineOutlined/>
             </Link>
             <Link to="/cart" className="relative">

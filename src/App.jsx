@@ -30,15 +30,15 @@ function App() {
             <Route path="/join" element={<Join/>} />
 
             <Route element={<UserLayout/>}>
-              <Route path="/mypage" element={<MyPage/>} />
-              <Route path="/mypage/wishlist" element={<Wishlist/>} />
-              <Route path="/mypage/cart" element={<Cart/>} />
-              <Route path="/mypage/myreviews" element={<MyReviews/>} />
-              <Route path="/mypage/myinquireies" element={<MyInquireies/>} />
-              <Route path="/mypage/orders" element={<Orders/>} />
-              <Route path="/mypage/manageaddress" element={<ManageAddress/>} />
-              <Route path="/mypage/editprofile" element={<EditProfile/>} />
-              <Route path="/mypage/deleteaccount" element={<DeleteAccount/>} />
+              <Route path="/my/user" element={<MyPage/>} />
+              <Route path="/my/user/wishlist" element={<Wishlist/>} />
+              <Route path="/my/user/cart" element={<Cart/>} />
+              <Route path="/my/user/review" element={<MyReviews/>} />
+              <Route path="/my/user/inquiry" element={<MyInquireies/>} />
+              <Route path="/my/user/order" element={<Orders/>} />
+              <Route path="/my/user/address" element={<ManageAddress/>} />
+              <Route path="/my/user/prifile" element={<EditProfile/>} />
+              <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
             </Route>
             {/* <Route path="/category" element={<Category />} /> */}
             <Route path="/event" element={<Event/>} />

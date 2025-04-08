@@ -10,11 +10,11 @@ function UserSidebar() {
               활동 정보
             </span>
             <nav className="mt-6 flex flex-col">
-                <Link to="/mypage" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">마이페이지</Link>
-                <Link to="/mypage/Wishlist" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">찜한 상품</Link>
-                <Link to="/mypage/cart" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">장바구니</Link>
-                <Link to="/mypage/myreviews" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 리뷰 보기</Link>
-                <Link to="/mypage/myinquireies" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 문의 보기</Link>
+                <Link to="/my/user" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">마이페이지</Link>
+                <Link to="/my/user/wishlist" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">찜한 상품</Link>
+                <Link to="/my/user/cart" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">장바구니</Link>
+                <Link to="/my/user/review" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 리뷰 보기</Link>
+                <Link to="/my/user/inquiry" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">내 문의 보기</Link>
             </nav>
 
             {/*쇼핑 정보*/}
@@ -22,8 +22,8 @@ function UserSidebar() {
               쇼핑정보
             </span>
             <nav className="mt-6 flex flex-col">
-                <Link to="/mypage/orders" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">주문 내역</Link>
-                <Link to="/mypage/manageaddress" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">배송지 관리</Link>
+                <Link to="/my/user/order" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">주문 내역</Link>
+                <Link to="/my/user/address" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">배송지 관리</Link>
             </nav>
 
             {/*개인정보*/}
@@ -31,8 +31,8 @@ function UserSidebar() {
               개인정보
             </span>
             <nav className="mt-6 flex flex-col">
-                <Link to="/mypage/editprofile" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">회원정보 수정</Link>
-                <Link to="/mypage/deleteaccount" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">회원 탈퇴</Link>
+                <Link to="/my/user/prifile" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">회원정보 수정</Link>
+                <Link to="/my/user/withdraw" className="text-left px-4 py-2 rounded-md hover:bg-gray-100 transition">회원 탈퇴</Link>
             </nav>
         </div>
     )
