@@ -69,7 +69,16 @@ function Header({ maincategories, subCategories, loading }) {
             <Link to="/wishlist">
               <FavoriteBorder/>
             </Link> 
+            {/* 구매자 마이페이지 */}
             <Link to="/my/user">
+              <PersonOutlineOutlined/>
+            </Link>
+            {/* 판매자 마이페이지 */}
+            <Link to="/my/seller">
+              <PersonOutlineOutlined/>
+            </Link>
+            {/* 관리자 페이지 */}
+            <Link to="/admin">
               <PersonOutlineOutlined/>
             </Link>
             <Link to="/cart" className="relative">
