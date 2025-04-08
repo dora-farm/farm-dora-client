@@ -1,13 +1,13 @@
 import { Outlet } from "react-router-dom";
-import UserSidebar from "./UserSidebar";
+import SellerSidebar from "./SellerSidebar";
 
-function UserLayout() {
+function SellerLayout() {
   return (
     <div className="flex w-full">
-      <UserSidebar />
+      <SellerSidebar />
       <Outlet />
     </div>
   );
 }
 
-export default UserLayout;
+export default SellerLayout;
