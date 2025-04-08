@@ -1,17 +1,24 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Layout from './layouts/Layout';
 import Home from './pages/Home';
 import Login from './pages/auth/Login';
 import Join from './pages/auth/Join';
+import UserLayout from './layouts/UserLayout';
+import MyPage from './pages/user/MyPage';
 import Wishlist from './pages/user/Wishlist';
-import Mypage from './pages/user/Mypage';
 import Cart from './pages/user/Cart';
+import MyReviews from './pages/user/MyReviews';
+import MyInquireies from './pages/user/MyInquireies';
+import Orders from './pages/user/Orders';
+import ManageAddress from './pages/user/ManageAddress';
+import EditProfile from './pages/user/EditProfile';
+import DeleteAccount from './pages/user/DeleteAccount';
 import Live from './pages/live/live';
 import LiveSetup from './pages/seller/LiveSetup';
 import StreamView from './pages/live/StreamView';
 import Event from './pages/event/Event';
 import ChatSupport from './pages/support/ChatSupport';
-// import Category from './pages/category/Category';
+// // import Category from './pages/category/Category';
 
 function App() {
   return (
@@ -21,9 +28,18 @@ function App() {
             <Route index element={<Home/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/join" element={<Join/>} />
-            <Route path="/wishlist" element={<Wishlist/>} />
-            <Route path="/mypage" element={<Mypage/>} />
-            <Route path="/cart" element={<Cart/>} />
+
+            <Route element={<UserLayout/>}>
+              <Route path="/my/user" element={<MyPage/>} />
+              <Route path="/my/user/wishlist" element={<Wishlist/>} />
+              <Route path="/my/user/cart" element={<Cart/>} />
+              <Route path="/my/user/review" element={<MyReviews/>} />
+              <Route path="/my/user/inquiry" element={<MyInquireies/>} />
+              <Route path="/my/user/order" element={<Orders/>} />
+              <Route path="/my/user/address" element={<ManageAddress/>} />
+              <Route path="/my/user/prifile" element={<EditProfile/>} />
+              <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
+            </Route>
             {/* <Route path="/category" element={<Category />} /> */}
             <Route path="/event" element={<Event/>} />
             <Route path="/support" element={<ChatSupport/>} />
