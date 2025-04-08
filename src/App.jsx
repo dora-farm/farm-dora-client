@@ -18,7 +18,8 @@ import LiveSetup from './pages/live/LiveSetup';
 import StreamView from './pages/live/StreamView';
 import Event from './pages/event/Event';
 import ChatSupport from './pages/support/ChatSupport';
-// import Category from './pages/category/Category';
+import AddItem from './pages/seller/AddItem';
+// import Category from './pages/category/Category';  
 
 function App() {
   return (
@@ -40,7 +41,9 @@ function App() {
               <Route path="/my/user/prifile" element={<EditProfile/>} />
               <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
             </Route>
-            {/* <Route path="/category" element={<Category />} /> */}
+            
+             <Route path="/my/seller/item/register" element={<AddItem/>} />
+
             <Route path="/event" element={<Event/>} />
             <Route path="/support" element={<ChatSupport/>} />
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}

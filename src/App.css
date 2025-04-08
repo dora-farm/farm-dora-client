@@ -13,3 +13,7 @@
 body {
   font-family: 'Noto Sans KR', sans-serif;
 }
+
+.editor-container .ck-editor__editable_inline {
+  min-height: 400px;
+}
