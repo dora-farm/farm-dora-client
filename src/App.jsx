@@ -25,13 +25,21 @@ import SellerHome from './pages/seller/SellerHome';
 import LiveSetup from './pages/seller/LiveSetup';
 import Manage from './pages/seller/Manage';
 import Register from './pages/seller/Register';
+import Adminbroadcast from './pages/adminpage/Adminbroadcast';
+import AdminHome from './pages/adminpage/AdminHome';
+import AdminPopup from './pages/adminpage/AdminPopup';
+import AdminPopupRegi from './pages/adminpage/AdminPopupRegi';
+import AdminProduct from './pages/adminpage/AdminProduct';
+import AdminReview from './pages/adminpage/AdminReview';
+import AdminUser from './pages/adminpage/AdminUser';
 import Live from './pages/live/Live';
 import StreamView from './pages/live/StreamView';
 import Event from './pages/event/Event';
 import ChatSupport from './pages/support/ChatSupport';
+import AdminLayout from './layouts/AdminLayout';
+import AdminBroadcast from './pages/adminpage/Adminbroadcast';
+// // import Category from './pages/category/Category';
 import AddItem from './pages/seller/AddItem';
-// import Category from './pages/category/Category';  
-
 
 function App() {
   return (
@@ -52,6 +60,16 @@ function App() {
               <Route path="/my/user/address" element={<ManageAddress/>} />
               <Route path="/my/user/prifile" element={<EditProfile/>} />
               <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
+            </Route>
+
+            <Route element={<AdminLayout/>}>
+              <Route path="/admin/broadcast" element={<AdminBroadcast/>} />
+              <Route path="/admin" element={<AdminHome/>} />
+              <Route path="/admin/popup" element={<AdminPopup/>} />
+              <Route path="/admin/popup/register" element={<AdminPopupRegi/>} />
+              <Route path="/admin/product" element={<AdminProduct/>} />
+              <Route path="/admin/review" element={<AdminReview/>} />
+              <Route path="/admin/user" element={<AdminUser/>} />
             </Route>
 
             <Route element={<SellerLayout/>}>
