@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/auth/Login';
 import Join from './pages/auth/Join';
 import UserLayout from './layouts/UserLayout';
+import SellerLayout from './layouts/SellerLayout';
 import MyPage from './pages/user/MyPage';
 import Wishlist from './pages/user/Wishlist';
 import Cart from './pages/user/Cart';
@@ -13,12 +14,22 @@ import Orders from './pages/user/Orders';
 import ManageAddress from './pages/user/ManageAddress';
 import EditProfile from './pages/user/EditProfile';
 import DeleteAccount from './pages/user/DeleteAccount';
-import Live from './pages/live/live';
-import LiveSetup from './pages/live/LiveSetup';
+import Cancel from './pages/seller/ordermanage/Cancel';
+import Exchange from './pages/seller/ordermanage/Exchange';
+import Inquiry from './pages/seller/ordermanage/Inquiry';
+import New from './pages/seller/ordermanage/New';
+import Order from './pages/seller/ordermanage/Order';
+import Refund from './pages/seller/ordermanage/Refund';
+import Review from './pages/seller/ordermanage/Review';
+import SellerHome from './pages/seller/SellerHome';
+import LiveSetup from './pages/seller/LiveSetup';
+import Manage from './pages/seller/Manage';
+import Register from './pages/seller/Register';
+import Live from './pages/live/Live';
 import StreamView from './pages/live/StreamView';
 import Event from './pages/event/Event';
 import ChatSupport from './pages/support/ChatSupport';
-// import Category from './pages/category/Category';
+// // import Category from './pages/category/Category';
 
 function App() {
   return (
@@ -40,6 +51,21 @@ function App() {
               <Route path="/my/user/prifile" element={<EditProfile/>} />
               <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
             </Route>
+
+            <Route element={<SellerLayout/>}>
+              <Route path="/my/seller" element={<SellerHome/>} />
+              <Route path="/my/seller/order" element={<Order/>} />
+              <Route path="/my/seller/order/new" element={<New/>} />
+              <Route path="/my/seller/order/exchange" element={<Exchange/>} />
+              <Route path="/my/seller/order/refund" element={<Refund/>} />
+              <Route path="/my/seller/order/cancel" element={<Cancel/>} />
+              <Route path="/my/seller/order/review" element={<Review/>} />
+              <Route path="/my/seller/order/inquiry" element={<Inquiry/>} />
+              <Route path="/my/seller/item/manage" element={<Manage/>} />
+              <Route path="/my/seller/item/register" element={<Register/>} />
+              <Route path="/my/seller/live" element={<LiveSetup/>} />
+            </Route>
+
             {/* <Route path="/category" element={<Category />} /> */}
             <Route path="/event" element={<Event/>} />
             <Route path="/support" element={<ChatSupport/>} />
