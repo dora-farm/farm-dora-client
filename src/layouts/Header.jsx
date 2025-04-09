@@ -66,9 +66,6 @@ function Header({ maincategories, subCategories, loading }) {
           <div className="flex items-center space-x-6">
             <Link to="/login" className="text-sm">로그인</Link>
             <Link to="/join" className="text-sm">회원가입</Link>
-            <Link to="/wishlist">
-              <FavoriteBorder/>
-            </Link> 
             {/* 구매자 마이페이지 */}
             <Link to="/my/user">
               <PersonOutlineOutlined/>
@@ -81,6 +78,9 @@ function Header({ maincategories, subCategories, loading }) {
             <Link to="/admin">
               <PersonOutlineOutlined/>
             </Link>
+            <Link to="/wishlist">
+              <FavoriteBorder/>
+            </Link> 
             <Link to="/cart" className="relative">
               <ShoppingBagOutlined/>
               <span className="absolute -top-2 -right-2 bg-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
