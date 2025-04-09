@@ -39,7 +39,6 @@ import ChatSupport from './pages/support/ChatSupport';
 import AdminLayout from './layouts/AdminLayout';
 import AdminBroadcast from './pages/adminpage/Adminbroadcast';
 // // import Category from './pages/category/Category';
-import AddItem from './pages/seller/AddItem';
 
 function App() {
   return (
@@ -82,7 +81,7 @@ function App() {
               <Route path="/my/seller/order/review" element={<Review/>} />
               <Route path="/my/seller/order/inquiry" element={<Inquiry/>} />
               <Route path="/my/seller/item/manage" element={<Manage/>} />
-              <Route path="/my/seller/item/register" element={<AddItem/>} />
+              <Route path="/my/seller/item/register" element={<Register/>} />
               <Route path="/my/seller/live" element={<LiveSetup/>} />
             </Route>
 

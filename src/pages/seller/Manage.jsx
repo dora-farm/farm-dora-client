@@ -1,9 +1,390 @@
-import React from 'react'
+// src/pages/seller/Manage.jsx
+import { useState, useEffect } from 'react';
+import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+
+import Keyword from '../../common/components/search/Keyword';
+import ProductStatus from '../../common/components/search/ProductStatus';
+import ProductCategory from '../../common/components/search/ProductCategory';
+import BasicBtn from '../../common/components/search/BasicBtn';
+import Pagenation from '../../common/components/search/Pagenation';
+
 
 function Manage() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({INSTOCK: true, PREORDER: false});
+  // true 값만 포함하는 새로운 state
+  const [processedFilters, setProcessedFilters] = useState({});
+  const [category, setCategory] = useState('');
+  const [subCategory, setSubCategory] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [totalCount, setTotalCount] = useState(100);
+  const [sortFilter, setSortFilter] = useState('LATEST');
+  const [smallCategoriesFiltered, setSmallCategoriesFiltered] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isAllChecked, setIsAllChecked] = useState(false);
+
+  
+  const itemsPerPage = 15;
+  
+  const bigCategories = [
+    { id: 1, name: '과일' },
+    { id: 2, name: '채소' },
+    { id: 3, name: '곡류' },
+    { id: 4, name: '견과류' },
+    { id: 5, name: '버섯류' }
+  ];
+
+  const smallCategories = [
+    { id: 1, bigCategoryId: 1, name: '사과' },
+    { id: 2, bigCategoryId: 1, name: '배' },
+    { id: 3, bigCategoryId: 1, name: '딸기' },
+    { id: 4, bigCategoryId: 1, name: '포도' },
+    { id: 5, bigCategoryId: 1, name: '감귤' },
+    { id: 6, bigCategoryId: 2, name: '상추' },
+    { id: 7, bigCategoryId: 2, name: '깻잎' },
+    { id: 8, bigCategoryId: 2, name: '고추' },
+    { id: 9, bigCategoryId: 2, name: '마늘' },
+    { id: 10, bigCategoryId: 2, name: '양파' },
+    { id: 11, bigCategoryId: 3, name: '쌀' },
+    { id: 12, bigCategoryId: 3, name: '현미' },
+    { id: 13, bigCategoryId: 3, name: '보리' },
+    { id: 14, bigCategoryId: 3, name: '콩' },
+    { id: 15, bigCategoryId: 4, name: '호두' },
+    { id: 16, bigCategoryId: 4, name: '아몬드' },
+    { id: 17, bigCategoryId: 4, name: '땅콩' },
+    { id: 18, bigCategoryId: 4, name: '잣' },
+    { id: 19, bigCategoryId: 5, name: '새송이버섯' },
+    { id: 20, bigCategoryId: 5, name: '표고버섯' },
+    { id: 21, bigCategoryId: 5, name: '느타리버섯' }
+  ];
+
+  // 전체 선택/해제 핸들러
+  const handleAllCheck = (event) => {
+    const checked = event.target.checked;
+    setIsAllChecked(checked);
+    
+    // 모든 상품의 체크박스 상태 업데이트
+    const updatedProducts = products.map(product => ({
+      ...product, 
+      isChecked: checked
+    }));
+    
+    setProducts(updatedProducts);
+  };
+
+  // 개별 상품 체크박스 핸들러
+  const handleItemCheck = (id) => {
+    const updatedProducts = products.map(product => 
+      product.id === id 
+        ? { ...product, isChecked: !product.isChecked } 
+        : product
+    );
+    
+    setProducts(updatedProducts);
+    
+    // 전체 선택 상태 업데이트
+    const allChecked = updatedProducts.every(product => product.isChecked);
+    setIsAllChecked(allChecked);
+  };
+  
+  // 목업 상품 데이터
+  useEffect(() => {
+    // 실제 앱에서는 필터를 포함한 API 호출이 여기 들어갑니다
+    const mockProducts = Array(15).fill(null).map((_, index) => ({
+      id: index + 1,
+      name: '상품명',
+      price: '10000',
+      status: index === 1 ? '판매 중지' : '판매중',
+      stock: 15,
+      orders: 11
+    }));
+    
+    setProducts(mockProducts);
+  }, [currentPage, filters, searchTerm, category, subCategory, sortFilter]);
+  
+  // 초기 GET 데이터 로드 함수
+  const fetchInitialProducts = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/my/seller/item/manage');
+      
+      if (!response.ok) {
+        throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
+      }
+
+      const data = await response.json();
+      
+      setProducts(data.content);
+      setTotalCount(data.totalElements);
+    } catch (error) {
+      setError(error.message);
+      console.error('초기 상품 데이터 로딩 중 오류:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+    // 초기 데이터 로드 (GET)
+    // useEffect(() => {
+    //   fetchInitialProducts();
+    // }, []);
+
+    //목업데이터
+    const fetchSearchProducts = async () => {
+      try {
+        // 실제 API 대신 목업 데이터 사용
+        const mockData = {
+          content: [
+            { id: 1, name: '상품1', price: 10000, status: '판매 중', stock: 10, orders: 5 },
+            { id: 2, name: '상품2', price: 20000, status: '판매 중지', stock: 5, orders: 2 }
+          ],
+          totalElements: 2
+        };
+    
+        setProducts(mockData.content);
+        setTotalCount(mockData.totalElements);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+
+  // 상품 데이터 및 페이지네이션 POST API 함수
+  // const fetchSearchProducts = async () => {
+  //   setIsLoading(true);
+  //   setError(null);
+
+  //   // JSON 데이터 준비
+  //   const jsonData = {
+  //     sellerId: 1, // 추후 JWT 토큰으로 처리 예정
+  //     keyword: searchTerm,
+  //     Sort: sortFilter,
+  //     filters: processedFilters,
+  //     typeBigId: category,
+  //     typeId: subCategory,
+  //     page: currentPage,
+  //     size: itemsPerPage
+  //   };
+
+  //   try {
+  //     const response = await fetch('/my/seller/item/manage', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(jsonData)
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('데이터를 불러오는 중 오류가 발생했습니다.');
+  //     }
+
+  //     const data = await response.json();
+      
+  //     setProducts(data.content);
+  //     setTotalCount(data.totalElements);
+  //   } catch (error) {
+  //     setError(error.message);
+  //     console.error('상품 데이터 로딩 중 오류:', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // 대분류 선택 시 소분류 필터링
+  useEffect(() => {
+    if (category) {
+      const filteredCategories = smallCategories.filter(
+        item => item.bigCategoryId === parseInt(category)
+      );
+      setSmallCategoriesFiltered(filteredCategories);
+      setSubCategory('');
+    } else {
+      setSmallCategoriesFiltered([]);
+      setSubCategory('');
+    }
+  }, [category]);
+  
+  // 페이지 변경 핸들러 (POST)
+  const handlePageChange = (selectedItem) => {
+    setCurrentPage(selectedItem.selected);
+    fetchSearchProducts();
+  };
+
+  const handleFilterChange = (event) => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      [event.target.name]: event.target.checked
+    }));
+  };
+  
+  useEffect(() => {
+    // true 값을 가진 키만 배열로 추출
+    const trueKeysArray = Object.keys(filters).filter(key => filters[key] === true);
+    setProcessedFilters(trueKeysArray);
+  }, [filters]);
+
+  // 검색 및 필터링 핸들러 (POST)
+  const handleSearch = () => {
+    setCurrentPage(0);
+    fetchSearchProducts();
+  };
+
+  const handleReset = () => {
+    setSearchTerm('');
+    setFilters({
+      INSTOCK: true,
+      PREORDER: false
+    });
+    setCategory('');
+    setSubCategory('');
+    setSortFilter('LATEST');
+  };
+  
+  // 에러 및 로딩 상태 렌더링
+  if (isLoading) {
+    return (
+      <div className="text-center py-4">
+        <div role="status">
+          <svg 
+            aria-hidden="true" 
+            className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-red-600" 
+            viewBox="0 0 100 101" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {/* SVG 로딩 스피너 */}
+            <path d="..." fill="currentColor" />
+          </svg>
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong className="font-bold">오류 발생! </strong>
+        <span className="block sm:inline">{error}</span>
+      </div>
+    );
+  }
+
   return (
-    <div>Manage</div>
-  )
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b">상품 조회/수정</h1>
+      
+      <div className="bg-white rounded-lg shadow-sm mb-6 p-4">
+       
+       {/* 검색창 구현(컴포넌트 */}
+      <Keyword 
+          searchTerm={searchTerm} 
+          setSearchTerm={setSearchTerm} 
+          sortFilter={sortFilter} 
+          setSortFilter={setSortFilter} 
+        />
+      
+      <ProductStatus 
+          filters={filters} 
+          handleFilterChange={handleFilterChange} 
+        />
+      
+      <ProductCategory 
+          category={category} 
+          setCategory={setCategory} 
+          subCategory={subCategory} 
+          setSubCategory={setSubCategory} 
+          bigCategories={bigCategories}
+          smallCategoriesFiltered={smallCategoriesFiltered}
+      />
+        
+        <BasicBtn 
+          handleSearch={handleSearch} 
+          handleReset={handleReset}
+        />
+        
+        
+      </div>
+      
+      {/* 결과 목록 */}
+      <div className="bg-white rounded-lg shadow-sm p-4">
+        <div className="flex justify-between items-center mb-2">
+          <div>상품 목록 (총 {totalCount}개)</div>
+          <button 
+            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm"
+          >
+            선택 삭제
+          </button>
+        </div>
+        
+        <TableContainer component={Paper} className="mb-4">
+          <Table size="small">
+            <TableHead>
+              <TableRow style={{ backgroundColor: '#4b4b4b' }}>
+                <TableCell padding="checkbox">
+                  <Checkbox color="default" 
+                            checked={isAllChecked}
+                            onChange={handleAllCheck}
+                  />
+                </TableCell>
+                <TableCell style={{ color: 'white' }}>번호</TableCell>
+                <TableCell style={{ color: 'white' }}>상품명</TableCell>
+                <TableCell style={{ color: 'white' }}>판매가</TableCell>
+                <TableCell style={{ color: 'white' }}>판매상태</TableCell>
+                <TableCell style={{ color: 'white' }}>재고 수량</TableCell>
+                <TableCell style={{ color: 'white' }}>주문 수</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {products.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell padding="checkbox">
+                    <Checkbox color="default" 
+                              checked={product.isChecked || false}
+                              onChange={() => handleItemCheck(product.id)}
+                    />
+                    
+                  </TableCell>
+                  <TableCell>{product.id}</TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>{product.price}</TableCell>
+                  <TableCell>
+                    <button 
+                      className={`text-xs py-1 px-2 rounded ${
+                        product.status === '판매 중지' 
+                          ? 'bg-red-500 hover:bg-red-600 text-white' 
+                          : 'bg-teal-500 hover:bg-teal-600 text-white'
+                      }`}
+                    >
+                      {product.status}
+                    </button>
+                  </TableCell>
+                  <TableCell>{product.stock}</TableCell>
+                  <TableCell>{product.orders}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        
+        {/* 페이지네이션 */}
+        <Pagenation 
+          currentPage={currentPage} 
+          handlePageChange={handlePageChange} 
+          totalCount={totalCount} 
+          itemsPerPage={itemsPerPage}
+        />
+        
+      </div>
+    </div>
+  );
 }
 
-export default Manage
+export default Manage;
