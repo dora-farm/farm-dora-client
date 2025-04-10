@@ -10,8 +10,10 @@ function SellerHome() {
     datasets: [
       {
         label: "매출 (원)",
-        data: [250000, 1200000, 1000000, 500000, 750000, 380000, 450000],
+        data: [250000, 1100000, 950000, 500000, 750000, 380000, 450000],
         backgroundColor: "#494041",
+        barThickness: 35,
+        borderRadius: 3,
       },
     ],
   };
@@ -19,15 +21,16 @@ function SellerHome() {
   const barChartOptions = {
     responsive: true,
     plugins: {
-      title: {
-        display: false,
-      },
-      legend: {
-        display: true,
-        position: "top",
-      },
+      title: {display: false},
+      legend: {display: false},
     },
+
+    layout: {
+      padding: {left: 1, top: 1, bottom: 5, right: 1}
+    },
+
     scales: {
+      x: {grid: {display: false}},
       y: {
         beginAtZero: true,
         ticks: {
@@ -65,7 +68,7 @@ function SellerHome() {
   };
 
   const pieChartOptions = {
-    responsive: true,
+    responsive: false,
     plugins: {
       legend: {
         position: "bottom",
@@ -79,32 +82,32 @@ function SellerHome() {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-2xl font-semibold mb-6 pb-2 border-b-2">매출 현황</h1>
 
-      <div className="flex items-center space-x-2 bg-gray-light border border-gray-dark rounded-md p-4 pl-6 mb-6">
-        <span>조회 기간:</span>
-        <button className="px-2 py-1 bg-white text-sm rounded-md border">오늘</button>
-        <button className="px-2 py-1 bg-gray-dark text-gray-light text-sm rounded-md border">1주일</button>
-        <button className="px-2 py-1 bg-white text-sm rounded-md border">1개월</button>
-        <button className="px-2 py-1 bg-white text-sm rounded-md border">3개월</button>
+      <div className="flex flex-wrap items-center space-x-2 bg-gray-light border border-gray-dark rounded-md p-4 pl-6 mb-6">
+        <span className="text-sm  min-w-[60px]">조회 기간:</span>
+        <button className="px-2 py-1 bg-white text-sm rounded-md border whitesp min-w-[50px]">오늘</button>
+        <button className="px-2 py-1 bg-gray-dark text-gray-light text-sm rounded-md border min-w-[50px]">1주일</button>
+        <button className="px-2 py-1 bg-white text-sm rounded-md border min-w-[50px]">1개월</button>
+        <button className="px-2 py-1 bg-white text-sm rounded-md border min-w-[50px]">3개월</button>
         <input type="date" className="px-2 py-1 text-sm border rounded-md" />
         <span>~</span>
         <input type="date" className="px-2 py-1 text-sm border rounded-md" />
-        <button className="px-3 py-1 text-sm rounded-md bg-black text-white">조회</button>
+        <button className="px-3 py-1 text-sm rounded-md bg-black text-white min-w-[50px]">조회</button>
       </div>
 
       <div className="flex items-center space-x-2 bg-gray-light border border-gray-dark rounded-md p-4 pl-6 mb-6">
-        <Bar data={barChartData} options={barChartOptions} height={200} />
+        <Bar data={barChartData} options={barChartOptions} height={150} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 rounded-md mb-6">
         <div className="bg-gray-light rounded-md flex flex-col items-center border border-gray-dark">
           <h3 className="text-lg font-medium mb-4">제품별 매출 비율</h3>
-          <div className="w-[80%] h-48 relative">
+          <div className="w-[80%] h-48 relative flex items-center justify-center">
             <Pie data={pieChartData1} options={pieChartOptions} />
           </div>
         </div>
         <div className="bg-gray-light rounded-md flex flex-col items-center border border-gray-dark">
           <h3 className="text-lg font-medium mb-4">반품 및 교환율</h3>
-          <div className="w-[80%] h-48 relative">
+          <div className=" w-[80%] h-48 relative flex items-center justify-center">
             <Pie data={pieChartData2} options={pieChartOptions} />
           </div>
         </div>
