@@ -13,7 +13,7 @@ function AdminSidebar() {
   }, [location.pathname]);
 
   return (
-    <div className="flex flex-col w-[250px] h-screen p-4 bg-brown max-w-[250px]">
+    <div className="flex flex-col w-[250px] h-screen p-4 bg-brown max-w-[250px] min-w-[250px]">
       <nav className="flex flex-col gap-1">
         <Link to="/admin" className={homebtn}>H O M E</Link>
       </nav>

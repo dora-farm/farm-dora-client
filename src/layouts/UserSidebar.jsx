@@ -12,7 +12,7 @@ function UserSidebar() {
   }, [location.pathname]);
 
   return (
-    <div className="flex-col w-[250px] h-screen rounded-xl p-4 mt-7 border-2 border-gray-dark max-w-[250px]">
+    <div className="flex-col w-[250px] h-screen rounded-xl p-4 mt-7 border-2 border-gray-dark max-w-[250px] min-w-[250px]">
 
       {/* 활동 정보 */}
       <h2 className="font-bold text-xl border-b-2 border-gray-dark pb-3 pl-2">
