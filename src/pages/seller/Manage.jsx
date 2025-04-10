@@ -60,6 +60,7 @@ function Manage() {
     { id: 21, bigCategoryId: 5, name: '느타리버섯' }
   ];
 
+
   // 전체 선택/해제 핸들러
   const handleAllCheck = (event) => {
     const checked = event.target.checked;
@@ -196,6 +197,42 @@ function Manage() {
   //     setIsLoading(false);
   //   }
   // };
+  const deleteSelectedItems = async() => {
+    //체크박스 안의 id값을 배열로 뽑아내기
+    const selectedProducts = products.filter(product => product.isChecked);
+    const selectedProductIds = selectedProducts.map(product => product.id);
+    console.log('선택된 상품들:', selectedProductIds);
+    try {
+      // JSON 형태로 가공
+      const request = {
+        saleIds: selectedProductIds
+      };
+      
+      // fetch API를 사용하여 서버로 요청 보내기
+      const response = await fetch('http://localhost:8080/my/seller/item/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request) // JSON 문자열로 변환
+      });
+      
+      // 응답 처리
+      if (response.status === 200) {
+        const result = await response.json();
+        console.log('삭제 성공:', result);
+        // 성공 후 처리 (예: 목록 새로고침 등)
+        
+      } else {
+        console.error('삭제 실패:', response.statusText);
+        // 실패 처리 (예: 에러 메시지 표시)
+      }
+    } catch (error) {
+      console.error('요청 오류:', error);
+      // 오류 처리
+    }
+
+  }
 
   // 대분류 선택 시 소분류 필터링
   useEffect(() => {
@@ -319,6 +356,7 @@ function Manage() {
           <div>상품 목록 (총 {totalCount}개)</div>
           <button 
             className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm"
+            onClick={deleteSelectedItems}
           >
             선택 삭제
           </button>
