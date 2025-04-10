@@ -1,11 +1,117 @@
-import React from 'react'
+import React from "react";
+import { Bar, Pie } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement,} from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 function SellerHome() {
+  const barChartData = {
+    labels: ["3/10", "3/11", "3/12", "3/13", "3/14", "3/15", "3/16"],
+    datasets: [
+      {
+        label: "매출 (원)",
+        data: [250000, 1200000, 1000000, 500000, 750000, 380000, 450000],
+        backgroundColor: "#494041",
+      },
+    ],
+  };
+
+  const barChartOptions = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: false,
+      },
+      legend: {
+        display: true,
+        position: "top",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function (value, index, values) {
+            if (value >= 1000) {
+              return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            return value;
+          },
+        },
+      },
+    },
+  };
+
+  const pieChartData1 = {
+    labels: ["과일", "채소", "곡류"],
+    datasets: [
+      {
+        data: [40, 30, 30],
+        backgroundColor: ["#1CA673", "#F29B30", "#494041"],
+        hoverBackgroundColor: ["#1CA673", "#F29B30", "#494041"],
+      },
+    ],
+  };
+
+  const pieChartData2 = {
+    labels: ["정상", "반품", "교환"],
+    datasets: [
+      {
+        data: [60, 10, 30],
+        backgroundColor: ["#1CA673", "#D92B2B", "#F29B30"],
+        hoverBackgroundColor: ["#1CA673", "#D92B2B", "#F29B30"],
+      },
+    ],
+  };
+
+  const pieChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom",
+      },
+      title: {
+        display: false,
+      },
+    },
+  };
   return (
-    <div>
-      Seller Home
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b-2">매출 현황</h1>
+
+      <div className="flex items-center space-x-2 bg-gray-light border border-gray-dark rounded-md p-4 pl-6 mb-6">
+        <span>조회 기간:</span>
+        <button className="px-2 py-1 bg-white text-sm rounded-md border">오늘</button>
+        <button className="px-2 py-1 bg-gray-dark text-gray-light text-sm rounded-md border">1주일</button>
+        <button className="px-2 py-1 bg-white text-sm rounded-md border">1개월</button>
+        <button className="px-2 py-1 bg-white text-sm rounded-md border">3개월</button>
+        <input type="date" className="px-2 py-1 text-sm border rounded-md" />
+        <span>~</span>
+        <input type="date" className="px-2 py-1 text-sm border rounded-md" />
+        <button className="px-3 py-1 text-sm rounded-md bg-black text-white">조회</button>
+      </div>
+
+      <div className="flex items-center space-x-2 bg-gray-light border border-gray-dark rounded-md p-4 pl-6 mb-6">
+        <Bar data={barChartData} options={barChartOptions} height={200} />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 rounded-md mb-6">
+        <div className="bg-gray-light rounded-md flex flex-col items-center border border-gray-dark">
+          <h3 className="text-lg font-medium mb-4">제품별 매출 비율</h3>
+          <div className="w-[80%] h-48 relative">
+            <Pie data={pieChartData1} options={pieChartOptions} />
+          </div>
+        </div>
+        <div className="bg-gray-light rounded-md flex flex-col items-center border border-gray-dark">
+          <h3 className="text-lg font-medium mb-4">반품 및 교환율</h3>
+          <div className="w-[80%] h-48 relative">
+            <Pie data={pieChartData2} options={pieChartOptions} />
+          </div>
+        </div>
+      </div>
+
     </div>
-  )
+  );
 }
 
-export default SellerHome
+export default SellerHome;

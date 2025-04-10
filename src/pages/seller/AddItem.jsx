@@ -179,7 +179,7 @@ const handleMainImageChange = (e) => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b">상품 등록</h1>
+      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b-2">상품 등록</h1>
       
       <form onSubmit={handleSubmit}>
         {/* 카테고리 선택 */}

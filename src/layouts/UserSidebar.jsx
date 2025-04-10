@@ -12,10 +12,10 @@ function UserSidebar() {
   }, [location.pathname]);
 
   return (
-    <div className="flex-col w-[250px] h-screen rounded-xl p-4 mt-7 border-2 border-gray-dark max-w-[250px] min-w-[250px]">
+    <div className="flex-col w-[250px] p-4 border-l-2 border-r-2 border-gray max-w-[250px] min-w-[250px]">
 
       {/* 활동 정보 */}
-      <h2 className="font-bold text-xl border-b-2 border-gray-dark pb-3 pl-2">
+      <h2 className="font-bold text-xl border-b-2 border-gray-200 pb-3 pl-2 mt-7">
         활동 정보
       </h2>
       <nav className="mt-6 flex flex-col gap-1">
@@ -27,7 +27,7 @@ function UserSidebar() {
       </nav>
 
       {/* 쇼핑 정보 */}
-      <h2 className="font-bold text-xl border-b-2 border-gray-dark pb-3 pl-2 mt-12">
+      <h2 className="font-bold text-xl border-b-2 border-gray-200 pb-3 pl-2 mt-12">
         쇼핑 정보
       </h2>
       <nav className="mt-6 flex flex-col gap-1">
@@ -36,7 +36,7 @@ function UserSidebar() {
       </nav>
 
       {/* 개인정보 */}
-      <h2 className="font-bold text-xl border-b-2 border-gray-dark pb-3 pl-2 mt-12">
+      <h2 className="font-bold text-xl border-b-2 border-gray-200 pb-3 pl-2 mt-12">
         개인정보
       </h2>
       <nav className="mt-6 flex flex-col gap-1">
