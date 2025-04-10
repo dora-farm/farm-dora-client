@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-function AddItem() {
+import AlertModal from '../../common/components/AlertModal';
+
+function Register() {
       // 카테고리 데이터
   const bigCategories = [
     { id: 1, name: '과일' },
@@ -47,6 +49,79 @@ function AddItem() {
   const [options, setOptions] = useState([{ name: '', price: '', quantity: '' }]);
   const [mainImageFile, setMainImageFile] = useState(null);
   const [detailImageFiles, setDetailImageFiles] = useState([null, null, null, null, null]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
+  const Reset = () => {
+    setSelectedBigCategory(null);
+    setMainImage(null);
+    setDetailImages([null, null, null, null, null]);
+    setProductName('');
+    setOriginName('');
+    setEditorData('');
+    setOptions([{ name: '', price: '', quantity: '' }]);
+    setMainImageFile(null);
+    setDetailImageFiles([null, null, null, null, null]);
+    setModalMessage('');
+    setShowModal(false);
+  };
+
+  const validateForm = () => {
+    if (!selectedBigCategory) {
+      setModalMessage('대분류를 선택해주세요.');
+      setShowModal(true);
+      return false;
+    }
+
+    if (!document.getElementById('smallCategory').value) {
+      setModalMessage('소분류를 선택해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    if (!mainImageFile) {
+      setModalMessage('대표 이미지를 등록해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    const hasAtLeastOneDetailImage = detailImageFiles.some((img) => img !== null);
+    if (!hasAtLeastOneDetailImage) {
+      setModalMessage('상세 이미지를 1개 이상 등록해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    if (!productName.trim()) {
+      setModalMessage('상품명을 입력해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    if (!originName.trim()) {
+      setModalMessage('원산지를 입력해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    if (!editorData.trim()) {
+      setModalMessage('상품 상세 설명을 입력해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    const invalidOption = options.some(
+      (opt) => !opt.name.trim() || !opt.price || !opt.quantity
+    );
+    if (invalidOption) {
+      setModalMessage('상품 옵션을 모두 입력해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    return true;
+  };
 
   // 대분류 선택 시 소분류 필터링
   useEffect(() => {
@@ -105,6 +180,9 @@ const handleMainImageChange = (e) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
+    //유효성 검사
+    if (!validateForm()) return;
+
     // FormData 객체 생성
     const formData = new FormData();
     
@@ -132,17 +210,27 @@ const handleMainImageChange = (e) => {
       }
     });
     
-    // API 호출
-    fetch('http://localhost:8080/my/seller/additem', {
+    fetch('http://localhost:8080/my/seller/item/register', {
       method: 'POST',
       body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-      console.log('성공:', data);
+    .then(async response => {
+      const data = await response.json();
+    
+      if (data.status === 200) {
+        console.log('성공:', data);
+        Reset();
+      } else {
+        // status가 200이 아닌 경우 예외 처리
+        console.error('서버 오류:', data.message || '예기치 못한 오류');
+        alert(`오류 발생: ${data.message || '처리에 실패했습니다.'}`);
+        e.target.reset();
+      }
     })
     .catch(error => {
-      console.error('에러:', error);
+      console.error('통신 오류:', error);
+      alert('네트워크 오류 또는 서버와의 연결 실패');
+      e.target.reset(); // 폼 초기화
     });
   };
 
@@ -180,7 +268,7 @@ const handleMainImageChange = (e) => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-2xl font-semibold mb-6 pb-2 border-b">상품 등록</h1>
-      
+
       <form onSubmit={handleSubmit}>
         {/* 카테고리 선택 */}
         <div className="mb-8">
@@ -424,15 +512,22 @@ const handleMainImageChange = (e) => {
             등록
           </button>
           <button 
-            type="button" 
+            type="button"
+            onClick={Reset}
             className="px-6 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
           >
             취소
           </button>
         </div>
       </form>
+      {showModal && (
+        <AlertModal
+          message={modalMessage}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };
 
-export default AddItem;
+export default Register;
