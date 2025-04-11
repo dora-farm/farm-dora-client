@@ -77,16 +77,12 @@ function Manage() {
       try {
         // 백엔드 API 호출
         const response = await fetch(`http://localhost:8080/my/seller/item/detail/${productId}`);
-        
-        if (!response.ok) {
-          throw new Error('상품 정보를 불러오는데 실패했습니다.');
-        }
-        
-        const data = await response.json();
-        console.log('조회된 상품 정보:', data);
+  
+        const httpResponse = await response.json();
+        console.log('조회된 상품 정보:', httpResponse);
         
         // 조회 성공 시 상태 업데이트
-        setProductDetail(data);
+        setProductDetail(httpResponse.data);
       } catch (error) {
         console.error('상품 상세 조회 오류:', error);
         
