@@ -85,21 +85,21 @@ function SellerHome() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b-2">매출 현황</h1>
+      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b-2">대시보드</h1>
 
       <div className="flex flex-wrap items-center space-x-2 bg-gray-light border border-gray-dark rounded-md p-4 pl-6 mb-6">
         <span className="text-sm  min-w-[60px]">조회 기간:</span>
-        <button className="px-2 py-1 bg-white text-sm rounded-md border whitesp min-w-[50px]">오늘</button>
-        <button className="px-2 py-1 bg-gray-dark text-gray-light text-sm rounded-md border min-w-[50px]">1주일</button>
-        <button className="px-2 py-1 bg-white text-sm rounded-md border min-w-[50px]">1개월</button>
-        <button className="px-2 py-1 bg-white text-sm rounded-md border min-w-[50px]">3개월</button>
+        <button className="px-2 py-1 bg-gray-dark text-gray-light text-sm rounded-md border min-w-[50px]">일별</button>
+        <button className="px-2 py-1 bg-white text-sm rounded-md border min-w-[50px]">주별</button>
+        <button className="px-2 py-1 bg-white text-sm rounded-md border min-w-[50px]">월별</button>
         <input type="date" className="px-2 py-1 text-sm border rounded-md" />
         <span>~</span>
         <input type="date" className="px-2 py-1 text-sm border rounded-md" />
         <button className="px-3 py-1 text-sm rounded-md bg-black text-white min-w-[50px]">조회</button>
       </div>
 
-      <div className="flex items-center space-x-2 bg-gray-light border border-gray-dark rounded-md p-4 pl-6 mb-6">
+      <div className="flex flex-col items-center space-x-2 bg-gray-light border border-gray-dark rounded-md p-4 pl-6 mb-6">
+        <h3 className="text-lg font-medium mb-4">매출 현황</h3>
         <Bar data={barChartData} options={barChartOptions} height={150} />
       </div>
 
