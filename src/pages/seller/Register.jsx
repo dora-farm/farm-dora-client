@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
-import AlertModal from '../../common/components/AlertModal';
+import AlertModal from '../../common/components/modal/AlertModal';
 
 function Register() {
       // 카테고리 데이터

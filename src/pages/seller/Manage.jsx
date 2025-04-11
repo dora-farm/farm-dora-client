@@ -7,7 +7,7 @@ import ProductStatus from '../../common/components/search/ProductStatus';
 import ProductCategory from '../../common/components/search/ProductCategory';
 import BasicBtn from '../../common/components/search/BasicBtn';
 import Pagenation from '../../common/components/search/Pagenation';
-
+import ProductDetailModal from '../../common/components/modal/ProductDetailModal';
 
 function Manage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,7 +25,12 @@ function Manage() {
   const [error, setError] = useState(null);
   const [isAllChecked, setIsAllChecked] = useState(false);
 
-  
+  // 모달(상세페이지)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [productDetail, setProductDetail] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+
   const itemsPerPage = 15;
   
   const bigCategories = [
@@ -59,6 +64,55 @@ function Manage() {
     { id: 20, bigCategoryId: 5, name: '표고버섯' },
     { id: 21, bigCategoryId: 5, name: '느타리버섯' }
   ];
+  // 상품명 클릭 시 수정 및 상세화면 출력
+  const handleProductClick = (productId) => {
+    fetchProductDetail(productId);
+  };
+
+    // 상품 상세 정보 조회 함수
+    const fetchProductDetail = async (productId) => {
+      setLoading(true);
+      setModalOpen(true);
+      
+      try {
+        // 백엔드 API 호출
+        const response = await fetch(`http://localhost:8080/my/seller/item/detail/${productId}`);
+        
+        if (!response.ok) {
+          throw new Error('상품 정보를 불러오는데 실패했습니다.');
+        }
+        
+        const data = await response.json();
+        console.log('조회된 상품 정보:', data);
+        
+        // 조회 성공 시 상태 업데이트
+        setProductDetail(data);
+      } catch (error) {
+        console.error('상품 상세 조회 오류:', error);
+        
+        // 에러 발생 시 임시 데이터로 대체 (백엔드 연동 전 테스트용)
+        // 실제 구현 시 에러 메시지를 표시하거나 다른 처리를 해야 함
+        setProductDetail({
+          id: productId,
+          title: `상품 ${productId}`,
+          bigCategory: '과일',
+          smallCategory: '사과',
+          origin: '국내산',
+          content: '<p>이 상품은 <strong>유기농으로 재배된</strong> 신선한 상품입니다.</p><p>자세한 정보는 상품 설명을 참고하세요.</p>',
+          mainImage: 'https://via.placeholder.com/300',
+          detailImages: [
+            'https://via.placeholder.com/200',
+            'https://via.placeholder.com/200'
+          ],
+          options: [
+            { name: '기본', price: '10000', quantity: '15' },
+            { name: '선물포장', price: '15000', quantity: '10' }
+          ]
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
 
   // 전체 선택/해제 핸들러
@@ -198,7 +252,8 @@ function Manage() {
   //   }
   // };
   const deleteSelectedItems = async() => {
-    //체크박스 안의 id값을 배열로 뽑아내기
+    //체크박스 안의 id값을 배열로 뽑아내기 
+    //백과 연결 및 삭제 확인 추후 sale_id 뽑아내는 걸로 변경 필요
     const selectedProducts = products.filter(product => product.isChecked);
     const selectedProductIds = selectedProducts.map(product => product.id);
     console.log('선택된 상품들:', selectedProductIds);
@@ -391,7 +446,10 @@ function Manage() {
                     
                   </TableCell>
                   <TableCell>{product.id}</TableCell>
-                  <TableCell>{product.name}</TableCell>
+                  <TableCell 
+                  onClick={() => handleProductClick(product.id)}
+                  className="cursor-pointer hover:bg-gray-100"
+                  >{product.name}</TableCell>
                   <TableCell>{product.price}</TableCell>
                   <TableCell>
                     <button 
@@ -419,6 +477,15 @@ function Manage() {
           totalCount={totalCount} 
           itemsPerPage={itemsPerPage}
         />
+
+      
+      {/* 상품 상세 정보 모달 */}
+      <ProductDetailModal 
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        productDetail={productDetail}
+        loading={loading}
+      />
         
       </div>
     </div>
