@@ -72,12 +72,17 @@ function SellerHome() {
     plugins: {
       legend: {
         position: "bottom",
+        labels: {
+          usePointStyle: true,
+          pointStyle: "circle",
+        }
       },
       title: {
         display: false,
       },
     },
   };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-2xl font-semibold mb-6 pb-2 border-b-2">매출 현황</h1>
