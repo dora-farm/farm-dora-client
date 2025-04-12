@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import Pagination from '../../common/components/Pagination';
 
 function Orders() {
   const navigate = useNavigate();
@@ -8,6 +9,14 @@ function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    currentPage: 0,
+    totalElements: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false,
+    pageSize: 5 // OrderController에서 조정 
+  });
   
   // URL에서 쿼리 파라미터 가져오기
   const getQueryParams = () => {
@@ -22,15 +31,15 @@ function Orders() {
   // 현재 달의 첫날 구하기
   const getFirstDayOfMonth = () => {
     const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-    return firstDay.toISOString().split('T')[0];
+    const FristDayofMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    return FristDayofMonth.toISOString().split('T')[0];
   };
   
   // 현재 달의 마지막 날 구하기
   const getLastDayOfMonth = () => {
     const now = new Date();
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    return lastDay.toISOString().split('T')[0];
+    const LastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return LastDayOfMonth.toISOString().split('T')[0];
   };
   
   // URL 쿼리 파라미터에서 날짜 정보 가져오기
@@ -52,7 +61,14 @@ function Orders() {
       
       if (response.data.status === 200) {
         setOrders(response.data.data.contents);
-        // 페이지네이션 정보는 현재 사용하지 않으므로 저장하지 않음
+        setPagination({
+          currentPage: response.data.data.currentPage,
+          totalElements: response.data.data.totalElements,
+          totalPages: response.data.data.totalPages,
+          hasNext: response.data.data.hasNext,
+          hasPrev: response.data.data.hasPrev,
+          pageSize: response.data.data.pageSize
+        });
       } else {
         setError('데이터를 불러오는데 실패했습니다.');
       }
@@ -109,8 +125,13 @@ function Orders() {
     
     setDateRange({ startDate, endDate });
     
-    // 바로 검색 실행 (선택적)
+    // 페이지는 항상 0으로 리셋
     navigate(`/my/user/order?startDate=${startDate}&endDate=${endDate}&page=0`);
+  };
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (newPage) => {
+    navigate(`/my/user/order?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}&page=${newPage}`);
   };
 
    // 주문 상태 매핑
@@ -129,6 +150,7 @@ function Orders() {
   
   // 검색 버튼 핸들러
   const handleSearch = () => {
+    // 검색 시 페이지는 항상 0으로 리셋
     navigate(`/my/user/order?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}&page=0`);
   };
   
@@ -298,6 +320,18 @@ function Orders() {
           ))
         )}
       </div>
+      
+      {orders.length > 0 && pagination.totalPages > 1 && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          hasNext={pagination.hasNext}
+          hasPrev={pagination.hasPrev}
+          onPageChange={handlePageChange}
+          activeColor="bg-green"
+          hoverColor="hover:bg-gray"
+        />
+      )}
     </div>
   );
 }
