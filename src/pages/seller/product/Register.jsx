@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import AlertModal from '../../common/components/modal/AlertModal';
+import AlertModal from '../../../common/components/modal/AlertModal';
 
 function Register() {
       // 카테고리 데이터
@@ -199,7 +199,7 @@ const handleMainImageChange = (e) => {
     formData.append('productData', JSON.stringify(jsonData));
     
     // 이미지 파일들 추가
-    if (mainImageFile) {
+    if (mainImage) {
       formData.append('files', mainImageFile);
     }
     
@@ -372,7 +372,7 @@ const handleMainImageChange = (e) => {
                   <input 
                     type="text" 
                     className="w-full p-2 border rounded text-sm"
-                    value={option.stock}
+                    value={option.quantity}
                     onChange={(e) => handleOptionChange(index, 'quantity', e.target.value)}
                     placeholder="재고"
                   />

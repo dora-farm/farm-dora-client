@@ -2,12 +2,12 @@
 import { useState, useEffect } from 'react';
 import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 
-import Keyword from '../../common/components/search/Keyword';
-import ProductStatus from '../../common/components/search/ProductStatus';
-import ProductCategory from '../../common/components/search/ProductCategory';
-import BasicBtn from '../../common/components/search/BasicBtn';
-import Pagenation from '../../common/components/search/Pagenation';
-import ProductDetailModal from '../../common/components/modal/ProductDetailModal';
+import Keyword from '../../../common/components/search/Keyword';
+import ProductStatus from '../../../common/components/search/ProductStatus';
+import ProductCategory from '../../../common/components/search/ProductCategory';
+import BasicBtn from '../../../common/components/search/BasicBtn';
+import Pagenation from '../../../common/components/search/Pagenation';
+import ProductDetailModal from './ProductDetailModal';
 
 function Manage() {
   const [searchTerm, setSearchTerm] = useState('');

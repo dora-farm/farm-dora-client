@@ -1,10 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { useNavigate } from 'react-router-dom';
 
 // 상품 상세 정보를 보여주는 모달 컴포넌트
 const ProductDetailModal = ({ isOpen, onClose, productDetail, loading }) => {
   const modalRef = useRef(null);
+  const navigate = useNavigate();
+    // 수정 버튼 클릭 시 처리 함수
+    const handleEditClick = () => {
+      // 수정 페이지로 이동하면서 상품 데이터 전달
+      navigate('/my/seller/item/edit', {
+        state: {
+          productDetail
+        }
+      });
+      
+      // 모달 닫기
+      onClose();
+    };
 
   // 모달 외부 클릭 시 닫기
   useEffect(() => {
@@ -185,10 +199,10 @@ const ProductDetailModal = ({ isOpen, onClose, productDetail, loading }) => {
         {/* 모달 푸터 */}
         <div className="flex justify-end p-4 border-t">
           <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            onClick={handleEditClick}
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors duration-200"
           >
-            닫기
+            수정하기
           </button>
         </div>
       </div>
