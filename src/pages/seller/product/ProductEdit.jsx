@@ -107,20 +107,6 @@ function ProductEdit() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const Reset = () => {
-
-    setMainImage(null);
-    setDetailImages([null, null, null, null, null]);
-    setProductName('');
-    setOriginName('');
-    setEditorData('');
-    setOptions([{ name: '', price: '', quantity: '' }]);
-    setMainImageFile(null);
-    setDetailImageFiles([null, null, null, null, null]);
-    setModalMessage('');
-    setShowModal(false);
-  };
-
   const validateForm = () => {
     if (!selectedBigCategory) {
       setModalMessage('대분류를 선택해주세요.');
@@ -567,14 +553,7 @@ const handleMainImageChange = (e) => {
             type="submit" 
             className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800"
           >
-            등록
-          </button>
-          <button 
-            type="button"
-            onClick={Reset}
-            className="px-6 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-          >
-            취소
+            수정하기
           </button>
         </div>
       </form>
