@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Rating from '@mui/material/Rating';
 
-// orderId와 orderData를 props로 받도록 수정
-const ReviewModal = ({ isOpen, onClose, orderId, orderData, onReviewComplete }) => {
+// orderId, orderData와 함께 saleData를 props로 받도록 수정
+const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) => {
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
@@ -38,7 +38,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, orderData, onReviewComplete }) 
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
     
-    // 최대 3개 이미지로 제한
+    // 최대 5개 이미지로 제한
     const totalImages = selectedImages.length + files.length;
     if (totalImages > 5) {
       alert('이미지는 최대 5개까지 업로드할 수 있습니다.');
@@ -87,7 +87,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, orderData, onReviewComplete }) 
     try {
       // FormData를 사용하여 이미지와 함께 전송
       const formData = new FormData();
-      formData.append('orderId', orderId);
+      formData.append('saleId', saleData.saleId); // orderId 대신 saleId 사용
       formData.append('score', rating);
       formData.append('content', content);
       
@@ -107,27 +107,24 @@ const ReviewModal = ({ isOpen, onClose, orderId, orderData, onReviewComplete }) 
       
       // 리뷰 작성 성공 시 콜백 호출 (전달된 경우)
       if (onReviewComplete) {
-        onReviewComplete(orderId);
+        onReviewComplete(orderId, saleData.saleId);
       }
       
       // 추후 모달 처리 예정
       alert('리뷰가 성공적으로 등록되었습니다.');
       onClose();
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error('리뷰 등록 오류:', error);
       alert('리뷰 등록 중 오류가 발생했습니다.');
     } finally {
       setSubmitting(false);
     }
-
-
-
   };
   
   // 이미지 URL이 있으면 사용, 없으면 기본 이미지 경로 구성
-  const productImage = orderData?.saveFile 
-    ? `/images/${orderData.saveFile}`
+  const productImage = saleData?.saveFile 
+    ? `/images/${saleData.saveFile}`
     : 'https://via.placeholder.com/100';
   
   return (
@@ -145,13 +142,13 @@ const ReviewModal = ({ isOpen, onClose, orderId, orderData, onReviewComplete }) 
         <div className="p-4 border-b">
           <div className="flex">
             <div className="w-20 h-20 bg-gray-100 rounded overflow-hidden mr-3">
-              <img src={productImage} alt={orderData?.title || '상품 이미지'} className="w-full h-full object-cover" />
+              <img src={productImage} alt={saleData?.title || '상품 이미지'} className="w-full h-full object-cover" />
             </div>
             <div>
-              <p className="font-medium">{orderData?.title || '상품명'}</p>
+              <p className="font-medium">{saleData?.title || '상품명'}</p>
               <p className="text-sm text-gray-500">
-                {orderData?.options && orderData.options.map((option, idx) => (
-                  <span key={idx}>{option.name} {option.quantity}개{idx < orderData.options.length - 1 ? ', ' : ''}</span>
+                {saleData?.options && saleData.options.map((option, idx) => (
+                  <span key={idx}>{option.name} {option.quantity}개{idx < saleData.options.length - 1 ? ', ' : ''}</span>
                 ))}
               </p>
             </div>
