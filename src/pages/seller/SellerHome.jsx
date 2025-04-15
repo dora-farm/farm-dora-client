@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement,} from "chart.js";
-import axios from "axios"; // axios 추가
+import axios from "axios";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -20,7 +20,7 @@ function SellerHome() {
     ],
   });
 
-  const [productRatio, setProductRatio] = useState({
+  const [productRatio] = useState({
     labels: [],
     datasets: [
       {
@@ -31,7 +31,7 @@ function SellerHome() {
     ],
   });
 
-  const [returnRatio, setReturnRatio] = useState({
+  const [returnRatio] = useState({
     labels: [],
     datasets: [
       {
@@ -70,6 +70,8 @@ function SellerHome() {
         }
       });
       
+      console.log("서버 응답 데이터:", response.data); // 서버 응답 자세히 확인
+      
       setSalesData({
         labels: response.data.labels,
         datasets: [
@@ -83,57 +85,13 @@ function SellerHome() {
         ],
       });
     } catch (error) {
-      console.error("Failed to load sales data:", error);
-    }
-  };
-
-  const loadProductRatio = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/my/seller/dashboard/product-ratio`, {
-        params: { sellerId }
-      });
-      
-      setProductRatio({
-        labels: response.data.labels,
-        datasets: [
-          {
-            data: response.data.data,
-            backgroundColor: ["#1CA673", "#F29B30", "#494041"],
-            hoverBackgroundColor: ["#1CA673", "#F29B30", "#494041"],
-          },
-        ],
-      });
-    } catch (error) {
-      console.error("Failed to load product ratio data:", error);
-    }
-  };
-
-  const loadReturnRatio = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/my/seller/dashboard/return-ratio`, {
-        params: { sellerId }
-      });
-      
-      setReturnRatio({
-        labels: response.data.labels,
-        datasets: [
-          {
-            data: response.data.data,
-            backgroundColor: ["#1CA673", "#D92B2B", "#F29B30"],
-            hoverBackgroundColor: ["#1CA673", "#D92B2B", "#F29B30"],
-          },
-        ],
-      });
-    } catch (error) {
-      console.error("Failed to load return ratio data:", error);
+      console.error("매출 데이터 가져오기 실패:", error);
     }
   };
 
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
     loadSalesData();
-    loadProductRatio();
-    loadReturnRatio();
   }, []);
 
   // 조회 버튼 클릭 핸들러
@@ -166,9 +124,6 @@ function SellerHome() {
     
     setStartDate(start.toISOString().split('T')[0]);
     setEndDate(now.toISOString().split('T')[0]);
-    
-    // 자동으로 새 날짜로 데이터 로드
-    setTimeout(loadSalesData, 0);
   };
 
   const barChartOptions = {
@@ -187,7 +142,7 @@ function SellerHome() {
       y: {
         beginAtZero: true,
         ticks: {
-          callback: function (value, index, values) {
+          callback: function (value) {
             if (value >= 1000) {
               return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
