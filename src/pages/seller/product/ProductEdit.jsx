@@ -1,8 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import AlertModal from '../../../common/components/modal/AlertModal';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function AddItem() {
+function ProductEdit() {
+
+  // 컴포넌트 마운트 시 딱 한 번만 실행
+  useEffect(() => {
+    // location.state에서 데이터 가져오기
+    const productDetail = location.state.productDetail;
+    setSaleId(productDetail.id);
+    
+    if (productDetail) {
+      console.log('전달받은 데이터:', productDetail);
+      
+      // 카테고리 설정 등 추가 작업 수행
+      if (productDetail.bigCategory) {
+        setSelectedBigCategory(getBigCategoryIdByName(productDetail.bigCategory));
+      }
+      if (productDetail.smallCategory) {
+        const categoryId = getSmallCategoryIdByName(productDetail.smallCategory);
+        setSelectedSmallCategory(categoryId);
+      }
+      if (productDetail.title){
+        setProductName(productDetail.title);
+      }
+      if (productDetail.origin){
+        setOriginName(productDetail.origin);
+      }
+      if (productDetail.content){
+        setEditorData(productDetail.content);
+      }
+      if (productDetail.options){
+        setOptions(productDetail.options);
+      }
+      
+
+    } else {
+      // 데이터가 없는 경우
+      alert('상품 정보를 찾을 수 없습니다.');
+      navigate('/my/seller/item/manage');
+    }
+  }, []); // 빈 의존성 배열 - 컴포넌트 마운트 시 한 번만 실행
+
       // 카테고리 데이터
   const bigCategories = [
     { id: 1, name: '과일' },
@@ -11,6 +52,16 @@ function AddItem() {
     { id: 4, name: '견과류' },
     { id: 5, name: '버섯류' }
   ];
+
+  //조회에서 온 name을 기준으로 id 번호 추출
+  const getBigCategoryIdByName = (name) => {
+    const category = bigCategories.find(category => category.name === name);
+    return category ? category.id : null; // 찾지 못하면 null 반환
+  };
+  const getSmallCategoryIdByName = (name) => {
+    const category = smallCategories.find(category => category.name === name);
+    return category ? category.id : null; // 찾지 못하면 null 반환
+  };
 
   const smallCategories = [
     { id: 1, bigCategoryId: 1, name: '사과' },
@@ -37,7 +88,9 @@ function AddItem() {
   ];
 
   // 상태 관리
+  const [saleId, setSaleId] = useState(null);
   const [selectedBigCategory, setSelectedBigCategory] = useState(null);
+  const [selectedSmallCategory, setSelectedSmallCategory] = useState('');
   const [filteredSmallCategories, setFilteredSmallCategories] = useState([]);
   const [mainImage, setMainImage] = useState(null);
   const [detailImages, setDetailImages] = useState([null, null, null, null, null]);
@@ -47,6 +100,68 @@ function AddItem() {
   const [options, setOptions] = useState([{ name: '', price: '', quantity: '' }]);
   const [mainImageFile, setMainImageFile] = useState(null);
   const [detailImageFiles, setDetailImageFiles] = useState([null, null, null, null, null]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const validateForm = () => {
+    if (!selectedBigCategory) {
+      setModalMessage('대분류를 선택해주세요.');
+      setShowModal(true);
+      return false;
+    }
+
+    if (!document.getElementById('smallCategory').value) {
+      setModalMessage('소분류를 선택해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    if (!mainImage) {
+      setModalMessage('대표 이미지를 등록해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    const hasAtLeastOneDetailImage = detailImageFiles.some((img) => img !== null);
+    if (!hasAtLeastOneDetailImage) {
+      setModalMessage('상세 이미지를 1개 이상 등록해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    if (!productName.trim()) {
+      setModalMessage('상품명을 입력해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    if (!originName.trim()) {
+      setModalMessage('원산지를 입력해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    if (!editorData.trim()) {
+      setModalMessage('상품 상세 설명을 입력해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    const invalidOption = options.some(
+      (opt) => !opt.name.trim() || !opt.price || !opt.quantity
+    );
+    if (invalidOption) {
+      setModalMessage('상품 옵션을 모두 입력해주세요.');
+      setShowModal(true);
+      return false;
+    }
+  
+    return true;
+  };
 
   // 대분류 선택 시 소분류 필터링
   useEffect(() => {
@@ -105,16 +220,20 @@ const handleMainImageChange = (e) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
+    //유효성 검사
+    if (!validateForm()) return;
+
     // FormData 객체 생성
     const formData = new FormData();
     
     // JSON 데이터 준비 // 추후 seller id 수정 필요
     const jsonData = {
         sellerId:1,
+        saleId:saleId,
         title:productName,
         content:editorData,
         origin:originName,
-        typeId: document.getElementById('smallCategory').value,
+        typeId:selectedSmallCategory,
         options
     };
     
@@ -132,17 +251,27 @@ const handleMainImageChange = (e) => {
       }
     });
     
-    // API 호출
-    fetch('http://localhost:8080/my/seller/additem', {
-      method: 'POST',
+    fetch('http://localhost:8080/my/seller/item/update', {
+      method: 'PUT',
       body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-      console.log('성공:', data);
+    .then(async response => {
+      const data = await response.json();
+    
+      if (data.status === 200) {
+        console.log('성공:', data);
+        Reset();
+      } else {
+        // status가 200이 아닌 경우 예외 처리
+        console.error('서버 오류:', data.message || '예기치 못한 오류');
+        alert(`오류 발생: ${data.message || '처리에 실패했습니다.'}`);
+        e.target.reset();
+      }
     })
     .catch(error => {
-      console.error('에러:', error);
+      console.error('통신 오류:', error);
+      alert('네트워크 오류 또는 서버와의 연결 실패');
+      e.target.reset(); // 폼 초기화
     });
   };
 
@@ -178,8 +307,9 @@ const handleMainImageChange = (e) => {
       }
 
   return (
+    
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b">상품 등록</h1>
+      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b">상품 수정</h1>
       
       <form onSubmit={handleSubmit}>
         {/* 카테고리 선택 */}
@@ -205,6 +335,8 @@ const handleMainImageChange = (e) => {
                 id="smallCategory" 
                 className="w-full h-64 p-2 bg-white"
                 size="10"
+                value={selectedSmallCategory}
+                onChange={(e) => setSelectedSmallCategory(e.target.value)}
               >
                 {filteredSmallCategories.map(category => (
                   <option key={category.id} value={category.id}>{category.name}</option>
@@ -285,7 +417,7 @@ const handleMainImageChange = (e) => {
                   <input 
                     type="text" 
                     className="w-full p-2 border rounded text-sm"
-                    value={option.stock}
+                    value={option.quantity}
                     onChange={(e) => handleOptionChange(index, 'quantity', e.target.value)}
                     placeholder="재고"
                   />
@@ -421,18 +553,18 @@ const handleMainImageChange = (e) => {
             type="submit" 
             className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800"
           >
-            등록
-          </button>
-          <button 
-            type="button" 
-            className="px-6 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-          >
-            취소
+            수정하기
           </button>
         </div>
       </form>
+      {showModal && (
+        <AlertModal
+          message={modalMessage}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };
 
-export default AddItem;
+export default ProductEdit;
