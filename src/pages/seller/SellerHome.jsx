@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement,} from "chart.js";
 import axios from "axios";
@@ -62,11 +62,20 @@ function SellerHome() {
   // 데이터 로딩 함수
   const loadSalesData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/my/seller/dashboard/daily-sales`, {
+      const periodMapping = {
+        'day': 'daily',
+        'week': 'weekly',
+        'month': 'monthly'
+      };
+
+      const serverPeriod = periodMapping[period];
+
+      const response = await axios.get(`http://localhost:8080/api/my/seller/dashboard/sales`, {
         params: {
           sellerId,
           startDate,
-          endDate
+          endDate,
+          period: serverPeriod,
         }
       });
       
@@ -138,6 +147,11 @@ function SellerHome() {
     setStartDate(start.toISOString().split('T')[0]);
     setEndDate(now.toISOString().split('T')[0]);
   };
+
+  useEffect(() => {
+    // 기간 변경 시 데이터 로드
+    loadSalesData();
+  }, []);
 
   const barChartOptions = {
     responsive: true,
