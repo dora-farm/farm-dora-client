@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from '../../common/components/Pagination';
+import ReviewModal from './modal/ReviewModal';
+import PaymentInfo from './modal/PaymentInfo';
 
 function Orders() {
   const navigate = useNavigate();
@@ -17,6 +19,53 @@ function Orders() {
     hasPrev: false,
     pageSize: 5 // OrderController에서 조정 
   });
+
+  const [reviewModal, setReviewModal] = useState({
+    isOpen: false,
+    orderId: null,
+    orderData: null,
+    saleData: null
+  });
+
+  const [paymentModal, setPaymentModal] = useState({
+    isOpen: false,
+    orderId: null,
+    orderData: null
+  });
+
+  const openReviewModal = (orderId, orderData, saleData) => {
+    setReviewModal({
+      isOpen: true,
+      orderId,
+      orderData,
+      saleData
+    });
+  };
+
+  const closeReviewModal = () => {
+    setReviewModal({
+      isOpen: false,
+      orderId: null,
+      orderData: null,
+      saleData: null
+    });
+  };
+
+  const openPaymentModal = (orderId, orderData) => {
+    setPaymentModal({
+      isOpen: true,
+      orderId,
+      orderData
+    });
+  };
+
+  const closePaymentModal = () => {
+    setPaymentModal({
+      isOpen: false,
+      orderId: null,
+      orderData: null
+    });
+  };
   
   // URL에서 쿼리 파라미터 가져오기
   const getQueryParams = () => {
@@ -27,7 +76,7 @@ function Orders() {
     
     return { startDate, endDate, page: parseInt(page) };
   };
-  
+ 
   // 현재 달의 첫날 구하기
   const getFirstDayOfMonth = () => {
     const now = new Date();
@@ -80,7 +129,7 @@ function Orders() {
   };
 
   // 현재 선택된 날짜 범위 타입을 저장하는 상태
-  const [selectedRange, setSelectedRange] = useState('all'); // 기본값은 '전체'
+  const [selectedRange, setSelectedRange] = useState(''); // 기본값은 '전체'
 
   // 날짜 범위 선택 핸들러
   const handleDateRangeSelect = (range) => {
@@ -152,6 +201,28 @@ function Orders() {
   const handleSearch = () => {
     // 검색 시 페이지는 항상 0으로 리셋
     navigate(`/my/user/order?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}&page=0`);
+  };
+
+  // 리뷰 완료 처리 함수
+  const handleReviewComplete = (orderId, saleId) => {
+    // 주문 목록에서 해당 주문 찾기
+    const updatedOrders = orders.map(order => {
+      if (order.orderId === orderId) {
+        // 해당 주문 내의 특정 상품 찾기
+        const updatedSales = order.sales.map(sale => {
+          if (sale.saleId === saleId) {
+            // 리뷰 완료 상태로 업데이트
+            return { ...sale, reviewCompleted: true };
+          }
+          return sale;
+        });
+        return { ...order, sales: updatedSales };
+      }
+      return order;
+    });
+    
+    // 업데이트된 주문 목록으로 상태 갱신
+    setOrders(updatedOrders);
   };
   
   // URL 변경 감지하여 데이터 다시 불러오기
@@ -250,72 +321,92 @@ function Orders() {
         ) : (
           orders.map((order) => (
             <div key={order.orderId} className="border border-gray-200 rounded overflow-hidden">
-              <div className="flex items-center p-4">
-                <div className="w-28 h-28 flex-shrink-0 overflow-hidden rounded">
-                  <img 
-                    src={`/images/${order.saveFile}`} 
-                    alt={order.title}
-                    className="w-full h-full object-cover"
-                  />
+              <div className="p-3 bg-gray-50 border-b border-gray-200">
+                <div className="font-bold">
+                  {new Date(order.createdDate).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  })} 주문
                 </div>
-                
-                <div className="ml-4 flex-1">
-                  <div className="font-bold text-lg">
-                    {new Date(order.createdDate).toLocaleDateString('ko-KR', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit'
-                    })}
-                  </div>
-                  <div className="text-lg mt-1">{order.title}</div>
-                  <div className="text-gray-600 mt-1">
-                    {order.options.map((option, idx) => (
-                      <div key={idx}>{option.name} {option.quantity}개</div>
-                    ))}
-                  </div>
-                  <div className="font-bold mt-1">{order.amount.toLocaleString()}원</div>
-                </div>
-
-                <div className={`px-2 py-1 rounded-full text-xs font-semibold ${getOrderStatusInfo(order.statusId).color}`}>
-                  {getOrderStatusInfo(order.statusId).name}
-                </div>
-                
-                <div className="ml-7 flex flex-col items-end space-y-3">
-                  <button className="px-3 py-1 border border-gray-dark rounded hover:bg-gray-300 transition-colors text-gray-700 text-sm">
-                    리뷰 작성
-                  </button>
-                  <button className="px-3 py-1 border border-gray-dark rounded hover:bg-gray-300 transition-colors text-gray-700 text-sm">
+                <div className="text-gray-600 text-sm">주문번호: {order.orderId}</div>
+                <div className="flex justify-between items-center mt-2">
+                  <button 
+                    className="px-3 py-1 border border-gray-dark rounded hover:bg-gray-300 transition-colors text-gray-700 text-sm"
+                    onClick={() => openPaymentModal(order.orderId, order)}>
                     결제 정보
                   </button>
-                  {/* 배송준비 */}
-                  {order.statusId === 1 && (
-                    <button className="px-3 py-1 bg-danger text-white rounded text-sm hover:bg-danger-dark transition-colors">
-                      주문 취소
-                    </button>
-                  )}
-                  
-                  {/* 배송중, 배송완료 */}
-                  {(order.statusId === 2 || order.statusId === 3) && (
-                    <button className="px-3 py-1 bg-green text-white rounded text-sm hover:bg-green-700 transition-colors">
-                      교환/반품
-                    </button>
-                  )}
-                  
-                  {/* 취소 */}
-                  {order.statusId === 4 && (
-                    <button className="px-3 py-1 bg-danger text-gray-500 rounded text-sm cursor-not-allowed" disabled>
-                      주문 취소
-                    </button>
-                  )}
-                  
-                  {/* 교환, 반품 */}
-                  {(order.statusId === 5 || order.statusId === 6) && (
-                    <button className="px-3 py-1 bg-gray-300 text-gray-500 rounded text-sm cursor-not-allowed" disabled>
-                      교환/반품
-                    </button>
-                  )}
+                  <div className="font-bold">총 결제금액: {order.amount?.toLocaleString()}원</div>
                 </div>
               </div>
+              
+              {/* 상품 목록 */}
+              {order.sales && order.sales.map((sale) => (
+                <div key={`${order.orderId}-${sale.saleId}`} className="flex items-center p-4 border-b last:border-b-0">
+                  <div className="w-28 h-28 flex-shrink-0 overflow-hidden rounded">
+                    <img 
+                      src={`/images/${sale.saveFile}`} 
+                      alt={sale.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  <div className="ml-4 flex-1">
+                    <div className="text-lg font-medium">{sale.title}</div>
+                    <div className="text-gray-600 mt-1">
+                      {sale.options && sale.options.map((option, optionIdx) => (
+                        <div key={`${sale.saleId}-${optionIdx}`}>{option.name} {option.quantity}개 <span className='text-xs text-gray-dark'>{option.price}원</span></div> 
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className={`px-2 py-1 rounded-full text-xs font-semibold ${getOrderStatusInfo(sale.statusId).color}`}>
+                    {getOrderStatusInfo(sale.statusId).name}
+                  </div>
+                  
+                  <div className="ml-7 flex flex-col items-end space-y-3">
+                    <button 
+                      className={`px-3 py-1 border rounded text-sm ${
+                        sale.reviewCompleted 
+                          ? 'bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed' 
+                          : 'border-gray-dark hover:bg-gray-300 transition-colors text-gray-700'
+                      }`}
+                      onClick={() => !sale.reviewCompleted && openReviewModal(order.orderId, order, sale)}
+                      disabled={sale.reviewCompleted}
+                    >
+                      {sale.reviewCompleted ? '리뷰 완료' : '리뷰 작성'}
+                    </button>
+
+                    {/* 배송준비 */}
+                    {sale.statusId === 1 && (
+                      <button className="px-3 py-1 bg-danger text-white rounded text-sm hover:bg-danger-dark transition-colors">
+                        주문 취소
+                      </button>
+                    )}
+                    
+                    {/* 배송중, 배송완료 */}
+                    {(sale.statusId === 2 || sale.statusId === 3) && (
+                      <button className="px-3 py-1 bg-green text-white rounded text-sm hover:bg-green-700 transition-colors">
+                        교환/반품
+                      </button>
+                    )}
+                    
+                    {/* 취소 */}
+                    {sale.statusId === 4 && (
+                      <button className="px-3 py-1 bg-danger text-gray-500 rounded text-sm cursor-not-allowed" disabled>
+                        주문 취소
+                      </button>
+                    )}
+                    
+                    {/* 교환, 반품 */}
+                    {(sale.statusId === 5 || sale.statusId === 6) && (
+                      <button className="px-3 py-1 bg-gray-300 text-gray-500 rounded text-sm cursor-not-allowed" disabled>
+                        교환/반품
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           ))
         )}
@@ -332,6 +423,21 @@ function Orders() {
           hoverColor="hover:bg-gray"
         />
       )}
+      <ReviewModal 
+        isOpen={reviewModal.isOpen} 
+        onClose={closeReviewModal} 
+        orderId={reviewModal.orderId}
+        orderData={reviewModal.orderData}
+        saleData={reviewModal.saleData}
+        onReviewComplete={handleReviewComplete}
+      />
+
+      <PaymentInfo
+        isOpen={paymentModal.isOpen}
+        onClose={closePaymentModal}
+        orderId={paymentModal.orderId}
+        orderData={paymentModal.orderData}
+      />
     </div>
   );
 }
