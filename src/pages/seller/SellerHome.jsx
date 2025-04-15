@@ -20,22 +20,22 @@ function SellerHome() {
     ],
   });
 
-  const [productRatio] = useState({
-    labels: [],
+  const [returnRatio] = useState({
+    labels: ["반품", "교환", "정상"],
     datasets: [
       {
-        data: [],
+        data: [30, 30, 40],
         backgroundColor: ["#1CA673", "#F29B30", "#494041"],
         hoverBackgroundColor: ["#1CA673", "#F29B30", "#494041"],
       },
     ],
   });
 
-  const [returnRatio] = useState({
-    labels: [],
+  const [productRatio] = useState({
+    labels: ["사과", "배", "딸기"],
     datasets: [
       {
-        data: [],
+        data: [20, 30, 50],
         backgroundColor: ["#1CA673", "#D92B2B", "#F29B30"],
         hoverBackgroundColor: ["#1CA673", "#D92B2B", "#F29B30"],
       },
@@ -62,7 +62,7 @@ function SellerHome() {
   // 데이터 로딩 함수
   const loadSalesData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/my/seller/dashboard/sales`, {
+      const response = await axios.get(`http://localhost:8080/api/my/seller/dashboard/daily-sales`, {
         params: {
           sellerId,
           startDate,
@@ -71,13 +71,26 @@ function SellerHome() {
       });
       
       console.log("서버 응답 데이터:", response.data); // 서버 응답 자세히 확인
+
+      // 데이터가 7개보다 많은 경우 가장 최근 데이터 7개만 사용
+      let recentlyLabels = response.data.labels;
+      let recentlyData = response.data.data;
+      
+      if (recentlyLabels.length > 7) {
+        // 가장 최근 데이터 7개만 추출 (배열의 마지막 7개 요소)
+        recentlyLabels = recentlyLabels.slice(-7);
+        recentlyData = recentlyData.slice(-7);
+
+        console.log("가장 최근 7개 데이터:", recentlyLabels);
+        console.log("가장 최근 7개 데이터 값:", recentlyData);
+      }
       
       setSalesData({
-        labels: response.data.labels,
+        labels: recentlyLabels,
         datasets: [
           {
             label: "매출 (원)",
-            data: response.data.data,
+            data: recentlyData,
             backgroundColor: "#494041",
             barThickness: 35,
             borderRadius: 3,
