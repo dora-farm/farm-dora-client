@@ -23,8 +23,8 @@ import Refund from './pages/seller/ordermanage/Refund';
 import Review from './pages/seller/ordermanage/Review';
 import SellerHome from './pages/seller/SellerHome';
 import LiveSetup from './pages/seller/LiveSetup';
-import Manage from './pages/seller/Manage';
-import Register from './pages/seller/Register';
+import Manage from './pages/seller/product/Manage';
+import Register from './pages/seller/product/Register';
 import Adminbroadcast from './pages/adminpage/Adminbroadcast';
 import AdminHome from './pages/adminpage/AdminHome';
 import AdminPopup from './pages/adminpage/AdminPopup';
@@ -38,8 +38,9 @@ import Event from './pages/event/Event';
 import ChatSupport from './pages/support/ChatSupport';
 import AdminLayout from './layouts/AdminLayout';
 import AdminBroadcast from './pages/adminpage/Adminbroadcast';
+import ProductEdit from './pages/seller/product/ProductEdit';
+
 // // import Category from './pages/category/Category';
-import AddItem from './pages/seller/AddItem';
 
 function App() {
   return (
@@ -82,7 +83,8 @@ function App() {
               <Route path="/my/seller/order/review" element={<Review/>} />
               <Route path="/my/seller/order/inquiry" element={<Inquiry/>} />
               <Route path="/my/seller/item/manage" element={<Manage/>} />
-              <Route path="/my/seller/item/register" element={<AddItem/>} />
+              <Route path="/my/seller/item/register" element={<Register/>} />
+              <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
               <Route path="/my/seller/live" element={<LiveSetup/>} />
             </Route>
 

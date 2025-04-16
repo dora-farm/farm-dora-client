@@ -19,7 +19,10 @@ export default {
           dark: "#8A8A8A", // 회색 테두리 (사용예시: className="border-gray-dark")
           light: "#FBFBFB" // 밝은 회색 배경 (사용예시: className="bg-gray-light")
         },
-        danger: "#D92B2B",  // 빨강색 (사용예시: className="bg-danger text-white" - 판매종료 or 탈퇴버튼 등)
+        danger: {
+          DEFAULT: "#D92B2B",
+          dark: "#AA1E1E"
+        },  // 빨강색 (사용예시: className="bg-danger text-white" - 판매종료 or 탈퇴버튼 등)
         warning: "#F29B30", // 주황색 (사용예시: className="text-warning" - 품절 메시지 등)
         text: {
           gray: "#8A8A8A", // 회색 텍스트 (사용예시: className="text-text-gray")
