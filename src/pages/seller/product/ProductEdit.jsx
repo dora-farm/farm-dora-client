@@ -260,7 +260,6 @@ const handleMainImageChange = (e) => {
     
       if (data.status === 200) {
         console.log('성공:', data);
-        Reset();
       } else {
         // status가 200이 아닌 경우 예외 처리
         console.error('서버 오류:', data.message || '예기치 못한 오류');

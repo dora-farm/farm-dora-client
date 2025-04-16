@@ -161,28 +161,28 @@ function Manage() {
     setError(null);
 
     try {
-      const response = await fetch('/my/seller/item/manage');
+      const response = await fetch('/my/seller/sale/search');
       
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
       }
-
-      const data = await response.json();
-      
-      setProducts(data.content);
-      setTotalCount(data.totalElements);
+    // 응답 텍스트 확인
+    const data = response.json
+    console.log('서버 응답:', data.data);
+      // setProducts(data.content);
+      // setTotalCount(data.totalElements);
     } catch (error) {
       setError(error.message);
       console.error('초기 상품 데이터 로딩 중 오류:', error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
-    // 초기 데이터 로드 (GET)
-    // useEffect(() => {
-    //   fetchInitialProducts();
-    // }, []);
+    //초기 데이터 로드 (GET)
+    useEffect(() => {
+      fetchInitialProducts();
+    }, []);
 
     //목업데이터
     const fetchSearchProducts = async () => {
@@ -215,7 +215,7 @@ function Manage() {
   //   const jsonData = {
   //     sellerId: 1, // 추후 JWT 토큰으로 처리 예정
   //     keyword: searchTerm,
-  //     Sort: sortFilter,
+  //     sort: sortFilter,
   //     filters: processedFilters,
   //     typeBigId: category,
   //     typeId: subCategory,
