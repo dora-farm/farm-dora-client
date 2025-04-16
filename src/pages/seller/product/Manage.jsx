@@ -6,8 +6,12 @@ import Keyword from '../../../common/components/search/Keyword';
 import ProductStatus from '../../../common/components/search/ProductStatus';
 import ProductCategory from '../../../common/components/search/ProductCategory';
 import BasicBtn from '../../../common/components/search/BasicBtn';
-import Pagenation from '../../../common/components/search/Pagenation';
+import Pagination from '../../../common/components/Pagination';
 import ProductDetailModal from './ProductDetailModal';
+
+import { bigCategories, smallCategories } from '../../../common/js/categories'
+
+import AlertModal from '../../../common/components/modal/AlertModal';
 
 function Manage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,9 +20,7 @@ function Manage() {
   const [processedFilters, setProcessedFilters] = useState({});
   const [category, setCategory] = useState('');
   const [subCategory, setSubCategory] = useState('');
-  const [currentPage, setCurrentPage] = useState(0);
   const [products, setProducts] = useState([]);
-  const [totalCount, setTotalCount] = useState(100);
   const [sortFilter, setSortFilter] = useState('LATEST');
   const [smallCategoriesFiltered, setSmallCategoriesFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,41 +31,33 @@ function Manage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [productDetail, setProductDetail] = useState(null);
   const [loading, setLoading] = useState(false);
-
-
-  const itemsPerPage = 15;
   
-  const bigCategories = [
-    { id: 1, name: '과일' },
-    { id: 2, name: '채소' },
-    { id: 3, name: '곡류' },
-    { id: 4, name: '견과류' },
-    { id: 5, name: '버섯류' }
-  ];
+  // 모달(알림)
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
-  const smallCategories = [
-    { id: 1, bigCategoryId: 1, name: '사과' },
-    { id: 2, bigCategoryId: 1, name: '배' },
-    { id: 3, bigCategoryId: 1, name: '딸기' },
-    { id: 4, bigCategoryId: 1, name: '포도' },
-    { id: 5, bigCategoryId: 1, name: '감귤' },
-    { id: 6, bigCategoryId: 2, name: '상추' },
-    { id: 7, bigCategoryId: 2, name: '깻잎' },
-    { id: 8, bigCategoryId: 2, name: '고추' },
-    { id: 9, bigCategoryId: 2, name: '마늘' },
-    { id: 10, bigCategoryId: 2, name: '양파' },
-    { id: 11, bigCategoryId: 3, name: '쌀' },
-    { id: 12, bigCategoryId: 3, name: '현미' },
-    { id: 13, bigCategoryId: 3, name: '보리' },
-    { id: 14, bigCategoryId: 3, name: '콩' },
-    { id: 15, bigCategoryId: 4, name: '호두' },
-    { id: 16, bigCategoryId: 4, name: '아몬드' },
-    { id: 17, bigCategoryId: 4, name: '땅콩' },
-    { id: 18, bigCategoryId: 4, name: '잣' },
-    { id: 19, bigCategoryId: 5, name: '새송이버섯' },
-    { id: 20, bigCategoryId: 5, name: '표고버섯' },
-    { id: 21, bigCategoryId: 5, name: '느타리버섯' }
-  ];
+  const [pagination, setPagination] = useState({
+    currentPage: 0,
+    totalElements: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false,
+    pageSize: 15
+  });
+
+  // 페이지 변경 핸들러 (POST)
+  const handlePageChange = (page) => {
+      setPagination(prevState => ({
+      ...prevState,  // 이전 상태의 모든 속성을 복사
+      currentPage: page // currentPage만 업데이트
+    }));
+  };
+
+  useEffect(() => {
+    fetchSearchProducts();
+  }, [pagination.currentPage]); // pagination.currentPage가 변경될 때마다 fetchSearchProducts 호출
+  
+
   // 상품명 클릭 시 수정 및 상세화면 출력
   const handleProductClick = (productId) => {
     fetchProductDetail(productId);
@@ -76,7 +70,7 @@ function Manage() {
       
       try {
         // 백엔드 API 호출
-        const response = await fetch(`http://localhost:8080/my/seller/item/detail/${productId}`);
+        const response = await fetch(`http://localhost:8888/my/seller/item/detail/${productId}`);
   
         const httpResponse = await response.json();
         console.log('조회된 상품 정보:', httpResponse);
@@ -128,7 +122,7 @@ function Manage() {
   // 개별 상품 체크박스 핸들러
   const handleItemCheck = (id) => {
     const updatedProducts = products.map(product => 
-      product.id === id 
+      product.saleId === id 
         ? { ...product, isChecked: !product.isChecked } 
         : product
     );
@@ -140,37 +134,29 @@ function Manage() {
     setIsAllChecked(allChecked);
   };
   
-  // 목업 상품 데이터
-  useEffect(() => {
-    // 실제 앱에서는 필터를 포함한 API 호출이 여기 들어갑니다
-    const mockProducts = Array(15).fill(null).map((_, index) => ({
-      id: index + 1,
-      name: '상품명',
-      price: '10000',
-      status: index === 1 ? '판매 중지' : '판매중',
-      stock: 15,
-      orders: 11
-    }));
-    
-    setProducts(mockProducts);
-  }, [currentPage, filters, searchTerm, category, subCategory, sortFilter]);
-  
   // 초기 GET 데이터 로드 함수
   const fetchInitialProducts = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('/my/seller/sale/search');
+      const response = await fetch('http://localhost:8080/my/seller/sale/search');
       
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
       }
     // 응답 텍스트 확인
-    const data = response.json
-    console.log('서버 응답:', data.data);
-      // setProducts(data.content);
-      // setTotalCount(data.totalElements);
+    const httpResponse = await response.json();
+    console.log('서버 응답:', httpResponse.data);
+      setProducts(httpResponse.data.contents);
+      setPagination({
+        currentPage: httpResponse.data.currentPage,
+        totalElements: httpResponse.data.totalElements,
+        totalPages: httpResponse.data.totalPages,
+        hasNext: httpResponse.data.hasNext,
+        hasPrev: httpResponse.data.hasPrevious,
+        pageSize: httpResponse.data.pageSize
+      });
     } catch (error) {
       setError(error.message);
       console.error('초기 상품 데이터 로딩 중 오류:', error);
@@ -184,74 +170,54 @@ function Manage() {
       fetchInitialProducts();
     }, []);
 
-    //목업데이터
-    const fetchSearchProducts = async () => {
-      try {
-        // 실제 API 대신 목업 데이터 사용
-        const mockData = {
-          content: [
-            { id: 1, name: '상품1', price: 10000, status: '판매 중', stock: 10, orders: 5 },
-            { id: 2, name: '상품2', price: 20000, status: '판매 중지', stock: 5, orders: 2 }
-          ],
-          totalElements: 2
-        };
-    
-        setProducts(mockData.content);
-        setTotalCount(mockData.totalElements);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
+  // 상품 데이터 및 페이지네이션 POST API 함수
+  const fetchSearchProducts = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    // JSON 데이터 준비
+    const jsonData = {
+      sellerId: 1, // 추후 JWT 토큰으로 백에서 처리 예정
+      keyword: searchTerm,
+      sort: sortFilter,
+      filters: processedFilters,
+      typeBigId: category,
+      typeId: subCategory,
+      page: pagination.currentPage,
+      size: pagination.pageSize
     };
 
+    try {
+      const response = await fetch('http://localhost:8080/my/seller/sale/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jsonData)
+      });
 
-  // 상품 데이터 및 페이지네이션 POST API 함수
-  // const fetchSearchProducts = async () => {
-  //   setIsLoading(true);
-  //   setError(null);
-
-  //   // JSON 데이터 준비
-  //   const jsonData = {
-  //     sellerId: 1, // 추후 JWT 토큰으로 처리 예정
-  //     keyword: searchTerm,
-  //     sort: sortFilter,
-  //     filters: processedFilters,
-  //     typeBigId: category,
-  //     typeId: subCategory,
-  //     page: currentPage,
-  //     size: itemsPerPage
-  //   };
-
-  //   try {
-  //     const response = await fetch('/my/seller/item/manage', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(jsonData)
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('데이터를 불러오는 중 오류가 발생했습니다.');
-  //     }
-
-  //     const data = await response.json();
-      
-  //     setProducts(data.content);
-  //     setTotalCount(data.totalElements);
-  //   } catch (error) {
-  //     setError(error.message);
-  //     console.error('상품 데이터 로딩 중 오류:', error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+    // 응답 텍스트 확인
+    const httpResponse = await response.json();
+    console.log('서버 응답:', httpResponse.data);
+      setProducts(httpResponse.data.contents);
+      setPagination({
+        currentPage: httpResponse.data.currentPage,
+        totalElements: httpResponse.data.totalElements,
+        totalPages: httpResponse.data.totalPages,
+        hasNext: httpResponse.data.hasNext,
+        hasPrev: httpResponse.data.hasPrevious,
+        pageSize: httpResponse.data.pageSize
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const deleteSelectedItems = async() => {
     //체크박스 안의 id값을 배열로 뽑아내기 
-    //백과 연결 및 삭제 확인 추후 sale_id 뽑아내는 걸로 변경 필요
     const selectedProducts = products.filter(product => product.isChecked);
-    const selectedProductIds = selectedProducts.map(product => product.id);
+    const selectedProductIds = selectedProducts.map(product => product.saleId);
     console.log('선택된 상품들:', selectedProductIds);
     try {
       // JSON 형태로 가공
@@ -260,7 +226,7 @@ function Manage() {
       };
       
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch('http://localhost:8080/my/seller/item/delete', {
+      const response = await fetch('http://localhost:8888/my/seller/item/delete', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -270,9 +236,10 @@ function Manage() {
       
       // 응답 처리
       if (response.status === 200) {
-        const result = await response.json();
-        console.log('삭제 성공:', result);
-        // 성공 후 처리 (예: 목록 새로고침 등)
+        setModalMessage('삭제성공.');
+        setShowModal(true);
+        // 성공 후 처리 (Post방식으로 값 다시 불러오기)
+        fetchSearchProducts();
         
       } else {
         console.error('삭제 실패:', response.statusText);
@@ -299,12 +266,6 @@ function Manage() {
     }
   }, [category]);
   
-  // 페이지 변경 핸들러 (POST)
-  const handlePageChange = (selectedItem) => {
-    setCurrentPage(selectedItem.selected);
-    fetchSearchProducts();
-  };
-
   const handleFilterChange = (event) => {
     setFilters(prevFilters => ({
       ...prevFilters,
@@ -320,7 +281,9 @@ function Manage() {
 
   // 검색 및 필터링 핸들러 (POST)
   const handleSearch = () => {
-    setCurrentPage(0);
+    setPagination(
+      pagination.currentPage = 0
+    );
     fetchSearchProducts();
   };
 
@@ -333,6 +296,7 @@ function Manage() {
     setCategory('');
     setSubCategory('');
     setSortFilter('LATEST');
+    fetchInitialProducts(); //get방식 데이터 불러오기
   };
   
   // 에러 및 로딩 상태 렌더링
@@ -398,13 +362,12 @@ function Manage() {
           handleReset={handleReset}
         />
         
-        
       </div>
       
       {/* 결과 목록 */}
       <div className="bg-white rounded-lg shadow-sm p-4">
         <div className="flex justify-between items-center mb-2">
-          <div>상품 목록 (총 {totalCount}개)</div>
+          <div>상품 목록 (총 {pagination.totalElements}개)</div>
           <button 
             className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm"
             onClick={deleteSelectedItems}
@@ -432,34 +395,34 @@ function Manage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.id}>
+              {products.map((product, index) => (
+                <TableRow key={product.saleId}>
                   <TableCell padding="checkbox">
                     <Checkbox color="default" 
                               checked={product.isChecked || false}
-                              onChange={() => handleItemCheck(product.id)}
+                              onChange={() => handleItemCheck(product.saleId)}
                     />
                     
                   </TableCell>
-                  <TableCell>{product.id}</TableCell>
+                  <TableCell>{pagination.currentPage * pagination.pageSize + index + 1}</TableCell>
                   <TableCell 
-                  onClick={() => handleProductClick(product.id)}
+                  onClick={() => handleProductClick(product.saleId)}
                   className="cursor-pointer hover:bg-gray-100"
-                  >{product.name}</TableCell>
+                  >{product.title}</TableCell>
                   <TableCell>{product.price}</TableCell>
                   <TableCell>
                     <button 
                       className={`text-xs py-1 px-2 rounded ${
-                        product.status === '판매 중지' 
+                        product.blind === true 
                           ? 'bg-red-500 hover:bg-red-600 text-white' 
                           : 'bg-teal-500 hover:bg-teal-600 text-white'
                       }`}
                     >
-                      {product.status}
+                      {product.blind === true ? "판매 중지" : "판매 중"}
                     </button>
                   </TableCell>
                   <TableCell>{product.stock}</TableCell>
-                  <TableCell>{product.orders}</TableCell>
+                  <TableCell>{product.orderCount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -467,12 +430,15 @@ function Manage() {
         </TableContainer>
         
         {/* 페이지네이션 */}
-        <Pagenation 
-          currentPage={currentPage} 
-          handlePageChange={handlePageChange} 
-          totalCount={totalCount} 
-          itemsPerPage={itemsPerPage}
-        />
+        <Pagination
+           currentPage={pagination.currentPage}
+           totalPages={pagination.totalPages}
+           hasNext={pagination.hasNext}
+           hasPrev={pagination.hasPrev}
+           onPageChange={handlePageChange}
+           activeColor="bg-green"
+           hoverColor="hover:bg-gray"
+         />
 
       
       {/* 상품 상세 정보 모달 */}
@@ -482,6 +448,13 @@ function Manage() {
         productDetail={productDetail}
         loading={loading}
       />
+
+      {showModal && (
+          <AlertModal
+            message={modalMessage}
+            onClose={() => setShowModal(false)}
+          />
+      )}
         
       </div>
     </div>
