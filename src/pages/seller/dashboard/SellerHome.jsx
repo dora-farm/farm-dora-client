@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import ChartContainer from "./components//ChartContainer";
+import ChartContainer from "./components/ChartContainer";
 import DashboardHeader from "./components/DashboardHeader";
 import DashboardLayout from "./components/DashboardLayout";
-import PeriodSelector from "./components//PeriodSelector";
-import ProductRatioChart from "./components//ProductRatioChart";
-import SalesChart from "./components//SalesChart";
-import StatusRatioChart from "./components//StatusRatioChart";
+import PeriodSelector from "./components/PeriodSelector";
+import ProductRatioChart from "./components/ProductRatioChart";
+import SalesChart from "./components/SalesChart";
+import StatusRatioChart from "./components/StatusRatioChart";
 import useDashboardData from "./hooks/useDashboardData";
 
 function SellerHome() {

@@ -26,7 +26,7 @@ import LiveSetup from './pages/seller/LiveSetup';
 import Manage from './pages/seller/product/Manage';
 import Register from './pages/seller/product/Register';
 import Adminbroadcast from './pages/adminpage/Adminbroadcast';
-import AdminHome from './pages/adminpage/AdminHome';
+import AdminHome from './pages/adminpage/dashboard/AdminHome';
 import AdminPopup from './pages/adminpage/AdminPopup';
 import AdminPopupRegi from './pages/adminpage/AdminPopupRegi';
 import AdminProduct from './pages/adminpage/AdminProduct';
