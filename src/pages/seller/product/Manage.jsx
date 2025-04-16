@@ -19,7 +19,7 @@ import { useCheckboxes } from '../../../common/hooks/useCheckboxes';
 
 function Manage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({INSTOCK: true, PREORDER: false});
+  const [filters, setFilters] = useState({INSTOCK: false, PREORDER: false});
   // true 값만 포함하는 새로운 state
   const [processedFilters, setProcessedFilters] = useState({});
   const [category, setCategory] = useState('');
@@ -276,8 +276,8 @@ function Manage() {
   const handleReset = () => {
     setSearchTerm('');
     setFilters({
-      INSTOCK: true,
-      PREORDER: true
+      INSTOCK: false,
+      PREORDER: false
     });
     setCategory('');
     setSubCategory('');
