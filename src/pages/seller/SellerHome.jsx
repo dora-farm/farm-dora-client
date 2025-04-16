@@ -25,19 +25,19 @@ function SellerHome() {
     datasets: [
       {
         data: [30, 30, 40],
-        backgroundColor: ["#1CA673", "#F29B30", "#494041"],
-        hoverBackgroundColor: ["#1CA673", "#F29B30", "#494041"],
+        backgroundColor: ["#1CA673", "#D92B2B", "#F29B30", "#494041", "#8B5CDF", "#3C7BC9"],
+        hoverBackgroundColor: ["#1CA673", "#D92B2B", "#F29B30", "#494041", "#8B5CDF", "#3C7BC9"],
       },
     ],
   });
 
-  const [productRatio] = useState({
-    labels: ["사과", "배", "딸기"],
+  const [productRatio, setProductRatio] = useState({
+    labels: [],
     datasets: [
       {
-        data: [20, 30, 50],
-        backgroundColor: ["#1CA673", "#D92B2B", "#F29B30"],
-        hoverBackgroundColor: ["#1CA673", "#D92B2B", "#F29B30"],
+        data: [],
+        backgroundColor: ["#1CA673", "#D92B2B", "#F29B30", "#494041", "#8B5CDF", "#3C7BC9"],
+        hoverBackgroundColor: ["#1CA673", "#D92B2B", "#F29B30", "#494041", "#8B5CDF", "#3C7BC9"],
       },
     ],
   });
@@ -78,20 +78,18 @@ function SellerHome() {
           period: serverPeriod,
         }
       });
-      
-      console.log("서버 응답 데이터:", response.data); // 서버 응답 자세히 확인
 
       // 데이터가 7개보다 많은 경우 가장 최근 데이터 7개만 사용
       let recentlyLabels = response.data.labels;
       let recentlyData = response.data.data;
+
+      console.log("가장 최근 7개 날짜:", recentlyLabels);
+      console.log("가장 최근 7개 값:", recentlyData);
       
       if (recentlyLabels.length > 7) {
         // 가장 최근 데이터 7개만 추출 (배열의 마지막 7개 요소)
         recentlyLabels = recentlyLabels.slice(-7);
         recentlyData = recentlyData.slice(-7);
-
-        console.log("가장 최근 7개 데이터:", recentlyLabels);
-        console.log("가장 최근 7개 데이터 값:", recentlyData);
       }
       
       setSalesData({
@@ -111,14 +109,52 @@ function SellerHome() {
     }
   };
 
+  const loadProductRatioData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/my/seller/dashboard/product`, {
+        params: {sellerId}
+      });
+      console.log("제품 비율 데이터:", response.data);
+
+      let productLabels = response.data.map(item => item.typename);
+      let productPercentages = response.data.map(item => item.percentage);
+
+      const baseColors = ["#1CA673", "#D92B2B", "#F29B30", "#494041", "#8B5CDF", "#3C7BC9"];
+      const backgroundColor = [];
+      const hoverBackgroundColor = [];
+      
+      for (let i = 0; i < productPercentages.length; i++) {
+        const colorIndex = i % baseColors.length;
+        backgroundColor.push(baseColors[colorIndex]);
+        hoverBackgroundColor.push(baseColors[colorIndex]);
+      }
+
+      setProductRatio({
+        labels: productLabels,
+        datasets: [
+          {
+            data: productPercentages,
+            backgroundColor: backgroundColor,
+            hoverBackgroundColor: hoverBackgroundColor,
+          },
+        ],
+      });
+
+    } catch (error) {
+      console.error("제품 비율 데이터 가져오기 실패:", error);
+    }
+  };
+
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
     loadSalesData();
+    loadProductRatioData();
   }, []);
 
   // 조회 버튼 클릭 핸들러
   const handleSearch = () => {
     loadSalesData();
+    loadProductRatioData
   };
 
   // 기간 버튼 핸들러
@@ -193,6 +229,16 @@ function SellerHome() {
       title: {
         display: false,
       },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.raw || 0;
+            const percentage = value.toFixed(1);
+            return `${label}: ${percentage}%`;
+          }
+        }
+      }
     },
   };
 
@@ -248,7 +294,7 @@ function SellerHome() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 rounded-md mb-6">
         <div className="bg-gray-light rounded-md flex flex-col items-center border border-gray-dark">
-          <h3 className="text-lg font-medium mb-4">제품별 매출 비율</h3>
+          <h3 className="text-lg font-medium mb-4">제품별 판매 비율</h3>
           <div className="w-[80%] h-48 relative flex items-center justify-center">
             <Pie data={productRatio} options={pieChartOptions} />
           </div>
