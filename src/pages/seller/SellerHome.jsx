@@ -82,14 +82,11 @@ function SellerHome() {
       // 데이터가 7개보다 많은 경우 가장 최근 데이터 7개만 사용
       let recentlyLabels = response.data.labels;
       let recentlyData = response.data.data;
-
-      console.log("가장 최근 7개 날짜:", recentlyLabels);
-      console.log("가장 최근 7개 값:", recentlyData);
       
       if (recentlyLabels.length > 7) {
         // 가장 최근 데이터 7개만 추출 (배열의 마지막 7개 요소)
-        recentlyLabels = recentlyLabels.slice(-7);
-        recentlyData = recentlyData.slice(-7);
+        recentlyLabels = recentlyLabels.slice(0, 7);
+        recentlyData = recentlyData.slice(0, 7);
       }
       
       setSalesData({
@@ -114,7 +111,6 @@ function SellerHome() {
       const response = await axios.get(`http://localhost:8080/api/my/seller/dashboard/product`, {
         params: {sellerId}
       });
-      console.log("제품 비율 데이터:", response.data);
 
       let productLabels = response.data.map(item => item.typename);
       let productPercentages = response.data.map(item => item.percentage);
