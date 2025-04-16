@@ -59,7 +59,7 @@ function App() {
               <Route path="/my/user/inquiry" element={<MyInquireies/>} />
               <Route path="/my/user/order" element={<Orders/>} />
               <Route path="/my/user/address" element={<ManageAddress/>} />
-              <Route path="/my/user/prifile" element={<EditProfile/>} />
+              <Route path="/my/user/profile" element={<EditProfile/>} />
               <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
             </Route>
 
