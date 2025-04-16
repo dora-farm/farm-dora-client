@@ -21,7 +21,7 @@ import New from './pages/seller/ordermanage/New';
 import Order from './pages/seller/ordermanage/Order';
 import Refund from './pages/seller/ordermanage/Refund';
 import Review from './pages/seller/ordermanage/Review';
-import SellerHome from './pages/seller/SellerHome';
+import SellerHome from './pages/seller/dashboard/SellerHome';
 import LiveSetup from './pages/seller/LiveSetup';
 import Manage from './pages/seller/product/Manage';
 import Register from './pages/seller/product/Register';
@@ -39,6 +39,7 @@ import ChatSupport from './pages/support/ChatSupport';
 import AdminLayout from './layouts/AdminLayout';
 import AdminBroadcast from './pages/adminpage/Adminbroadcast';
 import ProductEdit from './pages/seller/product/ProductEdit';
+import './pages/seller/dashboard/utils/ChartRegistry';
 
 // // import Category from './pages/category/Category';
 
