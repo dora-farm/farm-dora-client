@@ -1,6 +1,124 @@
+import { Link } from "react-router-dom";
+
 function MyPage() {
   return (
-    <div>Mypage</div>
+    <div className="w-full m-7 border-2 rounded-lg bg-gray-light shadow-lg">
+
+      <div className="flex h-auto justify-center mx-8 mt-8 gap-4">
+        <div className="flex flex-col w-[400px] bg-brown p-6 rounded-lg shadow-md">
+          <span className="text-white text-xl font-bold border-b-2 border-white pb-3 mb-4">ㅇㅇㅇ님, 환영합니다.</span>
+          <div className="flex flex-col text-white space-y-2 mt-2">
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span className="text-sm">010-1234-5678</span>
+            </div>
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span className="text-sm">user@example.com</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col w-[500px] bg-gray p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center border-b-2 pb-3 mb-4 border-brown">
+            <span className="text-brown text-xl font-bold">총 구매금액</span>
+            <span className="text-brown text-2xl font-bold">0 원</span>
+          </div>
+          <div className="flex justify-between mt-3">
+            <div className="flex flex-col items-center">
+              <span className="text-text-gray text-sm mb-1">쿠폰</span>
+              <span className="text-brown font-bold">0개</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-text-gray text-sm mb-1">포인트</span>
+              <span className="text-brown font-bold">0P</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-text-gray text-sm mb-1">리뷰</span>
+              <span className="text-brown font-bold">0개</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col mt-12 mx-8">
+        <div className="flex justify-between items-end border-b-2 pb-2 border-gray-dark">
+          <h2 className="font-bold text-2xl text-brown">나의 주문 현황</h2>
+          <Link to="/my/user/order" className="text-text-gray text-xs font-bold hover:text-brown transition-colors">더보기＞</Link>
+        </div>
+        
+        <div className="flex w-full justify-between mt-6 h-[180px] gap-4">
+          <div className="w-full h-full border border-gray-dark rounded-lg shadow-md flex flex-col items-center justify-center bg-white hover:bg-gray transition-colors">
+            <div className="w-16 h-16 bg-brown-light rounded-full flex items-center justify-center mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            </div>
+            <span className="font-bold text-lg text-brown">결제 완료</span>
+            <span className="text-brown text-2xl font-bold mt-2">0</span>
+          </div>
+          
+          <div className="w-full h-full border border-gray-dark rounded-lg shadow-md flex flex-col items-center justify-center bg-white hover:bg-gray transition-colors">
+            <div className="w-16 h-16 bg-brown-light rounded-full flex items-center justify-center mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+            </div>
+            <span className="font-bold text-lg text-brown">배송 준비중</span>
+            <span className="text-brown text-2xl font-bold mt-2">0</span>
+          </div>
+          
+          <div className="w-full h-full border border-gray-dark rounded-lg shadow-md flex flex-col items-center justify-center bg-white hover:bg-gray transition-colors">
+            <div className="w-16 h-16 bg-brown-light rounded-full flex items-center justify-center mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+              </svg>
+            </div>
+            <span className="font-bold text-lg text-brown">배송중</span>
+            <span className="text-brown text-2xl font-bold mt-2">0</span>
+          </div>
+          
+          <div className="w-full h-full border border-gray-dark rounded-lg shadow-md flex flex-col items-center justify-center bg-white hover:bg-gray transition-colors">
+            <div className="w-16 h-16 bg-brown-light rounded-full flex items-center justify-center mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span className="font-bold text-lg text-brown">배송완료</span>
+            <span className="text-brown text-2xl font-bold mt-2">0</span>
+          </div>
+          
+          <div className="w-full h-full border border-gray-dark rounded-lg shadow-md flex flex-col items-center justify-center bg-white hover:bg-gray transition-colors">
+            <div className="w-16 h-16 bg-brown-light rounded-full flex items-center justify-center mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <span className="font-bold text-lg text-brown">취소/반품/교환</span>
+            <span className="text-brown text-2xl font-bold mt-2">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col mt-12 mx-8 mb-8">
+        <div className="flex justify-between items-end border-b-2 pb-2 border-gray-dark">
+          <h2 className="font-bold text-2xl text-brown">찜한 상품</h2>
+          <Link to="/my/user/wishlist" className="text-text-gray text-xs font-bold hover:text-brown transition-colors">더보기＞</Link>
+        </div>
+        
+        <div className="flex w-full justify-between mt-6 h-[200px] gap-4">
+          <div className="w-full h-full flex items-center justify-center border border-gray-dark rounded-lg bg-gray-light">
+            <span className="text-text-gray">찜한 상품이 없습니다.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
   )
 }
 
