@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function MyPage() {
   return (
-    <div className="w-full m-7 border-2 rounded-lg bg-gray-light shadow-lg">
+    <div className="w-full m-7">
 
       <div className="flex h-auto justify-center mx-8 mt-8 gap-4">
         <div className="flex flex-col w-[400px] bg-brown p-6 rounded-lg shadow-md">
