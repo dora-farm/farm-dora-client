@@ -21,11 +21,10 @@ import New from './pages/seller/ordermanage/New';
 import Order from './pages/seller/ordermanage/Order';
 import Refund from './pages/seller/ordermanage/Refund';
 import Review from './pages/seller/ordermanage/Review';
-import SellerHome from './pages/seller/SellerHome';
+import SellerHome from './pages/seller/dashboard/SellerHome';
 import LiveSetup from './pages/seller/LiveSetup';
 import Manage from './pages/seller/product/Manage';
 import Register from './pages/seller/product/Register';
-import Adminbroadcast from './pages/adminpage/Adminbroadcast';
 import AdminHome from './pages/adminpage/AdminHome';
 import AdminPopup from './pages/adminpage/AdminPopup';
 import AdminPopupRegi from './pages/adminpage/AdminPopupRegi';
@@ -37,10 +36,11 @@ import StreamView from './pages/live/StreamView';
 import Event from './pages/event/Event';
 import ChatSupport from './pages/support/ChatSupport';
 import AdminLayout from './layouts/AdminLayout';
-import AdminBroadcast from './pages/adminpage/Adminbroadcast';
+import AdminBroadcast from './pages/adminpage/AdminBroadcast';
 import ProductEdit from './pages/seller/product/ProductEdit';
+import './pages/seller/dashboard/utils/ChartRegistry';
 
-// // import Category from './pages/category/Category';
+// import Category from './pages/category/Category';
 
 function App() {
   return (
