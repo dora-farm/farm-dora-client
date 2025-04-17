@@ -5,7 +5,7 @@ function MyPage() {
     <div className="w-full m-7">
 
       <div className="flex h-auto justify-center mx-8 mt-8 gap-4">
-        <div className="flex flex-col w-[400px] bg-brown p-6 rounded-lg shadow-md">
+        <div className="flex flex-col w-[400px] bg-brown p-6 rounded-lg shadow-md select-none cursor-default">
           <span className="text-white text-xl font-bold border-b-2 border-white pb-3 mb-4">ㅇㅇㅇ님, 환영합니다.</span>
           <div className="flex flex-col text-white space-y-2 mt-2">
             <div className="flex items-center">
@@ -23,29 +23,25 @@ function MyPage() {
           </div>
         </div>
 
-        <div className="flex flex-col w-[500px] bg-gray p-6 rounded-lg shadow-md">
+        <div className="flex flex-col w-[500px] bg-gray p-6 rounded-lg shadow-md select-none cursor-default">
           <div className="flex justify-between items-center border-b-2 pb-3 mb-4 border-brown">
             <span className="text-brown text-xl font-bold">총 구매금액</span>
             <span className="text-brown text-2xl font-bold">0 원</span>
           </div>
-          <div className="flex justify-between mt-3">
-            <div className="flex flex-col items-center">
-              <span className="text-text-gray text-sm mb-1">쿠폰</span>
-              <span className="text-brown font-bold">0개</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-text-gray text-sm mb-1">포인트</span>
-              <span className="text-brown font-bold">0P</span>
-            </div>
-            <div className="flex flex-col items-center">
+          <div className="flex mt-3">
+            <div className="flex flex-col items-center w-full">
               <span className="text-text-gray text-sm mb-1">리뷰</span>
-              <span className="text-brown font-bold">0개</span>
+              <Link to="/my/user/review" className="text-brown font-bold">0개</Link>
+            </div>
+            <div className="flex flex-col items-center w-full">
+              <span className="text-text-gray text-sm mb-1">문의</span>
+              <Link to="/my/user/inquiry" className="text-brown font-bold">0개</Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col mt-12 mx-8">
+      <div className="flex flex-col mt-12 mx-8 select-none cursor-default">
         <div className="flex justify-between items-end border-b-2 pb-2 border-gray-dark">
           <h2 className="font-bold text-2xl text-brown">나의 주문 현황</h2>
           <Link to="/my/user/order" className="text-text-gray text-xs font-bold hover:text-brown transition-colors">더보기＞</Link>
@@ -105,14 +101,14 @@ function MyPage() {
         </div>
       </div>
 
-      <div className="flex flex-col mt-12 mx-8 mb-8">
+      <div className="flex flex-col mt-12 mx-8 mb-8 select-none cursor-default">
         <div className="flex justify-between items-end border-b-2 pb-2 border-gray-dark">
           <h2 className="font-bold text-2xl text-brown">찜한 상품</h2>
           <Link to="/my/user/wishlist" className="text-text-gray text-xs font-bold hover:text-brown transition-colors">더보기＞</Link>
         </div>
         
         <div className="flex w-full justify-between mt-6 h-[200px] gap-4">
-          <div className="w-full h-full flex items-center justify-center border border-gray-dark rounded-lg bg-gray-light">
+          <div className="w-full h-full flex items-center justify-center">
             <span className="text-text-gray">찜한 상품이 없습니다.</span>
           </div>
         </div>
