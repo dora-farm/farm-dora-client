@@ -1,10 +1,10 @@
-import { useState ,useEffect } from "react";
-import DashboardHeader from "../../seller/dashboard/components/DashboardHeader";
-import DashboardLayout from "../../seller/dashboard/components/DashboardLayout";
-import PeriodSelector from "../../seller/dashboard/components/PeriodSelector";
-import ChartContainer from "../../seller/dashboard/components/ChartContainer";
-import SalesChart from "../../seller/dashboard/components/SalesChart";
-import useDashboardData from "../../seller/dashboard/hooks/useDashboardData";
+import { useState, useEffect } from "react";
+import DashboardHeader from "../seller/dashboard/components/DashboardHeader";
+import DashboardLayout from "../seller/dashboard/components/DashboardLayout";
+import PeriodSelector from "../seller/dashboard/components/PeriodSelector";
+import ChartContainer from "../seller/dashboard/components/ChartContainer";
+import SalesChart from "../seller/dashboard/components/SalesChart";
+import useDashboardData from "../seller/dashboard/hooks/useDashboardData";
 
 function AdminHome() {
   const [period, setPeriod] = useState("day");
@@ -20,11 +20,12 @@ function AdminHome() {
     return date.toISOString().split("T")[0];
   });
 
-  const {
-    adminSalesData,
-    usersData,
-    loadAdminAllData,
-  } = useDashboardData(null, startDate, endDate, period);
+  const { adminSalesData, usersData, loadAdminAllData } = useDashboardData(
+    null,
+    startDate,
+    endDate,
+    period
+  );
 
   const handlePeriodChange = (newPeriod) => {
     setPeriod(newPeriod);
