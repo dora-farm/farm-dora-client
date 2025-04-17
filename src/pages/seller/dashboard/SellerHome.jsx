@@ -31,17 +31,17 @@ function SellerHome() {
     salesData, 
     productRatio, 
     statusRatio, 
-    loadAllData 
+    loadSellerAllData
   } = useDashboardData(sellerId, startDate, endDate, period);
 
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
-    loadAllData();
+    loadSellerAllData();
   }, []);
 
   // 조회 버튼 클릭 핸들러
   const handleSearch = () => {
-    loadAllData();
+    loadSellerAllData();
   };
 
   // 기간 버튼 핸들러
