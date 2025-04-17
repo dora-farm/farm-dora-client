@@ -3,7 +3,7 @@ import AdminSidebar from "./AdminSidebar";
 
 function AdminLayout() {
   return (
-    <div className="flex w-full">
+    <div className="flex w-full h-screen">
       <AdminSidebar />
       <Outlet />
     </div>
