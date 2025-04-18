@@ -13,15 +13,15 @@ function MyPage() {
     },
     activityInfoDTO: {
       totalAmount: '100,000,000',
-      reviewCount: 125,
-      inquiryCount: 250,
+      reviewCount: 999,
+      inquiryCount: 999,
     },
     orderStatus: {
-      1: 5,
-      2: 3,
-      3: 10,
-      4: 2,
-      5: 999,
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
     }
   });
 
@@ -32,16 +32,25 @@ function MyPage() {
         { params: { userId } }
       );
 
-       // 서버 응답을 상태에 통합
+      const orderStatusResponse = await axios.get(
+        `http://localhost:8080/api/my/user/dashboard/order-status`,
+        { params: { userId } }
+      );
+
+      const orderStatusObj = {};
+      orderStatusResponse.data.data.forEach(status => {
+        orderStatusObj[status.statusId] = status.statusCount;
+      });
+
         setDashboardData(prevData => ({
           ...prevData,
           userInfoDTO: userResponse.data.data.userInfoDTO,
           activityInfoDTO: userResponse.data.data.activityInfoDTO,
+          orderStatus: {
+            ...prevData.orderStatus,
+            ...orderStatusObj
+          }
         }));
-      
-      
-
-
     } catch (error) {
       console.error("유저 정보를 받아올 수 없습니다!:", error.message);
     }
