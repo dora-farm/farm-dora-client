@@ -4,7 +4,7 @@ import axios from "axios";
 
 function MyPage() {
 
-  // const userId = 1;
+  const userId = 1;
 
   const [userInfo, setUserInfo] = useState({
     name: '박보검',
@@ -25,7 +25,7 @@ function MyPage() {
 
   const loadUserInfo = async () => {
     try {
-      const userResponse = await axios.get(`http://localhost:8080/api/user/dashboard/info`);
+      const userResponse = await axios.get(`http://localhost:8080/api/my/user/dashboard/info`, {params: userId});
       const userData = userResponse.data.data;
       setUserInfo(userData);
     } catch (error) {
