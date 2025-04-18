@@ -192,7 +192,7 @@ function MyReviews() {
     // URL이 없거나 쿼리 파라미터가 누락된 경우 기본값으로 리다이렉트
         if (!location.search || !getQueryParams().startDate || !getQueryParams().endDate) {
             navigate(`/my/user/review?startDate=${getFirstDayOfMonth()}&endDate=${getLastDayOfMonth()}&page=0`);
-            setSelectedRange('month'); // 기본 범위를 '1개월'로 설정
+            setSelectedRange('all');
         }
     }, []);
 
