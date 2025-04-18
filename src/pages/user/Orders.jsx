@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from '../../common/components/Pagination';
 import ReviewModal from './modal/ReviewModal';
-// import PaymentInfo from './modal/PaymentInfo';
+import PaymentInfo from './modal/PaymentInfo';
 
 function Orders() {
   const navigate = useNavigate();
@@ -76,7 +76,7 @@ function Orders() {
     
     return { startDate, endDate, page: parseInt(page) };
   };
- 
+  
   // 현재 달의 첫날 구하기
   const getFirstDayOfMonth = () => {
     const now = new Date();
@@ -423,6 +423,7 @@ function Orders() {
           hoverColor="hover:bg-gray"
         />
       )}
+
       <ReviewModal 
         isOpen={reviewModal.isOpen} 
         onClose={closeReviewModal} 
