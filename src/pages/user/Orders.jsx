@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from '../../common/components/Pagination';
 import ReviewModal from './modal/ReviewModal';
-// import PaymentInfo from './modal/PaymentInfo';
+import PaymentInfo from './modal/PaymentInfo';
 
 function Orders() {
   const navigate = useNavigate();
