@@ -77,7 +77,6 @@ function Orders() {
     
     return { startDate, endDate, page: parseInt(page) };
   };
- 
   // 현재 달의 첫날 구하기
   const getFirstDayOfMonth = () => {
     const now = new Date();
@@ -147,7 +146,7 @@ function Orders() {
   };
 
    // 주문 상태 매핑
-   const getOrderStatusInfo = (statusId) => {
+  const getOrderStatusInfo = (statusId) => {
     const statusMap = {
       1: { name: '배송준비', color: 'bg-blue-100 text-blue-800' },
       2: { name: '배송중', color: 'bg-yellow-100 text-yellow-800' },
@@ -160,6 +159,20 @@ function Orders() {
     return statusMap[statusId] || { name: '알 수 없음', color: 'bg-gray-100 text-gray-800' };
   };
   
+  const handleCancelOrder = async (orderId) => {
+    if(window.confirm("주문을 취소하시겠습니까?")) {
+      try {
+        const response = await axios.put(`http://localhost:8080/api/my/user/order/${orderId}/cancel`);
+        if(response.status == 200) {
+          alert("성공적으로 주문이 취소되었습니다.");
+          getOrdersWithAxios();
+        }
+      } catch (error) {
+        console.log("주문취소실패", error);
+        alert("주문 취소 실패")
+      }
+    }
+  }
 
   // 리뷰 완료 처리 함수
   const handleReviewComplete = (orderId, saleId) => {
@@ -274,13 +287,14 @@ function Orders() {
                       }`}
                       onClick={() => !sale.reviewCompleted && openReviewModal(order.orderId, order, sale)}
                       disabled={sale.reviewCompleted}
-                    >
+                    > 
                       {sale.reviewCompleted ? '리뷰 완료' : '리뷰 작성'}
                     </button>
 
                     {/* 배송준비 */}
                     {sale.statusId === 1 && (
-                      <button className="px-3 py-1 bg-danger text-white rounded text-sm hover:bg-danger-dark transition-colors">
+                      <button className="px-3 py-1 bg-danger text-white rounded text-sm hover:bg-danger-dark transition-colors"
+                      onClick={() => handleCancelOrder(order.orderId)}>
                         주문 취소
                       </button>
                     )}
@@ -324,6 +338,7 @@ function Orders() {
           hoverColor="hover:bg-gray"
         />
       )}
+      
       <ReviewModal 
         isOpen={reviewModal.isOpen} 
         onClose={closeReviewModal} 
