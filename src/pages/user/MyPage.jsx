@@ -243,6 +243,7 @@ function MyPage() {
         ) : wishlistItems.length > 0 ? (
           <div className="grid grid-cols-4 gap-4 mt-6">
             {wishlistItems.map((item) => (
+              // 상품 클릭 시 상품 상세 페이지로 이동
               <Link 
                 to={`/product/${item.productId}`} 
                 key={item.id}
