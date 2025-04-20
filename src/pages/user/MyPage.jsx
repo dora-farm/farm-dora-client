@@ -25,7 +25,6 @@ function MyPage() {
     }
   });
 
-  // 찜 리스트 상태 추가
   const [wishlistItems, setWishlistItems] = useState([]);
   const [imageErrors, setImageErrors] = useState({});
   const [isWishlistLoading, setIsWishlistLoading] = useState(true);
@@ -61,17 +60,18 @@ function MyPage() {
     }
   }
 
-  // 찜 리스트 로드 함수 추가
   const loadWishlistItems = async () => {
     setIsWishlistLoading(true);
     try {
       // const response = await axios.get(
-      //   `http://localhost:8080/api/my/user/wishlist/preview`,
-      //   { params: { userId, limit: 4 } } // 미리보기용 최대 4개 아이템만 요청
+      //   `http://localhost:8080/api/my/user/dashboard/preview`,
+      //   { params: { userId, limit: 4 } }
       // );
       
       // setWishlistItems(response.data.data || []);
-      setWishlistItems(sampleWishlistItems); // 샘플 데이터 사용 (API 연동 후 제거)
+
+      // 샘플 데이터 사용 (API 연동 후 제거)
+      setWishlistItems(sampleWishlistItems); 
     } catch (error) {
       console.error("찜 리스트를 불러올 수 없습니다:", error.message);
       setWishlistItems(sampleWishlistItems);
@@ -82,7 +82,7 @@ function MyPage() {
 
   useEffect(() => {
     loadDashboardInfo();
-    loadWishlistItems(); // 찜 리스트 로드 함수 호출
+    loadWishlistItems();
   }, []);
 
   // 샘플 데이터 - API 연동 전 테스트용 (실제 구현 시 삭제)
@@ -91,6 +91,7 @@ function MyPage() {
       id: 1,
       productId: 101,
       productName: "프리미엄 원두 선물세트",
+      productOption: "500g x 2개",
       thumbnail: "/images/products/coffee-beans.jpg",
       price: 38000
     },
@@ -98,6 +99,7 @@ function MyPage() {
       id: 2,
       productId: 102,
       productName: "핸드드립 커피메이커",
+      productOption: "1~2인용",
       thumbnail: "/images/products/drip-maker.jpg",
       price: 56000,
     },
@@ -105,6 +107,7 @@ function MyPage() {
       id: 3,
       productId: 103,
       productName: "스페셜티 커피 3종",
+      productOption: "250g x 3개",
       thumbnail: "/images/products/specialty-coffee.jpg",
       price: 25000,
     },
@@ -112,21 +115,19 @@ function MyPage() {
       id: 4,
       productId: 104,
       productName: "커피 보온병",
+      productOption: "500ml",
       thumbnail: "/images/products/thermos.jpg",
       price: 15000,
     }
   ];
 
-  // 가격 포맷팅 함수
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
   return (
     <div className="w-full m-7">
-      {/* 기존 코드 유지 */}
       <div className="flex h-auto justify-center mx-8 mt-8 gap-4">
-        {/* 사용자 정보 카드 */}
         <div className="flex flex-col w-[400px] bg-brown p-6 rounded-lg shadow-md select-none cursor-default">
           <span className="text-white text-xl font-bold border-b-2 border-white pb-3 mb-4">
             {dashboardData.userInfoDTO.name}님, 환영합니다.
@@ -147,7 +148,6 @@ function MyPage() {
           </div>
         </div>
 
-        {/* 활동 정보 카드 */}
         <div className="flex flex-col w-[500px] bg-gray p-6 rounded-lg shadow-md select-none cursor-default">
           <div className="flex justify-between items-center border-b-2 pb-3 mb-4 border-brown">
             <span className="text-brown text-xl font-bold">총 구매금액</span>
@@ -166,7 +166,6 @@ function MyPage() {
         </div>
       </div>
 
-      {/* 주문 현황 섹션 */}
       <div className="flex flex-col mt-12 mx-8 select-none cursor-default">
         <div className="flex justify-between items-end border-b-2 pb-2 border-gray-dark">
           <h2 className="font-bold text-2xl text-brown">나의 주문 현황</h2>
@@ -229,7 +228,6 @@ function MyPage() {
         </div>
       </div>
 
-      {/* 찜 리스트 섹션 - 개선된 코드 */}
       <div className="flex flex-col mt-12 mx-8 mb-8 select-none">
         <div className="flex justify-between items-end border-b-2 pb-2 border-gray-dark">
           <h2 className="font-bold text-2xl text-brown">찜 리스트</h2>
@@ -239,12 +237,10 @@ function MyPage() {
         </div>
         
         {isWishlistLoading ? (
-          // 로딩 상태 UI
           <div className="flex w-full justify-center mt-6 h-[200px] items-center">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brown"></div>
           </div>
         ) : wishlistItems.length > 0 ? (
-          // 찜 목록이 있을 때
           <div className="grid grid-cols-4 gap-4 mt-6">
             {wishlistItems.map((item) => (
               <Link 
@@ -253,7 +249,6 @@ function MyPage() {
                 className="bg-white border border-gray-dark rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
               >
                 <div className="relative h-48 overflow-hidden">
-                  {/* 실제 구현 시 placeholder 대신 실제 이미지 사용 */}
                   <div className="w-full h-full bg-gray-light flex items-center justify-center">
                     {item.thumbnail && !imageErrors[item.id] ? (
                       <img 
@@ -274,6 +269,7 @@ function MyPage() {
                 
                 <div className="p-4">
                   <h3 className="font-bold text-brown truncate">{item.productName}</h3>
+                  <p className="text-text-gray text-sm mt-1">{item.productOption}</p>
                   <div className="mt-2">
                     <span className="text-brown font-bold">{formatPrice(item.price)}원</span>
                   </div>
@@ -282,7 +278,6 @@ function MyPage() {
             ))}
           </div>
         ) : (
-          // 찜 목록이 없을 때
           <div className="flex flex-col w-full justify-center items-center mt-6 h-[200px]">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-text-gray mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
