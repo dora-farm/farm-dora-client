@@ -40,7 +40,7 @@ import AdminBroadcast from './pages/adminpage/AdminBroadcast';
 import ProductEdit from './pages/seller/product/ProductEdit';
 import './pages/seller/dashboard/utils/ChartRegistry';
 
-// import Category from './pages/category/Category';
+import Category from './pages/category/Category';
 
 function App() {
   return (
@@ -88,8 +88,7 @@ function App() {
               <Route path="/my/seller/live" element={<LiveSetup/>} />
             </Route>
 
-            {/* <Route path="/category" element={<Category />} /> */}
-
+            <Route path="/category" element={<Category/>} />
             <Route path="/event" element={<Event/>} />
             <Route path="/support" element={<ChatSupport/>} />
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}

@@ -77,6 +77,7 @@ function Orders() {
     
     return { startDate, endDate, page: parseInt(page) };
   };
+
   // 현재 달의 첫날 구하기
   const getFirstDayOfMonth = () => {
     const now = new Date();
@@ -338,7 +339,7 @@ function Orders() {
           hoverColor="hover:bg-gray"
         />
       )}
-      
+
       <ReviewModal 
         isOpen={reviewModal.isOpen} 
         onClose={closeReviewModal} 
