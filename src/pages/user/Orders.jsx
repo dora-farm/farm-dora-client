@@ -5,6 +5,7 @@ import Pagination from '../../common/components/Pagination';
 import ReviewModal from './modal/ReviewModal';
 import PaymentInfo from './modal/PaymentInfo';
 import DateFilter from './components/DateFilter';
+import ChangeOrderModal from './modal/ChangeOrderModal';
 
 function Orders() {
   const navigate = useNavigate();
@@ -32,6 +33,12 @@ function Orders() {
     isOpen: false,
     orderId: null,
     orderData: null
+  });
+
+  const [changeOrderModal, setChangeOrderModal] = useState({
+    isOpen: false,
+    orderId: null,
+    saleId: null
   });
 
   const openReviewModal = (orderId, orderData, saleData) => {
@@ -66,6 +73,30 @@ function Orders() {
       orderId: null,
       orderData: null
     });
+  };
+
+  // Orders.js에서 handleChangeOrder 함수 수정
+  const handleChangeOrder = (orderId, saleId, sale, order) => {
+    setChangeOrderModal({
+      isOpen: true,
+      orderId,
+      saleId,
+      saleData: sale,
+      orderData: order
+    });
+  };
+
+  const closeChangeOrderModal = () => {
+    setChangeOrderModal({
+      isOpen: false,
+      orderId: null,
+      saleId: null
+    });
+  };
+
+  // 주문 상태 변경 처리 함수
+  const handleOrderStatusChanged = () => {
+    getOrdersWithAxios();
   };
   
   // URL에서 쿼리 파라미터 가져오기
@@ -302,7 +333,8 @@ function Orders() {
                     
                     {/* 배송중, 배송완료 */}
                     {(sale.statusId === 2 || sale.statusId === 3) && (
-                      <button className="px-3 py-1 bg-green text-white rounded text-sm hover:bg-green-700 transition-colors">
+                      <button className="px-3 py-1 bg-green text-white rounded text-sm hover:bg-green-700 transition-colors"
+                      onClick={() => handleChangeOrder(order.orderId, sale.saleId, sale, order)}>
                         교환/반품
                       </button>
                     )}
@@ -354,6 +386,15 @@ function Orders() {
         onClose={closePaymentModal}
         orderId={paymentModal.orderId}
         orderData={paymentModal.orderData}
+      />
+
+      <ChangeOrderModal
+        isOpen={changeOrderModal.isOpen}
+        onClose={closeChangeOrderModal}
+        orderId={changeOrderModal.orderId}
+        saleData={changeOrderModal.saleData}
+        orderData={changeOrderModal.orderData}
+        onOrderChanged={handleOrderStatusChanged}
       />
     </div>
   );
