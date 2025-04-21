@@ -4,6 +4,7 @@ import axios from 'axios';
 import Pagination from '../../common/components/Pagination';
 import ReviewModal from './modal/ReviewModal';
 import PaymentInfo from './modal/PaymentInfo';
+import DateFilter from './components/DateFilter';
 
 function Orders() {
   const navigate = useNavigate();
@@ -99,7 +100,7 @@ function Orders() {
   });
   
   // 주문 목록 불러오기
-  const fetchOrders = async () => {
+  const getOrdersWithAxios = async () => {
     try {
       setLoading(true);
       const { startDate, endDate, page } = getQueryParams();
@@ -132,50 +133,12 @@ function Orders() {
   const [selectedRange, setSelectedRange] = useState(''); // 기본값은 '전체'
 
   // 날짜 범위 선택 핸들러
-  const handleDateRangeSelect = (range) => {
-    const today = new Date();
-    let startDate, endDate;
-    
-    // 현재 선택된 범위 업데이트
-    setSelectedRange(range);
-    
-    switch(range) {
-      case 'all':
-        // 전체: 오늘부터 2년 이내
-        startDate = new Date(today);
-        startDate.setFullYear(today.getFullYear() - 2);
-        startDate = startDate.toISOString().split('T')[0];
-        endDate = today.toISOString().split('T')[0];
-        break;
-      case 'week':
-        // 1주일: 오늘부터 7일 전
-        startDate = new Date(today);
-        startDate.setDate(today.getDate() - 7);
-        startDate = startDate.toISOString().split('T')[0];
-        endDate = today.toISOString().split('T')[0];
-        break;
-      case 'month':
-        // 1개월: 오늘부터 30일 전
-        startDate = new Date(today);
-        startDate.setDate(today.getDate() - 30);
-        startDate = startDate.toISOString().split('T')[0];
-        endDate = today.toISOString().split('T')[0];
-        break;
-      case 'quarter':
-        // 3개월: 오늘부터 90일 전
-        startDate = new Date(today);
-        startDate.setDate(today.getDate() - 90);
-        startDate = startDate.toISOString().split('T')[0];
-        endDate = today.toISOString().split('T')[0];
-        break;
-      default:
-        return;
-    }
-    
-    setDateRange({ startDate, endDate });
+  const handleDateRangeUpdate = (newDateRange, rangeType) => {
+    setDateRange(newDateRange);
+    setSelectedRange(rangeType);
     
     // 페이지는 항상 0으로 리셋
-    navigate(`/my/user/order?startDate=${startDate}&endDate=${endDate}&page=0`);
+    navigate(`/my/user/order?startDate=${newDateRange.startDate}&endDate=${newDateRange.endDate}&page=0`);
   };
 
   // 페이지 변경 핸들러
@@ -197,11 +160,6 @@ function Orders() {
     return statusMap[statusId] || { name: '알 수 없음', color: 'bg-gray-100 text-gray-800' };
   };
   
-  // 검색 버튼 핸들러
-  const handleSearch = () => {
-    // 검색 시 페이지는 항상 0으로 리셋
-    navigate(`/my/user/order?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}&page=0`);
-  };
 
   // 리뷰 완료 처리 함수
   const handleReviewComplete = (orderId, saleId) => {
@@ -227,7 +185,7 @@ function Orders() {
   
   // URL 변경 감지하여 데이터 다시 불러오기
   useEffect(() => {
-    fetchOrders();
+    getOrdersWithAxios();
   }, [location.search]);
   
   // 초기 렌더링 시 URL 설정
@@ -251,68 +209,11 @@ function Orders() {
 
   return (
     <div className="w-full m-7">
-      {/* 필터 섹션 */}
-      <div className="flex items-center justify-center gap-2 mb-4">
-        <button 
-          onClick={() => handleDateRangeSelect('all')} 
-          className={`px-3 py-1 border border-gray-300 rounded text-sm ${
-            selectedRange === 'all' ? 'bg-green text-white' : 'bg-white text-gray-700 hover:bg-green-700 transition-colors hover:text-white'
-          }`}
-        >
-          전체
-        </button>
-        <button 
-          onClick={() => handleDateRangeSelect('week')} 
-          className={`px-3 py-1 border border-gray-300 rounded text-sm ${
-            selectedRange === 'week' ? 'bg-green text-white' : 'bg-white text-gray-700 hover:bg-green-700 transition-colors hover:text-white'
-          }`}
-        >
-          1주일
-        </button>
-        <button 
-          onClick={() => handleDateRangeSelect('month')} 
-          className={`px-3 py-1 border border-gray-300 rounded text-sm ${
-            selectedRange === 'month' ? 'bg-green text-white' : 'bg-white text-gray-700 hover:bg-green-700 transition-colors hover:text-white'
-          }`}
-        >
-          1개월
-        </button>
-        <button 
-          onClick={() => handleDateRangeSelect('quarter')} 
-          className={`px-3 py-1 border border-gray-300 rounded text-sm ${
-            selectedRange === 'quarter' ? 'bg-green text-white' : 'bg-white text-gray-700 hover:bg-green-700 transition-colors hover:text-white'
-          }`}
-        >
-          3개월
-        </button>
-        
-        <input 
-          type="date" 
-          name="startDate"
-          value={dateRange.startDate}
-          onChange={(e) => {
-            setDateRange(prev => ({ ...prev, startDate: e.target.value }));
-          }}
-          className="border border-gray-300 rounded px-2 py-1 text-sm cursor-pointer"
-        />
-        <span>~</span>
-        <input 
-          type="date" 
-          name="endDate"
-          value={dateRange.endDate}
-          onChange={(e) => {
-            setDateRange(prev => ({ ...prev, endDate: e.target.value }));
-          }}
-          className="border border-gray-300 rounded px-2 py-1 text-sm cursor-pointer"
-        />
-        
-        <button 
-          onClick={handleSearch}
-          className="px-4 py-1 bg-green text-white rounded text-sm ml-2 hover:bg-green-700 transition-colors"
-        >
-          조회
-        </button>
-      </div>
+      <DateFilter
+        dateRange={dateRange}
+        selectedRange={selectedRange}
+        onRangeUpdate={handleDateRangeUpdate}
+      />
       
       {/* 주문 목록 */}
       <div className="space-y-5">

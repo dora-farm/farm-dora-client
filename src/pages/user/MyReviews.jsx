@@ -169,11 +169,12 @@ function MyReviews() {
   // 리뷰 삭제 처리
     const handleReviewDelete = async (reviewId) => {
         try {
-        const response = await axios.delete(`http://localhost:8080/api/my/user/order/myreviews/${reviewId}`);
+        const response = await axios.delete(`http://localhost:8080/api/my/user/order/myreviews/${reviewId}/delete`);
 
         if (response.data.status === 200) {
             // 성공적으로 삭제되면 목록에서도 제거
             setReviews(reviews.filter(review => review.reviewId !== reviewId));
+            getReviewsWithAxios();
         } else {
             alert('리뷰 삭제에 실패했습니다.');
         }
@@ -192,7 +193,7 @@ function MyReviews() {
     // URL이 없거나 쿼리 파라미터가 누락된 경우 기본값으로 리다이렉트
         if (!location.search || !getQueryParams().startDate || !getQueryParams().endDate) {
             navigate(`/my/user/review?startDate=${getFirstDayOfMonth()}&endDate=${getLastDayOfMonth()}&page=0`);
-            setSelectedRange('month'); // 기본 범위를 '1개월'로 설정
+            setSelectedRange('all');
         }
     }, []);
 
