@@ -87,6 +87,13 @@ function MyPage() {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
+  const formatImageUrl = (imagePath) => {
+    const baseUrl = "https://u7ouobpu9909.edge.naverncp.com/cdie6Z8lNS/wishlist/";
+    const params = "?type=f&w=216&h=180"
+
+    return imagePath.startsWith('http') ? imagePath : `${baseUrl}${imagePath}${params}`;
+  };
+
   return (
     <div className="w-full m-7">
       <div className="flex h-auto justify-center mx-8 mt-8 gap-4">
@@ -215,7 +222,7 @@ function MyPage() {
                   <div className="w-full h-full bg-gray-light flex items-center justify-center">
                     {item.saveFile && !imageErrors[item.id] ? (
                       <img 
-                        src={item.saveFile} 
+                        src={formatImageUrl(item.saveFile)}
                         alt={item.title} 
                         className="w-full h-full object-cover"
                         onError={() => {
