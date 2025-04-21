@@ -1,4 +1,3 @@
-// useWishlist.js - 로직 부분을 커스텀 훅으로 분리
 import { useState, useEffect } from "react";
 import axios from "axios";
 
