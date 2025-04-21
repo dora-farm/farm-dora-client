@@ -63,18 +63,16 @@ function MyPage() {
   const loadWishlistItems = async () => {
     setIsWishlistLoading(true);
     try {
-      // const response = await axios.get(
-      //   `http://localhost:8080/api/my/user/dashboard/preview`,
-      //   { params: { userId, limit: 4 } }
-      // );
-      
-      // setWishlistItems(response.data.data || []);
+      const response = await axios.get(
+        `http://localhost:8080/api/my/user/dashboard/preview`,
+        { params: { userId } }
+      );
 
-      // 샘플 데이터 사용 (API 연동 후 제거)
-      setWishlistItems(sampleWishlistItems); 
+      const limitedData = response.data.data.slice(0, 4);
+      setWishlistItems(limitedData)
+
     } catch (error) {
       console.error("찜 리스트를 불러올 수 없습니다:", error.message);
-      setWishlistItems(sampleWishlistItems);
     } finally {
       setIsWishlistLoading(false);
     }
@@ -84,42 +82,6 @@ function MyPage() {
     loadDashboardInfo();
     loadWishlistItems();
   }, []);
-
-  // 샘플 데이터 - API 연동 전 테스트용 (실제 구현 시 삭제)
-  const sampleWishlistItems = [
-    {
-      id: 1,
-      productId: 101,
-      productName: "프리미엄 원두 선물세트",
-      productOption: "500g x 2개",
-      thumbnail: "/images/products/coffee-beans.jpg",
-      price: 38000
-    },
-    {
-      id: 2,
-      productId: 102,
-      productName: "핸드드립 커피메이커",
-      productOption: "1~2인용",
-      thumbnail: "/images/products/drip-maker.jpg",
-      price: 56000,
-    },
-    {
-      id: 3,
-      productId: 103,
-      productName: "스페셜티 커피 3종",
-      productOption: "250g x 3개",
-      thumbnail: "/images/products/specialty-coffee.jpg",
-      price: 25000,
-    },
-    {
-      id: 4,
-      productId: 104,
-      productName: "커피 보온병",
-      productOption: "500ml",
-      thumbnail: "/images/products/thermos.jpg",
-      price: 15000,
-    }
-  ];
 
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -245,16 +207,16 @@ function MyPage() {
             {wishlistItems.map((item) => (
               // 상품 클릭 시 상품 상세 페이지로 이동
               <Link 
-                to={`/product/${item.productId}`} 
+                to={`/product/${item.saleId}`} 
                 key={item.id}
                 className="bg-white border border-gray-dark rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
               >
                 <div className="relative h-48 overflow-hidden">
                   <div className="w-full h-full bg-gray-light flex items-center justify-center">
-                    {item.thumbnail && !imageErrors[item.id] ? (
+                    {item.saveFile && !imageErrors[item.id] ? (
                       <img 
-                        src={item.thumbnail} 
-                        alt={item.productName} 
+                        src={item.saveFile} 
+                        alt={item.title} 
                         className="w-full h-full object-cover"
                         onError={() => {
                           setImageErrors((prev) => ({ ...prev, [item.id]: true }));
@@ -269,8 +231,8 @@ function MyPage() {
                 </div>
                 
                 <div className="p-4">
-                  <h3 className="font-bold text-brown truncate">{item.productName}</h3>
-                  <p className="text-text-gray text-sm mt-1">{item.productOption}</p>
+                  <h3 className="font-bold text-brown truncate">{item.title}</h3>
+                  <p className="text-text-gray text-sm mt-1">{item.name}</p>
                   <div className="mt-2">
                     <span className="text-brown font-bold">{formatPrice(item.price)}원</span>
                   </div>
