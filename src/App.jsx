@@ -50,10 +50,16 @@ function App() {
             <Route index element={<Home/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/join" element={<Join/>} />
+            <Route path="/category" element={<Category/>} />
+            <Route path="/event" element={<Event/>} />
+            <Route path="/support" element={<ChatSupport/>} />
+            <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
+            <Route path="/live/setup" element={<LiveSetup/>} /> {/* 방송준비화면 */}
+            <Route path="/live/view" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
+            <Route path="/user/wishlist" element={<Wishlist/>} />
 
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
-              <Route path="/my/user/wishlist" element={<Wishlist/>} />
               <Route path="/my/user/cart" element={<Cart/>} />
               <Route path="/my/user/review" element={<MyReviews/>} />
               <Route path="/my/user/inquiry" element={<MyInquireies/>} />
@@ -87,13 +93,6 @@ function App() {
               <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
               <Route path="/my/seller/live" element={<LiveSetup/>} />
             </Route>
-
-            <Route path="/category" element={<Category/>} />
-            <Route path="/event" element={<Event/>} />
-            <Route path="/support" element={<ChatSupport/>} />
-            <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
-            <Route path="/live/setup" element={<LiveSetup/>} /> {/* 방송준비화면 */}
-            <Route path="/live/view" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
           </Route>
         </Routes>
     </BrowserRouter>

@@ -20,7 +20,7 @@ function UserSidebar() {
       </h2>
       <nav className="mt-6 flex flex-col gap-1">
         <Link to="/my/user" className={activePath === "/my/user" ? activeBtn : btnHover}>마이페이지</Link>
-        <Link to="/my/user/wishlist" className={activePath === "/my/user/wishlist" ? activeBtn : btnHover}>찜한 상품</Link>
+        <Link to="/user/wishlist" className={activePath === "/user/wishlist" ? activeBtn : btnHover}>찜한 상품</Link>
         <Link to="/my/user/cart" className={activePath === "/my/user/cart" ? activeBtn : btnHover}>장바구니</Link>
         <Link to="/my/user/review" className={activePath === "/my/user/review" ? activeBtn : btnHover}>내 리뷰 보기</Link>
         <Link to="/my/user/inquiry" className={activePath === "/my/user/inquiry" ? activeBtn : btnHover}>내 문의 보기</Link>
