@@ -56,7 +56,6 @@ function App() {
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
             <Route path="/live/setup" element={<LiveSetup/>} /> {/* 방송준비화면 */}
             <Route path="/live/view" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
-            <Route path="/user/wishlist" element={<Wishlist/>} />
 
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
@@ -67,6 +66,7 @@ function App() {
               <Route path="/my/user/address" element={<ManageAddress/>} />
               <Route path="/my/user/profile" element={<EditProfile/>} />
               <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
+              <Route path="/my/user/wishlist" element={<Wishlist/>} />
             </Route>
 
             <Route element={<AdminLayout/>}>

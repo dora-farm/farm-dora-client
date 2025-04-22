@@ -3,7 +3,7 @@ import { useWishlist } from "./useWishlist";
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 
 export function WishPreview({ userId }) {
-  const { wishlistItems, isLoading, imageErrors, formatPrice, formatImageUrl, handleImageError } = useWishlist(userId);
+  const { wishlistItems, isLoading, imageErrors, formatImageUrl, handleImageError } = useWishlist(userId);
 
   if (isLoading) {
     return <div>로딩 중...</div>;
@@ -46,7 +46,7 @@ export function WishPreview({ userId }) {
               <h3 className="font-bold text-brown truncate">{item.title}</h3>
               <p className="text-text-gray text-sm mt-1">{item.name}</p>
               <div className="mt-2">
-                <span className="text-brown font-bold">{formatPrice(item.price)}원</span>
+                <span className="text-brown font-bold">{(item.price).toLocaleString()}원</span>
               </div>
             </div>
           </Link>
