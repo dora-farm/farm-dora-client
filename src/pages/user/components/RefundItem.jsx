@@ -7,6 +7,7 @@ function RefundItem({ sale }) {
     };
   
     return (
+      <>
       <div className="p-4 border-b">
         {/* 판매자 정보 */}
         {sale.seller && (
@@ -64,6 +65,8 @@ function RefundItem({ sale }) {
           </div>
         </div>
       </div>
+
+      </>
     );
   }
   
