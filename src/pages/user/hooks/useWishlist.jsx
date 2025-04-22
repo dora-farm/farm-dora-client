@@ -7,6 +7,8 @@ export function useWishlist(userId, previewMode) {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState({});
   const [isAllSelected, setIsAllSelected] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 5;
 
   const loadWishlistItems = async () => {
     setIsLoading(true);
@@ -16,15 +18,12 @@ export function useWishlist(userId, previewMode) {
         { params: { userId } }
       );
 
-      // 두 API 모두 response.data.data 형태로 실제 데이터가 전달됨
       let items = response.data.data;
 
-      // 미리보기 모드일 경우 데이터 제한
       if (previewMode) {
         items = items.slice(0, 4);
       }
 
-      // 데이터 정규화 - API 응답 구조가 다를 수 있음
       const normalizedItems = items.map((item) => ({
         saleId: item.saleId || "",
         title: item.title || "",
@@ -37,10 +36,9 @@ export function useWishlist(userId, previewMode) {
 
       setWishlistItems(normalizedItems);
 
-      // 선택 상태 초기화
       const initialSelection = {};
       normalizedItems.forEach((item) => {
-        initialSelection[item.id] = false;
+        initialSelection[item.saleId] = false;
       });
       setSelectedItems(initialSelection);
     } catch (error) {
@@ -54,7 +52,6 @@ export function useWishlist(userId, previewMode) {
     loadWishlistItems();
   }, [userId, previewMode]);
 
-  // 이미지 URL 포맷
   const formatImageUrl = (imagePath) => {
     if (!imagePath) return null;
 
@@ -67,15 +64,14 @@ export function useWishlist(userId, previewMode) {
       : `${baseUrl}${imagePath}${params}`;
   };
 
-  // 이미지 에러 처리
-  const handleImageError = (itemId) => {
-    setImageErrors((prev) => ({ ...prev, [itemId]: true }));
+  const handleImageError = (saleId) => {
+    setImageErrors((prev) => ({ ...prev, [saleId]: true }));
   };
 
   // 아이템 선택 토글
-  const toggleItemSelection = (itemId) => {
+  const toggleItemSelection = (saleId) => {
     setSelectedItems((prev) => {
-      const newState = { ...prev, [itemId]: !prev[itemId] };
+      const newState = { ...prev, [saleId]: !prev[saleId] };
 
       // 모든 아이템이 선택되었는지 확인
       const allSelected = Object.values(newState).every((selected) => selected);
@@ -92,7 +88,7 @@ export function useWishlist(userId, previewMode) {
 
     const updatedSelection = {};
     wishlistItems.forEach((item) => {
-      updatedSelection[item.id] = newState;
+      updatedSelection[item.saleId] = newState;
     });
 
     setSelectedItems(updatedSelection);
@@ -135,8 +131,33 @@ export function useWishlist(userId, previewMode) {
     }
   };
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  // 현재 페이지의 아이템만 반환하는 계산된 값
+  const paginatedItems = previewMode 
+    ? wishlistItems 
+    : wishlistItems.slice(
+        currentPage * itemsPerPage,
+        (currentPage + 1) * itemsPerPage
+      );
+  
+  // 전체 페이지 수 계산
+  const totalPages = Math.ceil(wishlistItems.length / itemsPerPage);
+  
+  // 이전/다음 페이지 존재 여부
+  const hasPrev = currentPage > 0;
+  const hasNext = currentPage < totalPages - 1;
+  
   return {
-    wishlistItems,
+    wishlistItems: paginatedItems, // 페이지네이션된 아이템
+    totalItems: wishlistItems.length, // 전체 아이템 개수
+    totalPages,
+    currentPage,
+    hasPrev,
+    hasNext,
+    onPageChange: handlePageChange,
     isLoading,
     imageErrors,
     selectedItems,

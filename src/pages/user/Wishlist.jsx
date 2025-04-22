@@ -8,18 +8,9 @@ function Wishlist() {
   const userId = 1;
 
   const {
-    wishlistItems,
-    isLoading,
-    imageErrors,
-    selectedItems,
-    isAllSelected,
-    formatImageUrl,
-    handleImageError,
-    toggleItemSelection,
-    toggleSelectAll,
-    deleteSelectedItems,
-    addToCart
-  } = useWishlist(userId, false);
+    wishlistItems, isLoading, imageErrors, selectedItems, isAllSelected, formatImageUrl, handleImageError, toggleItemSelection,
+    toggleSelectAll, deleteSelectedItems, addToCart, totalItems, totalPages, currentPage, hasPrev, hasNext, onPageChange
+    } = useWishlist(userId, false);
 
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">로딩 중...</div>;
@@ -52,7 +43,7 @@ function Wishlist() {
             <GreenCircleCheckbox checked={isAllSelected} onChange={toggleSelectAll} />
             <span className="font-medium">전체 선택</span>
             <span className="text-sm ml-2 text-gray-600">
-              (총 {wishlistItems.length}개)
+              (총 {totalItems}개)
             </span>
           </div>
           <button 
@@ -68,23 +59,23 @@ function Wishlist() {
       <div className="grid grid-cols-1 gap-0">
         {wishlistItems.map((item) => (
           <WishlistItem
-            key={item.id}
+            key={item.saleId}
             item={item}
-            selected={selectedItems[item.id]}
+            selected={selectedItems[item.saleId]}
             onToggleSelect={toggleItemSelection}
             onAddToCart={addToCart}
             formatImageUrl={formatImageUrl}
             onImageError={handleImageError}
-            imageError={imageErrors[item.id]}
+            imageError={imageErrors[item.saleId]}
             previewMode={false}
           />
         ))}
           <Pagination
-            currentPage={0}
-            totalPages={Math.ceil(wishlistItems.length / 5)}
-            onPageChange={() => {}}
-            hasPrev={true}
-            hasNext={true}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            hasPrev={hasPrev}
+            hasNext={hasNext}
             pageButtonCount={5}
             activeColor="bg-green"
             hoverColor="hover:bg-gray-100"
