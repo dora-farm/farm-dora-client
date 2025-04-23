@@ -16,7 +16,7 @@ export function useWishlist(userId, previewMode) {
 
       const endpoint = previewMode
         ? `http://localhost:8080/api/my/user/dashboard/wishpreview`
-        : `http://localhost:8080/api/my/user/dashboard/wishlist`;
+        : `http://localhost:8080/api/my/user/wishlist/list`;
       const response = await axios.get(
         endpoint, { params: { userId } });
 
@@ -103,7 +103,7 @@ export function useWishlist(userId, previewMode) {
     setIsLoading(true);
     try {
       // API 호출로 선택된 아이템 삭제
-      await axios.delete(`http://localhost:8080/api/my/user/wishlist/items`, {
+      await axios.delete(`http://localhost:8080/api/my/user/wishlist/delete`, {
         data: { itemIds: itemsToDelete },
       });
 
