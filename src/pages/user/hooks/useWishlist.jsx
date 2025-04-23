@@ -9,6 +9,7 @@ export function useWishlist(userId, previewMode) {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
 
+  // 찜 리스트 불러오기
   const loadWishlistItems = async () => {
     setIsLoading(true);
     try {
@@ -45,6 +46,23 @@ export function useWishlist(userId, previewMode) {
       setIsLoading(false);
     }
   };
+
+  // 찜 리스트 삭제하기
+  const selectedItemsToDelete = Object.keys(selectedItems).filter(
+    (likeId) => selectedItems[likeId]
+  );
+
+  const deleteSelectedItems = async () => {
+    if (selectedItemsToDelete.length === 0) return;
+    try {
+      const response = await axios.delete (
+        `http://localhost:8080/api/my/user/wishlist/delete`, {
+          data: { likeIds: selectedItemsToDelete },
+        }
+        
+      )
+    }
+  }
 
   useEffect(() => {
     loadWishlistItems();
@@ -86,7 +104,6 @@ export function useWishlist(userId, previewMode) {
     });
     setSelectedItems(newSelection);
   }
-
 
   // 페이지네이션
   const handlePageChange = (newPage) => {
