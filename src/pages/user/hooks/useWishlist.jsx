@@ -13,16 +13,14 @@ export function useWishlist(userId, previewMode) {
   const loadWishlistItems = async () => {
     setIsLoading(true);
     try {
+
+      const endpoint = previewMode
+        ? `http://localhost:8080/api/my/user/dashboard/wishpreview`
+        : `http://localhost:8080/api/my/user/dashboard/wishlist`;
       const response = await axios.get(
-        `http://localhost:8080/api/my/user/dashboard/wishlist`,
-        { params: { userId } }
-      );
+        endpoint, { params: { userId } });
 
       let items = response.data.data;
-
-      if (previewMode) {
-        items = items.slice(0, 4);
-      }
 
       const normalizedItems = items.map((item) => ({
         saleId: item.saleId || "",

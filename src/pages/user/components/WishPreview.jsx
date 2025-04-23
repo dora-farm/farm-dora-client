@@ -10,7 +10,8 @@ function WishPreview({ userId }) {
     imageErrors,
     formatImageUrl,
     handleImageError
-  } = useWishlist(userId, true); // true로 설정하여 미리보기 모드 활성화
+  } = useWishlist(userId, true);
+
 
   if (isLoading) {
     return (
@@ -56,11 +57,11 @@ function WishPreview({ userId }) {
       <div className="grid grid-cols-4 gap-4 mt-6">
         {wishlistItems.map(item => (
           <WishlistItem
-            key={item.id}
+            key={item.saleId}
             item={item}
             formatImageUrl={formatImageUrl}
             onImageError={handleImageError}
-            imageError={imageErrors[item.id]}
+            imageError={imageErrors[item.saleId]}
             previewMode={true}
           />
         ))}

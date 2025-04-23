@@ -16,7 +16,6 @@ function WishlistItem({
   imageError,
   previewMode = false
 }) {
-  // 미리보기 모드일 때의 렌더링
   if (previewMode) {
     return (
       <Link 
@@ -51,7 +50,6 @@ function WishlistItem({
     );
   }
 
-  // 전체 리스트 모드일 때의 렌더링
   return (
     <div className="grid grid-cols-3 py-3 border-b border-gray-300">
       <div className="flex items-center ml-8 justify-center">
