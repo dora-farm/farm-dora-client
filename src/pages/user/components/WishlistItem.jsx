@@ -8,12 +8,11 @@ import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 
 function WishlistItem({
   item,
-  selected,
-  onToggleSelect,
-  onAddToCart,
   formatImageUrl,
   onImageError,
   imageError,
+  checked,
+  onToggleSelect,
   previewMode = false
 }) {
   if (previewMode) {
@@ -29,7 +28,7 @@ function WishlistItem({
                 src={formatImageUrl(item.saveFile)}
                 alt={item.title} 
                 className="w-full h-full object-cover"
-                onError={() => onImageError(item.saleId)}
+                onError={() => onImageError(item.likeId)}
               />
             ) : (
               <ImageNotSupportedIcon 
@@ -54,20 +53,17 @@ function WishlistItem({
     <div className="grid grid-cols-3 py-3 border-b border-gray-300">
       <div className="flex items-center ml-8 justify-center">
         <div className="flex items-center mr-8">
-          <GreenCircleCheckbox 
-            checked={selected} 
-            onChange={() => onToggleSelect(item.saleId)} 
-          />
+          <GreenCircleCheckbox checked={checked} onChange={onToggleSelect} />
         </div>
 
         <div className="flex items-center">
-          <div className="w-[150px] flex items-center justify-center overflow-hidden">
+          <div className="w-[150px] h-[125px] rounded-xl flex items-center justify-center overflow-hidden">
             {(item.saveFile) && !imageError ? (
               <img 
                 src={formatImageUrl(item.saveFile)}
                 alt={item.title} 
                 className="w-full h-full object-cover rounded-xl"
-                onError={() => onImageError(item.saleId)}
+                onError={() => onImageError(item.likeId)}
               />
             ) : (
               <div className="w-[150px] h-[150px] flex items-center justify-center bg-gray-200 rounded-xl">
@@ -105,13 +101,14 @@ function WishlistItem({
         <div className="flex items-center">
           <button 
             className="w-10 h-10 flex items-center justify-center mb-5 mr-6"
-            onClick={() => onAddToCart(item.saleId)}
           >
             <AddShoppingCartIcon fontSize="medium" />
           </button>
         </div>
         <div className="flex items-center">
-          <button className="w-10 h-10 flex items-center justify-center text-red-500 mr-6">
+          <button 
+            className="w-10 h-10 flex items-center justify-center text-red-500 mr-6"
+          >
             <FavoriteIcon fontSize="medium" />
           </button>
         </div>

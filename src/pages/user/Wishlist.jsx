@@ -8,8 +8,21 @@ function Wishlist() {
   const userId = 1;
 
   const {
-    wishlistItems, isLoading, imageErrors, selectedItems, isAllSelected, formatImageUrl, handleImageError, toggleItemSelection,
-    toggleSelectAll, deleteSelectedItems, addToCart, totalItems, totalPages, currentPage, hasPrev, hasNext, onPageChange
+    wishlistItems, 
+    isLoading, 
+    imageErrors, 
+    totalItems, 
+    totalPages, 
+    currentPage, 
+    hasPrev, 
+    hasNext, 
+    formatImageUrl, 
+    handleImageError,
+    toggleItemSelection,
+    toggleSelectAll,
+    selectedItems,
+    isAllSelected,
+    onPageChange
     } = useWishlist(userId, false);
 
   if (isLoading) {
@@ -40,7 +53,7 @@ function Wishlist() {
       <div className="border-y-2 border-gray-dark py-4 mb-4">
         <div className="flex items-center ml-4 justify-between">
           <div className="flex items-center ml-14">
-            <GreenCircleCheckbox checked={isAllSelected} onChange={toggleSelectAll} />
+            <GreenCircleCheckbox checked={isAllSelected} onChange={toggleSelectAll}/>
             <span className="font-medium">전체 선택</span>
             <span className="text-sm ml-2 text-gray-600">
               (총 {totalItems}개)
@@ -48,8 +61,6 @@ function Wishlist() {
           </div>
           <button 
             className="px-3 py-1 bg-red-500 text-white text-sm rounded mr-10"
-            onClick={deleteSelectedItems}
-            disabled={!Object.values(selectedItems).some(selected => selected)}
           >
             선택 삭제
           </button>
@@ -61,12 +72,11 @@ function Wishlist() {
           <WishlistItem
             key={item.saleId}
             item={item}
-            selected={selectedItems[item.saleId]}
-            onToggleSelect={toggleItemSelection}
-            onAddToCart={addToCart}
             formatImageUrl={formatImageUrl}
             onImageError={handleImageError}
-            imageError={imageErrors[item.saleId]}
+            imageError={imageErrors[item.likeId]}
+            checked={selectedItems[item.likeId] || false}
+            onToggleSelect={() => toggleItemSelection(item.likeId)}
             previewMode={false}
           />
         ))}

@@ -6,7 +6,6 @@ export function useWishlist(userId, previewMode) {
   const [imageErrors, setImageErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState({});
-  const [isAllSelected, setIsAllSelected] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
 
@@ -23,6 +22,7 @@ export function useWishlist(userId, previewMode) {
       let items = response.data.data;
 
       const normalizedItems = items.map((item) => ({
+        likeId: item.likeId || "",
         saleId: item.saleId || "",
         title: item.title || "",
         option: item.option || "",
@@ -36,7 +36,7 @@ export function useWishlist(userId, previewMode) {
 
       const initialSelection = {};
       normalizedItems.forEach((item) => {
-        initialSelection[item.saleId] = false;
+        initialSelection[item.likeId] = false;
       });
       setSelectedItems(initialSelection);
     } catch (error) {
@@ -48,8 +48,9 @@ export function useWishlist(userId, previewMode) {
 
   useEffect(() => {
     loadWishlistItems();
-  }, [userId, previewMode]);
+  }, []);
 
+  // 이미지 URL 포맷팅 & 에러 핸들링
   const formatImageUrl = (imagePath) => {
     if (!imagePath) return null;
 
@@ -61,96 +62,48 @@ export function useWishlist(userId, previewMode) {
       ? imagePath
       : `${baseUrl}${imagePath}${params}`;
   };
-
-  const handleImageError = (saleId) => {
-    setImageErrors((prev) => ({ ...prev, [saleId]: true }));
+  const handleImageError = (likeId) => {
+    setImageErrors((prev) => ({ ...prev, [likeId]: true }));
   };
 
-  // 아이템 선택 토글
-  const toggleItemSelection = (saleId) => {
-    setSelectedItems((prev) => {
-      const newState = { ...prev, [saleId]: !prev[saleId] };
-
-      // 모든 아이템이 선택되었는지 확인
-      const allSelected = Object.values(newState).every((selected) => selected);
-      setIsAllSelected(allSelected);
-
-      return newState;
-    });
+  // 아이템 선택, 전체 선택
+  const toggleItemSelection = (likeId) => {
+    setSelectedItems(prev => ({
+      ...prev,
+      [likeId]: !prev[likeId],
+    }));
   };
 
-  // 전체 선택/해제
+  const isAllSelected = wishlistItems.length > 0 && 
+    wishlistItems.every(item => selectedItems[item.likeId] === true);
+
   const toggleSelectAll = () => {
-    const newState = !isAllSelected;
-    setIsAllSelected(newState);
+    const allSelected = !isAllSelected;
+    const newSelection = {};
 
-    const updatedSelection = {};
-    wishlistItems.forEach((item) => {
-      updatedSelection[item.saleId] = newState;
+    wishlistItems.forEach(item => {
+      newSelection[item.likeId] = allSelected;
     });
+    setSelectedItems(newSelection);
+  }
 
-    setSelectedItems(updatedSelection);
-  };
 
-  // 선택된 아이템 삭제
-  const deleteSelectedItems = async () => {
-    const itemsToDelete = Object.entries(selectedItems)
-      .filter(([_, isSelected]) => isSelected)
-      .map(([id]) => id);
-
-    if (itemsToDelete.length === 0) return;
-
-    setIsLoading(true);
-    try {
-      // API 호출로 선택된 아이템 삭제
-      await axios.delete(`http://localhost:8080/api/my/user/wishlist/delete`, {
-        data: { itemIds: itemsToDelete },
-      });
-
-      // 성공 시 목록 다시 로드
-      await loadWishlistItems();
-    } catch (error) {
-      console.error("선택한 항목을 삭제할 수 없습니다:", error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // 장바구니에 추가
-  const addToCart = async (itemId) => {
-    try {
-      await axios.post(`http://localhost:8080/api/cart`, {
-        userId,
-        itemId,
-      });
-      // 성공 메시지나 상태 업데이트 로직 추가 가능
-    } catch (error) {
-      console.error("장바구니에 추가할 수 없습니다:", error.message);
-    }
-  };
-
+  // 페이지네이션
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-
-  // 현재 페이지의 아이템만 반환하는 계산된 값
   const paginatedItems = previewMode 
     ? wishlistItems 
     : wishlistItems.slice(
-        currentPage * itemsPerPage,
-        (currentPage + 1) * itemsPerPage
+        currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage
       );
-  
-  // 전체 페이지 수 계산
   const totalPages = Math.ceil(wishlistItems.length / itemsPerPage);
-  
-  // 이전/다음 페이지 존재 여부
   const hasPrev = currentPage > 0;
   const hasNext = currentPage < totalPages - 1;
   
   return {
-    wishlistItems: paginatedItems, // 페이지네이션된 아이템
-    totalItems: wishlistItems.length, // 전체 아이템 개수
+    wishlistItems: paginatedItems,
+    totalItems: wishlistItems.length,
     totalPages,
     currentPage,
     hasPrev,
@@ -159,13 +112,11 @@ export function useWishlist(userId, previewMode) {
     isLoading,
     imageErrors,
     selectedItems,
-    isAllSelected,
     formatImageUrl,
     handleImageError,
     toggleItemSelection,
     toggleSelectAll,
-    deleteSelectedItems,
-    addToCart,
+    isAllSelected,
     refreshItems: loadWishlistItems,
   };
 }
