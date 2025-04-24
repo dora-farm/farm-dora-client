@@ -4,7 +4,7 @@ import GreenCircleCheckbox from "../../../common/components/GreenCircleCheckbox"
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
-import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
+import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 
 function WishlistItem({
   item,
@@ -15,36 +15,38 @@ function WishlistItem({
   onToggleSelect,
   onToggleLike,
   showAlert,
-  previewMode = false
+  previewMode = false,
 }) {
   if (previewMode) {
     return (
-      <Link 
+      <Link
         to={`/product/${item.saleId}`}
         className="bg-white border border-gray-dark rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
       >
         <div className="relative h-48 overflow-hidden">
           <div className="w-full h-full bg-gray-light flex items-center justify-center">
-            {(item.saveFile) && !imageError ? (
-              <img 
+            {item.saveFile && !imageError ? (
+              <img
                 src={formatImageUrl(item.saveFile)}
-                alt={item.title} 
-                className="w-full h-full object-cover"
-                onError={() => onImageError(item.likeId)}
+                alt={item.title}
+                className="w-full h-full object-cover rounded-lg"
+                onError={() => onImageError(item.saleId)}
               />
             ) : (
-              <ImageNotSupportedIcon 
-                style={{ width: 64, height: 64, color: "#6B7280" }} 
+              <ImageNotSupportedIcon
+                style={{ width: 64, height: 64, color: "#6B7280" }}
               />
             )}
           </div>
         </div>
-        
+
         <div className="p-4">
           <h3 className="font-bold text-brown truncate">{item.title}</h3>
           <p className="text-text-gray text-sm mt-1">{item.option}</p>
           <div className="mt-2">
-            <span className="text-brown font-bold">{(item.price).toLocaleString()}원</span>
+            <span className="text-brown font-bold">
+              {item.price.toLocaleString()}원
+            </span>
           </div>
         </div>
       </Link>
@@ -60,17 +62,17 @@ function WishlistItem({
 
         <div className="flex items-center">
           <div className="w-[150px] h-[125px] rounded-xl flex items-center justify-center overflow-hidden">
-            {(item.saveFile) && !imageError ? (
-              <img 
+            {item.saveFile && !imageError ? (
+              <img
                 src={formatImageUrl(item.saveFile)}
-                alt={item.title} 
+                alt={item.title}
                 className="w-full h-full object-cover rounded-xl"
                 onError={() => onImageError(item.likeId)}
               />
             ) : (
-              <div className="w-[150px] h-[150px] flex items-center justify-center bg-gray-200 rounded-xl">
-                <ImageNotSupportedIcon 
-                  style={{ width: 64, height: 64, color: "#6B7280" }} 
+              <div className="w-[150px] h-[125px] flex items-center justify-center bg-gray-200 rounded-xl">
+                <ImageNotSupportedIcon
+                  style={{ width: 64, height: 64, color: "#6B7280" }}
                 />
               </div>
             )}
@@ -84,9 +86,7 @@ function WishlistItem({
           <div className="flex">
             <StarIcon className="text-green" />
           </div>
-          <span className="ml-1 text-sm text-gray-600">
-            ({item.score})
-          </span>
+          <span className="ml-1 text-sm text-gray-600">({item.score})</span>
           <span className="mx-2 text-gray-300">|</span>
           <span className="text-sm text-gray-600">
             리뷰 {item.reviewCount}개
@@ -101,16 +101,16 @@ function WishlistItem({
 
       <div className="flex flex-col items-end justify-center h-full pr-8">
         <div className="flex items-center">
-          <button 
-            className="w-10 h-10 flex items-center justify-center mb-5 mr-6"
-          >
+          <button className="w-10 h-10 flex items-center justify-center mb-5 mr-6">
             <AddShoppingCartIcon fontSize="medium" />
           </button>
         </div>
         <div className="flex items-center">
-          <button 
+          <button
             className="w-10 h-10 flex items-center justify-center text-red-500 mr-6"
-            onClick={() => showAlert("찜 해제 되었습니다!",() => onToggleLike(item.likeId))}
+            onClick={() =>
+              showAlert("찜 해제 되었습니다!", () => onToggleLike(item.likeId))
+            }
           >
             <FavoriteIcon fontSize="medium" />
           </button>

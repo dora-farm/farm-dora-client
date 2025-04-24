@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useWishlist } from "./hooks/useWishlist";
 import WishlistItem from "./components/WishlistItem";
 import GreenCircleCheckbox from "../../common/components/GreenCircleCheckbox";
@@ -22,7 +22,8 @@ function Wishlist() {
     imageErrors, 
     totalItems, 
     totalPages, 
-    currentPage, 
+    currentPage,
+    setCurrentPage,
     hasPrev, 
     hasNext, 
     formatImageUrl, 
@@ -37,41 +38,70 @@ function Wishlist() {
     selectedItemsToDelete
   } = useWishlist(userId, false);
 
-  // 알림 모달 열기
-  const showAlert = (message, callback = null) => {
-    setAlertModal({
-      isOpen: true,
-      message,
-      callback
-    });
-  };
+  // 알림 모달 열기 - useCallback으로 메모이제이션하여 안정성 높임
+  const showAlert = useCallback((message, callback = null) => {
+    console.log("showAlert 함수 호출됨:", message);
+    // setTimeout을 사용하여 상태 업데이트를 다음 틱으로 지연
+    setTimeout(() => {
+      setAlertModal({
+        isOpen: true,
+        message,
+        callback
+      });
+    }, 0);
+  }, []);
 
   // 모달 닫기
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     const { callback } = alertModal;
-    setAlertModal({ isOpen: false, message: "", callback: null });
+    setAlertModal(prev => ({ ...prev, isOpen: false }));
     
-    // 콜백이 있으면 실행
+    // 콜백이 있으면 실행, 약간의 지연 후 실행
     if (callback) {
-      callback();
+      setTimeout(() => {
+        callback();
+      }, 50);
     }
-  };
+    
+    // 완전히 초기화는 트랜지션 이후에
+    setTimeout(() => {
+      setAlertModal({ isOpen: false, message: "", callback: null });
+    }, 300);
+  }, [alertModal]);
 
-  // 삭제 버튼 클릭 핸들러 - 바로 삭제 실행
+  // 삭제 버튼 클릭 핸들러
   const handleDeleteClick = async () => {
     if (selectedItemsToDelete.length === 0) {
       showAlert("삭제할 상품을 선택해주세요.");
       return;
     }
-    
-    // 바로 삭제 실행
+  
     setDeleteLoading(true);
-    
+  
     try {
-      const success = await deleteSelectedItems();
+      // 현재 페이지 정보 및 선택된 항목 수 미리 계산
+      const currentPageItems = wishlistItems.slice(
+        currentPage * 5,
+        (currentPage + 1) * 5
+      );
+      const selectedCount = currentPageItems.filter(
+        (item) => selectedItems[item.likeId]
+      ).length;
+      const willBeEmptyPage =
+        selectedCount === currentPageItems.length && currentPage > 0;
       
+      // 삭제 작업 실행
+      const success = await deleteSelectedItems();
+  
       if (success) {
-        showAlert("선택한 상품이 삭제되었습니다.");
+        // 삭제 성공 후 모달 표시
+        if (willBeEmptyPage) {
+          showAlert("찜 항목이 삭제되었습니다!", () => {
+            setCurrentPage((prev) => Math.max(0, prev - 1));
+          });
+        } else {
+          showAlert("찜 항목이 삭제되었습니다!");
+        }
       } else {
         showAlert("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
@@ -154,7 +184,7 @@ function Wishlist() {
         />
       </div>
       
-      {/* 알림 모달 */}
+      {/* 알림 모달 - 상태 관리 강화 */}
       {alertModal.isOpen && (
         <AlertModal
           message={alertModal.message}

@@ -61,7 +61,7 @@ function WishPreview({ userId }) {
             item={item}
             formatImageUrl={formatImageUrl}
             onImageError={handleImageError}
-            imageError={imageErrors[item.likeId]}
+            imageError={imageErrors[item.saleId]}
             previewMode={true}
           />
         ))}
