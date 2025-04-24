@@ -49,7 +49,8 @@ export function useWishlist(userId, previewMode) {
 
   // 찜 리스트 삭제하기
   const selectedItemsToDelete = Object.keys(selectedItems).filter(
-    (likeId) => selectedItems[likeId]
+    (likeId) => selectedItems[likeId])
+    .map(likeId => parseInt(likeId, 10)
   );
 
   const deleteSelectedItems = async () => {
@@ -58,9 +59,10 @@ export function useWishlist(userId, previewMode) {
       setIsLoading(true);
       const response = await axios.delete (
         `http://localhost:8080/api/my/user/wishlist/delete`, {
-          data: { likeIds: selectedItemsToDelete },
+          data: selectedItemsToDelete,
         }
       );
+
       if (response.status === 200) {
         await loadWishlistItems();
 
@@ -123,7 +125,7 @@ export function useWishlist(userId, previewMode) {
     });
     setSelectedItems(newSelection);
   }
-  
+
   // 페이지네이션
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
