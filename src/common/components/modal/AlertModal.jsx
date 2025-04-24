@@ -8,7 +8,7 @@ function AlertModal({ message, onClose }) {
           <p className="text-gray-800">{message}</p>
           <button
             onClick={onClose}
-            className="mt-5 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="mt-5 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           >
             닫기
           </button>

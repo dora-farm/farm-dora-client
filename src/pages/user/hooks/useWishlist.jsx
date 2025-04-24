@@ -55,12 +55,31 @@ export function useWishlist(userId, previewMode) {
   const deleteSelectedItems = async () => {
     if (selectedItemsToDelete.length === 0) return;
     try {
+      setIsLoading(true);
       const response = await axios.delete (
         `http://localhost:8080/api/my/user/wishlist/delete`, {
           data: { likeIds: selectedItemsToDelete },
         }
-        
-      )
+      );
+      if (response.status === 200) {
+        await loadWishlistItems();
+
+        const newSelection = {};
+        wishlistItems.forEach(item => {
+          newSelection[item.likeId] = false;
+        });
+        setSelectedItems(newSelection);
+
+        if (paginatedItems.length === selectedItemsToDelete.length && currentPage > 0) {
+          setCurrentPage(prev => prev - 1);
+        }
+
+        return true;
+      }
+    } catch (error) {
+      console.error("찜 리스트를 삭제할 수 없습니다:", error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -104,7 +123,7 @@ export function useWishlist(userId, previewMode) {
     });
     setSelectedItems(newSelection);
   }
-
+  
   // 페이지네이션
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -135,5 +154,7 @@ export function useWishlist(userId, previewMode) {
     toggleSelectAll,
     isAllSelected,
     refreshItems: loadWishlistItems,
+    selectedItemsToDelete,
+    deleteSelectedItems,
   };
 }
