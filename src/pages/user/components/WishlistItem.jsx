@@ -13,6 +13,8 @@ function WishlistItem({
   imageError,
   checked,
   onToggleSelect,
+  onToggleLike,
+  showAlert,
   previewMode = false
 }) {
   if (previewMode) {
@@ -108,6 +110,7 @@ function WishlistItem({
         <div className="flex items-center">
           <button 
             className="w-10 h-10 flex items-center justify-center text-red-500 mr-6"
+            onClick={() => showAlert("찜 해제 되었습니다!",() => onToggleLike(item.likeId))}
           >
             <FavoriteIcon fontSize="medium" />
           </button>

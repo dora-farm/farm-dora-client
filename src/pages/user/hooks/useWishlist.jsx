@@ -13,12 +13,10 @@ export function useWishlist(userId, previewMode) {
   const loadWishlistItems = async () => {
     setIsLoading(true);
     try {
-
       const endpoint = previewMode
         ? `http://localhost:8080/api/my/user/dashboard/wishpreview`
         : `http://localhost:8080/api/my/user/wishlist/list`;
-      const response = await axios.get(
-        endpoint, { params: { userId } });
+      const response = await axios.get(endpoint, { params: { userId } });
 
       let items = response.data.data;
 
@@ -48,17 +46,17 @@ export function useWishlist(userId, previewMode) {
   };
 
   // 찜 리스트 삭제하기
-  const selectedItemsToDelete = Object.keys(selectedItems).filter(
-    (likeId) => selectedItems[likeId])
-    .map(likeId => parseInt(likeId, 10)
-  );
+  const selectedItemsToDelete = Object.keys(selectedItems)
+    .filter((likeId) => selectedItems[likeId])
+    .map((likeId) => parseInt(likeId, 10));
 
   const deleteSelectedItems = async () => {
     if (selectedItemsToDelete.length === 0) return;
     try {
       setIsLoading(true);
-      const response = await axios.delete (
-        `http://localhost:8080/api/my/user/wishlist/delete`, {
+      const response = await axios.delete(
+        `http://localhost:8080/api/my/user/wishlist/delete`,
+        {
           data: selectedItemsToDelete,
         }
       );
@@ -67,13 +65,16 @@ export function useWishlist(userId, previewMode) {
         await loadWishlistItems();
 
         const newSelection = {};
-        wishlistItems.forEach(item => {
+        wishlistItems.forEach((item) => {
           newSelection[item.likeId] = false;
         });
         setSelectedItems(newSelection);
 
-        if (paginatedItems.length === selectedItemsToDelete.length && currentPage > 0) {
-          setCurrentPage(prev => prev - 1);
+        if (
+          paginatedItems.length === selectedItemsToDelete.length &&
+          currentPage > 0
+        ) {
+          setCurrentPage((prev) => prev - 1);
         }
 
         return true;
@@ -83,7 +84,25 @@ export function useWishlist(userId, previewMode) {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
+
+  // 찜 항목 삭제
+  const deleteSingleItem = async (likeId) => {
+    try {
+      setIsLoading(true);
+      await axios.delete(
+        `http://localhost:8080/api/my/user/wishlist/delete`,
+        {
+          data: [likeId],
+        }
+      );
+      await loadWishlistItems();
+    } catch (error) {
+      console.error("찜 항목을 삭제할 수 없습니다:", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     loadWishlistItems();
@@ -107,38 +126,40 @@ export function useWishlist(userId, previewMode) {
 
   // 아이템 선택, 전체 선택
   const toggleItemSelection = (likeId) => {
-    setSelectedItems(prev => ({
+    setSelectedItems((prev) => ({
       ...prev,
       [likeId]: !prev[likeId],
     }));
   };
 
-  const isAllSelected = wishlistItems.length > 0 && 
-    wishlistItems.every(item => selectedItems[item.likeId] === true);
+  const isAllSelected =
+    wishlistItems.length > 0 &&
+    wishlistItems.every((item) => selectedItems[item.likeId] === true);
 
   const toggleSelectAll = () => {
     const allSelected = !isAllSelected;
     const newSelection = {};
 
-    wishlistItems.forEach(item => {
+    wishlistItems.forEach((item) => {
       newSelection[item.likeId] = allSelected;
     });
     setSelectedItems(newSelection);
-  }
+  };
 
   // 페이지네이션
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-  const paginatedItems = previewMode 
-    ? wishlistItems 
+  const paginatedItems = previewMode
+    ? wishlistItems
     : wishlistItems.slice(
-        currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage
+        currentPage * itemsPerPage,
+        (currentPage + 1) * itemsPerPage
       );
   const totalPages = Math.ceil(wishlistItems.length / itemsPerPage);
   const hasPrev = currentPage > 0;
   const hasNext = currentPage < totalPages - 1;
-  
+
   return {
     wishlistItems: paginatedItems,
     totalItems: wishlistItems.length,
@@ -158,5 +179,6 @@ export function useWishlist(userId, previewMode) {
     refreshItems: loadWishlistItems,
     selectedItemsToDelete,
     deleteSelectedItems,
+    deleteSingleItem,
   };
 }
