@@ -11,29 +11,29 @@ function DateFilter({ dateRange, selectedRange, onRangeUpdate }) {
         // 전체: 오늘부터 2년 이내
         startDate = new Date(today);
         startDate.setFullYear(today.getFullYear() - 2);
-        startDate = startDate.toISOString().split('T')[0];
-        endDate = today.toISOString().split('T')[0];
+        startDate = startDate.toLocaleDateString('en-CA');
+      endDate = today.toLocaleDateString('en-CA');
         break;
       case 'week':
         // 1주일: 오늘부터 7일 전
         startDate = new Date(today);
         startDate.setDate(today.getDate() - 7);
-        startDate = startDate.toISOString().split('T')[0];
-        endDate = today.toISOString().split('T')[0];
+        startDate = startDate.toLocaleDateString('en-CA');
+      endDate = today.toLocaleDateString('en-CA');
         break;
       case 'month':
         // 1개월: 오늘부터 30일 전
         startDate = new Date(today);
         startDate.setDate(today.getDate() - 30);
-        startDate = startDate.toISOString().split('T')[0];
-        endDate = today.toISOString().split('T')[0];
+        startDate = startDate.toLocaleDateString('en-CA');
+      endDate = today.toLocaleDateString('en-CA');
         break;
       case 'quarter':
         // 3개월: 오늘부터 90일 전
         startDate = new Date(today);
         startDate.setDate(today.getDate() - 90);
-        startDate = startDate.toISOString().split('T')[0];
-        endDate = today.toISOString().split('T')[0];
+        startDate = startDate.toLocaleDateString('en-CA');
+      endDate = today.toLocaleDateString('en-CA');
         break;
       default:
         return;
