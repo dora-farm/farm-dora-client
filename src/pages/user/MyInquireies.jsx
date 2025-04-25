@@ -83,7 +83,7 @@ function MyInquireies() {
       <div className="overflow-x-auto bg-white p-6 rounded-lg shadow">
         <table className="w-full text-center">
           <thead className="bg-gray-50">
-            <tr className="">
+            <tr>
               <th className="py-3 px-4 border-b">번호</th>
               <th className="py-3 px-4 border-b">제목</th>
               <th className="py-3 px-4 border-b">작성일</th>
