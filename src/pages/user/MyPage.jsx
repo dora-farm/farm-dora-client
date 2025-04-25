@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { WishPreview } from "./components/WishPreview";
+import WishPreview from "./components/WishPreview";
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import InventoryIcon from '@mui/icons-material/Inventory';
