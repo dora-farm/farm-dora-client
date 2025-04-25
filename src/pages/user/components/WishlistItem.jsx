@@ -15,6 +15,7 @@ function WishlistItem({
   onToggleSelect,
   onToggleLike,
   showAlert,
+  addBasket,
   previewMode = false,
 }) {
   if (previewMode) {
@@ -101,7 +102,17 @@ function WishlistItem({
 
       <div className="flex flex-col items-end justify-center h-full pr-8">
         <div className="flex items-center">
-          <button className="w-10 h-10 flex items-center justify-center mb-5 mr-6">
+          <button 
+            className="w-10 h-10 flex items-center justify-center mb-5 mr-6"
+            onClick={async () => {
+              const result = await addBasket(item.optionId);
+              if (result === true || result?.success === true) {
+                showAlert("장바구니에 담겼습니다!");
+              } else {
+                showAlert(result?.message || "장바구니에 추가할 수 없습니다.");
+              }
+            }}
+          >
             <AddShoppingCartIcon fontSize="medium" />
           </button>
         </div>

@@ -35,6 +35,7 @@ function Wishlist() {
     onPageChange,
     deleteSelectedItems,
     deleteSingleItem,
+    addBasket,
     selectedItemsToDelete
   } = useWishlist(userId, false);
 
@@ -169,6 +170,7 @@ function Wishlist() {
             onToggleSelect={() => toggleItemSelection(item.likeId)}
             onToggleLike={deleteSingleItem}
             showAlert={showAlert}
+            addBasket={addBasket}
             previewMode={false}
           />
         ))}

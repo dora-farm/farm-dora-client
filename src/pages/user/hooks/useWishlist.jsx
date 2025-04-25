@@ -9,19 +9,20 @@ export function useWishlist(userId, previewMode) {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
 
-  // 찜 리스트 불러오기 - useCallback으로 메모이제이션
+  // 찜 리스트 불러오기
   const loadWishlistItems = useCallback(async () => {
     setIsLoading(true);
     try {
       const endpoint = previewMode
-        ? `http://localhost:8080/api/my/user/dashboard/wishpreview`
-        : `http://localhost:8080/api/my/user/wishlist/list`;
+        ? `http://localhost:8010/api/my/user/dashboard/wishpreview`
+        : `http://localhost:8010/api/my/user/wishlist/list`;
       const response = await axios.get(endpoint, { params: { userId } });
 
       let items = response.data.data;
 
       const normalizedItems = items.map((item) => ({
         likeId: item.likeId || "",
+        optionId: item.optionId || "",
         saleId: item.saleId || "",
         title: item.title || "",
         option: item.option || "",
@@ -64,7 +65,7 @@ export function useWishlist(userId, previewMode) {
 
       // 삭제 API 호출
       const response = await axios.delete(
-        `http://localhost:8080/api/my/user/wishlist/delete`,
+        `http://localhost:8010/api/my/user/wishlist/delete`,
         {
           data: selectedItemsToDelete,
         }
@@ -88,7 +89,7 @@ export function useWishlist(userId, previewMode) {
   const deleteSingleItem = useCallback(async (likeId) => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(`http://localhost:8080/api/my/user/wishlist/delete`, {
+      const response = await axios.delete(`http://localhost:8010/api/my/user/wishlist/delete`, {
         data: [likeId],
       });
       
@@ -101,6 +102,34 @@ export function useWishlist(userId, previewMode) {
       setIsLoading(false);
     }
   }, [loadWishlistItems]);
+
+  // 장바구니 추가
+  const addBasket = async (optionId) => {
+    try {
+      setIsLoading(true);
+
+      const formData = new FormData();
+      formData.append("optionId", optionId);
+      formData.append("quantity", 1);
+      
+      const response = await axios.post(
+        `http:///localhost:8020/api/basket`, formData);
+
+      if (response.status === 200) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        console.error("이미 장바구니에 존재하는 상품입니다.");
+        return { success: false, message: "이미 장바구니에 존재하는 상품입니다." };
+      }
+      console.error("장바구니에 추가할 수 없습니다:", error.message);
+      return { success: false, message: "장바구니에 추가할 수 없습니다." };
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
     loadWishlistItems();
@@ -180,5 +209,6 @@ export function useWishlist(userId, previewMode) {
     selectedItemsToDelete,
     deleteSelectedItems,
     deleteSingleItem,
+    addBasket,
   };
 }
