@@ -50,7 +50,7 @@ function DateFilter({ dateRange, selectedRange, onRangeUpdate }) {
   };
   
   return (
-    <div className="flex items-center justify-center gap-3 mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+    <div className="flex items-center justify-center gap-3 mb-6 bg-gray-50 p-4 rounded-lg shadow-sm border-y">
       <div className="space-x-1">
         <button 
           onClick={() => handleDateRangeSelect('all')} 
