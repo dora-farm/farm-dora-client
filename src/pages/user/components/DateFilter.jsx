@@ -12,28 +12,28 @@ function DateFilter({ dateRange, selectedRange, onRangeUpdate }) {
         startDate = new Date(today);
         startDate.setFullYear(today.getFullYear() - 2);
         startDate = startDate.toLocaleDateString('en-CA');
-      endDate = today.toLocaleDateString('en-CA');
+        endDate = today.toLocaleDateString('en-CA');
         break;
       case 'week':
         // 1주일: 오늘부터 7일 전
         startDate = new Date(today);
         startDate.setDate(today.getDate() - 7);
         startDate = startDate.toLocaleDateString('en-CA');
-      endDate = today.toLocaleDateString('en-CA');
+        endDate = today.toLocaleDateString('en-CA');
         break;
       case 'month':
         // 1개월: 오늘부터 30일 전
         startDate = new Date(today);
         startDate.setDate(today.getDate() - 30);
         startDate = startDate.toLocaleDateString('en-CA');
-      endDate = today.toLocaleDateString('en-CA');
+        endDate = today.toLocaleDateString('en-CA');
         break;
       case 'quarter':
         // 3개월: 오늘부터 90일 전
         startDate = new Date(today);
         startDate.setDate(today.getDate() - 90);
         startDate = startDate.toLocaleDateString('en-CA');
-      endDate = today.toLocaleDateString('en-CA');
+        endDate = today.toLocaleDateString('en-CA');
         break;
       default:
         return;
