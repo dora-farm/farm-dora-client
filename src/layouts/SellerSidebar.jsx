@@ -21,7 +21,9 @@ function SellerSidebar() {
       <div className="border-t-2 border-gray-light my-4" />
 
       <nav className="flex flex-col gap-1">
-        <Link to="/my/seller/order" className={activePath === "/my/seller/order" ? activeBtn : btnHover}>주문 관리</Link>
+        <Link to="/my/seller/order" className={location.pathname.startsWith('/my/seller/order') ? activeBtn : btnHover}>
+          주문 관리
+        </Link>
       </nav>
 
       <div className="border-t-2 border-gray-light my-4" />
