@@ -36,7 +36,7 @@ function Order() {
     const isActive = location.pathname === itemPath;
     
     // 현재 활성화된 항목에 대한 스타일 반환
-    return isActive ? 'bg-opacity-90 font-bold' : '';
+    return isActive ? 'bg-opacity-100 font-bold' : '';
   };
 
   // 현재 경로에 따른 배경색 결정
@@ -49,19 +49,21 @@ function Order() {
     <DashboardLayout>
       <DashboardHeader title={"주문 관리"} />
       <div className='mt-4 border-b pb-4'>
-        <div className='flex flex-wrap gap-2'>
+        <div className='flex flex-nowrap gap-2 justify-between'>
           {menuItems.map((item) => (
             <Link
               key={item.id}
               to={item.path}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md ${getButtonColor(item)} border border-gray-200 hover:bg-opacity-80 transition-colors ${getButtonStyle(item.path)}`}
-
+              className={`flex items-center gap-2 px-2 py-2 rounded-md ${getButtonColor(item)} 
+                          border border-gray-200 hover:shadow-md hover:-translate-y-1  transition-all ${getButtonStyle(item.path)}`}
             >
               <span className="text-gray-700">{item.icon}</span>
-              <span className="font-medium">{item.label}</span>
-              {item.count !== null && (
-                <span className="ml-1 text-sm font-semibold">{item.count}건</span>
-              )}
+              <div className='flex flex-col'>
+                <span className="font-medium">{item.label}</span>
+                {item.count !== null && (
+                  <span className="ml-1 text-sm font-semibold text-center">{item.count}건</span>
+                )}
+              </div>
             </Link>
           ))}
         </div>
