@@ -87,6 +87,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) =
     try {
       // FormData를 사용하여 이미지와 함께 전송
       const formData = new FormData();
+      formData.append('orderId', orderId);
       formData.append('saleId', saleData.saleId); // orderId 대신 saleId 사용
       formData.append('score', rating);
       formData.append('content', content);
