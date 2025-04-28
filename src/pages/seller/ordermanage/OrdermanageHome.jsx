@@ -89,13 +89,13 @@ function OrdermanageHome() {
   const renderContent = () => {
     const path = location.pathname;
     
-    if (path === '/my/seller/order') return <Order />;
-    if (path === '/my/seller/order/new') return <New />;
-    if (path === '/my/seller/order/exchange') return <Exchange />;
-    if (path === '/my/seller/order/refund') return <Refund />;
-    if (path === '/my/seller/order/cancel') return <Cancel />;
-    if (path === '/my/seller/order/review') return <Review />;
-    if (path === '/my/seller/order/inquiry') return <Question />;
+    if (path === '/my/seller/order') return <Order sellerId={sellerId} />;
+    if (path === '/my/seller/order/new') return <New sellerId={sellerId} />;
+    if (path === '/my/seller/order/exchange') return <Exchange sellerId={sellerId} />;
+    if (path === '/my/seller/order/refund') return <Refund sellerId={sellerId} />;
+    if (path === '/my/seller/order/cancel') return <Cancel sellerId={sellerId} />;
+    if (path === '/my/seller/order/review') return <Review sellerId={sellerId} />;
+    if (path === '/my/seller/order/inquiry') return <Question sellerId={sellerId} />;
     
     // 기본값
     return <Order />;
@@ -104,7 +104,7 @@ function OrdermanageHome() {
   return (
     <DashboardLayout>
       <DashboardHeader title={"주문 관리"} />
-      <div className='mt-4 border-b pb-4'>
+      <div className='mt-4'>
         {loading ? (
             <div className="text-center py-4">통계 데이터 로딩 중...</div>
           ) : error ? (
@@ -132,7 +132,7 @@ function OrdermanageHome() {
       </div>
       
       {/* 동적으로 콘텐츠 표시 */}
-      <div className='mt-4 border-2 p-4'>
+      <div className='mt-4'>
         {renderContent()}
       </div>
     </DashboardLayout>
