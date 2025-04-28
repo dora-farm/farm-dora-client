@@ -1,51 +1,177 @@
-import glass from '../../../assets/images/glass.png'
+import React, {useRef, useState} from 'react';
+import glass from '../../../assets/images/glass.png';
+import FindModalForm from "./FindModalForm.jsx";
+import FindVerifyModalForm from "./FindVerifyModalForm.jsx";
+import { findId, findPassword, findVerificationCode } from '../services/findService.js';
+import { useFindModal } from "../hooks/useFindModal.js";
+import AlertModal from "../../../common/components/modal/AlertModal.jsx";
 
-const LoginForm = ({id, setId, saveIdChecked, setSaveIdChecked, loginUser}) => {
+const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) => {
+    // 💬 useState 제거 → useRef로 값 관리
+    const findNameRef = useRef('');
+    const findEmailRef = useRef('');
+    const findIdInputRef = useRef('');
+    const findVerifyCodeRef = useRef('');
+    const findTypeRef = useRef('');
+
+    const [showModal, setShowModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
+
+    // 🔥 모달 관리 훅
+    const {
+        isOpen,
+        title,
+        content,
+        inputs,
+        onSubmitAction,
+        openModal,
+        closeModal,
+        isVerifyModal,
+        openVerifyModal,
+        closeVerifyModal,
+        onSubmitCode,
+    } = useFindModal();
+
+    // 🔥 ID / PWD 찾기 모달 열기
+    const handleFindModal = (type) => {
+        findTypeRef.current = type; // 바로 쓸 수 있음
+
+        openModal({
+            modalTitle: type === "ID" ? "아이디 찾기" : "비밀번호 찾기",
+            modalContent: type === "ID"
+                ? "회원가입 시 입력한 이름과 이메일을 입력하세요."
+                : "아이디와 이메일을 입력하시면 비밀번호 재설정 링크를 보내드립니다.",
+            modalInputs: type === "ID"
+                ? [
+                    { label: "이름", type: "text", name: "name", onChange: (e) => findNameRef.current = e.target.value },
+                    { label: "이메일", type: "email", name: "email", onChange: (e) => findEmailRef.current = e.target.value },
+                ]
+                : [
+                    { label: "아이디", type: "text", name: "id", onChange: (e) => findIdInputRef.current = e.target.value },
+                    { label: "이메일", type: "email", name: "email", onChange: (e) => findEmailRef.current = e.target.value },
+                ],
+            onSubmit: async () => {
+                let message = "";
+                try {
+                    const result = findTypeRef.current === "ID"
+                        ? await findId(findNameRef.current, findEmailRef.current)
+                        : await findPassword(findIdInputRef.current, findEmailRef.current);
+
+                    setModalMessage(result.message);
+                    setShowModal(true);
+                    closeModal();
+                    openFindVerifyModal();
+                } catch (err) {
+                    console.error(err);
+                    setModalMessage("인증 코드 전송 실패");
+                    setShowModal(true);
+                    AlertModal({ message: message, onClose: true });
+                }
+            },
+        });
+    };
+
+    // 🔥 인증번호 입력 모달 열기
+    const openFindVerifyModal = () => {
+        openVerifyModal({
+            modalTitle: "인증번호 입력",
+            modalContent: "입력한 이메일로 발송된 인증번호를 입력하세요.",
+            modalInputs: [
+                { label: "인증코드", type: "text", name: "code", onChange: (e) => findVerifyCodeRef.current = e.target.value },
+            ],
+            onSubmit: async () => {
+                try {
+                    const result = await findVerificationCode(findEmailRef.current, findVerifyCodeRef.current, findTypeRef.current);
+                    setModalMessage(result.message);
+                    setShowModal(true);
+                    closeVerifyModal();
+                } catch (err) {
+                    console.error(err);
+                    setModalMessage("인증에 실패하였습니다.");
+                    setShowModal(true);
+                }
+            },
+        });
+    };
+
     return (
-        <form className="flex flex-col space-y-3 w-full max-w-2xl p-4">
-            <h2 className="text-xl font-semibold text-center">회원 로그인</h2>
-            <div className="border border-gray-300 ml-1 mr-1 mb-1 mt-1">
-                <label className="border-r-2 px-5 text-[#8A8A8A] font-light text-xs " htmlFor="username">아이디</label>
-                <input
-                    id="id"
-                    name="id"
-                    type="text"
-                    value={id}
-                    onChange={(e) => setId(e.target.value)}
-                    className="ml-2 py-2 w-3/4 focus:outline-none"
-                />
-            </div>
-            <div className="border border-gray-300 ml-1 mr-1 mb-1 mt-1">
-                <label className="border-r-2 text-[#8A8A8A] px-3.5 text-xs font-light " htmlFor="password">비밀번호</label>
-                <input
-                    id="pwd"
-                    name="pwd"
-                    type="password"
-                    className="ml-2 py-2 w-3/4 focus:outline-none"
-                />
-            </div>
-            <button type="button" onClick={loginUser} className="bg-[#575757] border-0 text-white py-2 rounded">
-                로그인
-            </button>
+        <div>
+            <form className="flex flex-col space-y-3 w-full max-w-2xl p-4">
+                <h2 className="text-xl font-semibold text-center">회원 로그인</h2>
 
-            <div className="flex items-center justify-between text-xs">
-                <label className="flex">
+                {/* 아이디 입력 */}
+                <div className="border border-gray-300 ml-1 mr-1 mb-1 mt-1">
+                    <label className="border-r-2 px-5 text-[#8A8A8A] font-light text-xs" htmlFor="id">아이디</label>
                     <input
-                        type="checkbox"
-                        checked={saveIdChecked}
-                        onChange={() => setSaveIdChecked(!saveIdChecked)}
+                        id="id"
+                        name="id"
+                        type="text"
+                        value={id}
+                        onChange={(e) => setId(e.target.value)}
+                        className="ml-2 py-2 w-3/4 focus:outline-none"
                     />
-                    &nbsp;아이디 기억
-                </label>
-                <div className="flex space-x-2">
-                    <img src={glass} className='h-4 border-r-2'/>
-                    <div className="space-x-2">
-                        <button type="button">아이디 찾기</button>
-                        <button type="button">비밀번호 찾기</button>
+                </div>
+
+                {/* 비밀번호 입력 */}
+                <div className="border border-gray-300 ml-1 mr-1 mb-1 mt-1">
+                    <label className="border-r-2 text-[#8A8A8A] px-3.5 text-xs font-light" htmlFor="password">비밀번호</label>
+                    <input
+                        id="pwd"
+                        name="pwd"
+                        type="password"
+                        className="ml-2 py-2 w-3/4 focus:outline-none"
+                    />
+                </div>
+
+                {/* 로그인 버튼 */}
+                <button type="button" onClick={loginUser} className="bg-[#575757] border-0 text-white py-2 rounded">
+                    로그인
+                </button>
+
+                {/* 아이디/비밀번호 찾기 버튼 */}
+                <div className="flex items-center justify-between text-xs">
+                    <label className="flex">
+                        <input
+                            type="checkbox"
+                            checked={saveIdChecked}
+                            onChange={() => setSaveIdChecked(!saveIdChecked)}
+                        />
+                        &nbsp;아이디 기억
+                    </label>
+                    <div className="flex space-x-2">
+                        <img src={glass} className="h-4 border-r-2" alt="Search Icon" />
+                        <div className="space-x-2">
+                            <button type="button" onClick={() => handleFindModal("ID")}>아이디 찾기</button>
+                            <button type="button" onClick={() => handleFindModal("PWD")}>비밀번호 찾기</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+
+            {/* 모달 연결 */}
+            <FindModalForm
+                title={title}
+                content={content}
+                isOpen={isOpen}
+                onClose={closeModal}
+                onSubmit={onSubmitAction}
+                inputs={inputs}
+            />
+            <FindVerifyModalForm
+                title={title}
+                content={content}
+                isOpen={isVerifyModal}
+                onClose={closeVerifyModal}
+                onSubmit={onSubmitCode}
+                inputs={inputs}
+            />
+            {showModal && (
+                <AlertModal
+                    message={modalMessage}
+                    onClose={() => setShowModal(false)}
+                />
+            )}
+        </div>
     );
 };
 
