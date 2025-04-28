@@ -10,7 +10,7 @@ import useAddressForm from '../../features/auth/hooks/useAddressForm';
 import ManageAddressModal from './modal/ManageAddressModal';
 
 const AddressManagePage = () => {
-    const userId = 5;
+    const userId = 0;
     const [addresses, setAddresses] = useState([]);
     const [title, setTitle] = useState('');
 
