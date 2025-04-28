@@ -192,7 +192,7 @@ useEffect(() => {
       };
       
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/delete`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -216,8 +216,6 @@ useEffect(() => {
       setShowModal(true);
     }
   }
-
-
 
   const handleReset = () => {
     setSearchTerm('');
