@@ -17,17 +17,17 @@ const FindModalForm = ({ isOpen, onClose, title, content, inputs, onSubmit }) =>
                     className="space-y-3"
                 >
                     {inputs.map(({ label, type, name, onChange }, idx) => (
-                        <div key={idx}>
-                            <label className="block text-sm mb-1">{label}</label>
+                        <div key={idx} className="flex-row  flex p-2 justify-between items-center border">
+                            <label className="block text-xs text-gray-600 px-2">{label}</label>
                             <input
                                 type={type}
                                 name={name}
                                 onChange={onChange}
-                                className="w-full p-2 border rounded"
+                                className="w-4/5 p-1 border rounded focus:outline-none"
                             />
                         </div>
                     ))}
-                    <button type="submit" className="w-full bg-black text-white p-2 rounded">확인</button>
+                    <button type="submit" className="w-full bg-[#575757] text-white p-2 rounded">확인</button>
                     <button
                         type="button"
                         onClick={onClose}
