@@ -179,7 +179,7 @@ const handleMainImageChange = (e) => {
       }
     });
     
-    fetch('http://localhost:8888/my/seller/item/register', {
+    fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/register`, {
       method: 'POST',
       body: formData
     })
