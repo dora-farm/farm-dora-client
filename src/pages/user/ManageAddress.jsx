@@ -80,7 +80,6 @@ const AddressManagePage = () => {
     };
 
     const handleDeleteClick = async (depotId) => {
-        if (!window.confirm('정말 삭제하시겠습니까?')) return;
         try {
             await deleteAddress(depotId);
             await loadAddresses();
