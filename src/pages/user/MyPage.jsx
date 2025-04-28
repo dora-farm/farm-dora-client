@@ -37,12 +37,12 @@ function MyPage() {
   const loadDashboardInfo = async () => {
     try {
       const userResponse = await axios.get(
-        `http://localhost:8080/api/my/user/dashboard/info`, 
+        `http://localhost:8010/api/my/user/dashboard/info`, 
         { params: { userId } }
       );
 
       const orderStatusResponse = await axios.get(
-        `http://localhost:8080/api/my/user/dashboard/order-status`,
+        `http://localhost:8010/api/my/user/dashboard/order-status`,
         { params: { userId } }
       );
 
