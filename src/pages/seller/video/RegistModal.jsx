@@ -1,16 +1,9 @@
 import React, { useState} from 'react';
 
-const RegistModal = ({ isOpen, onClose, loading }) => {
+const RegistModal = ({ isOpen, onClose, loading, refreshProducts}) => {
   const [title, setTitle] = useState('');
   const [desc, setDescription] = useState('');
   const [video, setVideo] = useState(null);
-
-  // 입력값 초기화 함수
-  const resetForm = () => {
-    setTitle('');
-    setDescription('');
-    setVideo(null);
-  };
 
   const handleSubmit = async () => {
     try {
@@ -33,7 +26,7 @@ const RegistModal = ({ isOpen, onClose, loading }) => {
       
       if (data.status === 200) {
         console.log('성공:', data);
-        resetForm();
+        refreshProducts();
         onClose();
       } else {
         console.error('서버 오류:', data.message || '예기치 못한 오류');

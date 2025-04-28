@@ -19,6 +19,9 @@ function VideoManage() {
   const [sortFilter, setSortFilter] = useState('LATEST');
   const [isLoading, setIsLoading] = useState(false);
 
+  // 검색 트리거 상태 추가
+  const [searchTrigger, setSearchTrigger] = useState(0);
+
   // 모달(상세페이지)
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -33,7 +36,7 @@ function VideoManage() {
     totalPages: 0,
     hasNext: false,
     hasPrev: false,
-    pageSize: 15
+    pageSize: 5
   });
 
   const {
@@ -43,27 +46,19 @@ function VideoManage() {
     handleItemCheck,
     getSelectedIds,
     setItems: setCheckboxItems
-  } = useCheckboxes([]);
+  } = useCheckboxes([],`id`);
 
   // 검색 결과가 변경되면 체크박스 상태 업데이트
   useEffect(() => {
     setCheckboxItems(products);
   }, [products, setCheckboxItems]);
 
-  // 페이지 변경 핸들러 (POST)
-  const handlePageChange = (page) => {
-      setPagination(prevState => ({
-      ...prevState,  // 이전 상태의 모든 속성을 복사
-      currentPage: page // currentPage만 업데이트
-    }));
-  };
-
-  const handleStatusCheck = async (productId) => {
+  const handleStatusCheck = async (videoId) => {
 
     try {
  
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/updateStatus/${productId}`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/updateStatus/${videoId}`, {
         method: 'PUT',
       });
       
@@ -82,24 +77,43 @@ function VideoManage() {
     }
   }
 
+  
+  // 페이지 변경 핸들러 (POST)
+  const handlePageChange = (page) => {
+    setPagination(prevState => ({
+    ...prevState,  // 이전 상태의 모든 속성을 복사
+    currentPage: page // currentPage만 업데이트
+  }));
+};
 
-  useEffect(() => {
-    fetchSearchProducts();
-  }, [pagination.currentPage]); // pagination.currentPage가 변경될 때마다 fetchSearchProducts 호출
+// 검색 및 필터링 핸들러
+const handleSearch = () => {
+  setPagination(prevPagination => ({
+    ...prevPagination,
+    currentPage: 0
+  }));
+  // 트리거 상태 업데이트
+  setSearchTrigger(prev => prev + 1);
+};
+
+// useEffect 수정
+useEffect(() => {
+  fetchSearchProducts();
+}, [pagination.currentPage, searchTrigger]);
   
   // 초기 GET 데이터 로드 함수
   const fetchInitialProducts = async () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/seller/list`);
-      
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/seller/list/${pagination.pageSize}`);
+      console.log(response.ok);
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
       }
     // 응답 텍스트 확인
     const httpResponse = await response.json();
-    console.log('서버 응답:', httpResponse.data);
+    console.log('서버 응답:', httpResponse.data); 
       setProducts(httpResponse.data.contents);
       setPagination({
         currentPage: httpResponse.data.currentPage,
@@ -127,7 +141,6 @@ function VideoManage() {
 
     // JSON 데이터 준비
     const jsonData = {
-      sellerId: 1, // 추후 JWT 토큰으로 백에서 처리 예정
       keyword: searchTerm,
       sort: sortFilter,
       page: pagination.currentPage,
@@ -135,7 +148,7 @@ function VideoManage() {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/sale/search`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/seller/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +158,7 @@ function VideoManage() {
 
     // 응답 텍스트 확인
     const httpResponse = await response.json();
-    // console.log('서버 응답:', httpResponse.data);
+     console.log('서버 응답:', httpResponse.data);
       setProducts(httpResponse.data.contents);
       setPagination({
         currentPage: httpResponse.data.currentPage,
@@ -162,11 +175,6 @@ function VideoManage() {
     }
   };
 
-  const createdItems = async() => {
-
-    
-  }
-
   const deleteSelectedItems = async() => {
     // useCheckboxes의 getSelectedIds 함수 사용
     const selectedProductIds = getSelectedIds();
@@ -180,7 +188,7 @@ function VideoManage() {
     try {
       // JSON 형태로 가공
       const request = {
-        saleIds: selectedProductIds
+        broadcastIds: selectedProductIds
       };
       
       // fetch API를 사용하여 서버로 요청 보내기
@@ -209,13 +217,7 @@ function VideoManage() {
     }
   }
 
-  // 검색 및 필터링 핸들러 (POST)
-  const handleSearch = () => {
-    setPagination(
-      pagination.currentPage = 0
-    );
-    fetchSearchProducts();
-  };
+
 
   const handleReset = () => {
     setSearchTerm('');
@@ -257,7 +259,6 @@ function VideoManage() {
       <button 
         className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm"
         onClick={() => {
-          createdItems();
           setModalOpen(true);
         }}
       >
@@ -298,6 +299,7 @@ function VideoManage() {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         loading={loading}
+        refreshProducts={fetchInitialProducts}
       />
 
       {showModal && (

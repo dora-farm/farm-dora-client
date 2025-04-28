@@ -29,6 +29,9 @@ function Manage() {
   const [smallCategoriesFiltered, setSmallCategoriesFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 검색 트리거 상태 추가
+  const [searchTrigger, setSearchTrigger] = useState(0);
+
   // 모달(상세페이지)
   const [modalOpen, setModalOpen] = useState(false);
   const [productDetail, setProductDetail] = useState(null);
@@ -54,7 +57,7 @@ function Manage() {
     handleItemCheck,
     getSelectedIds,
     setItems: setCheckboxItems
-  } = useCheckboxes([]);
+  } = useCheckboxes([],`saleId`);
 
   // 검색 결과가 변경되면 체크박스 상태 업데이트
   useEffect(() => {
@@ -68,6 +71,21 @@ function Manage() {
       currentPage: page // currentPage만 업데이트
     }));
   };
+
+  // 검색 및 필터링 핸들러
+  const handleSearch = () => {
+    setPagination(prevPagination => ({
+      ...prevPagination,
+      currentPage: 0
+    }));
+    // 트리거 상태 업데이트
+    setSearchTrigger(prev => prev + 1);
+  };
+  
+  // useEffect 수정
+  useEffect(() => {
+    fetchSearchProducts();
+  }, [pagination.currentPage, searchTrigger]);
 
   const handleStatusCheck = async (productId) => {
 
@@ -93,10 +111,6 @@ function Manage() {
     }
   }
 
-
-  useEffect(() => {
-    fetchSearchProducts();
-  }, [pagination.currentPage]); // pagination.currentPage가 변경될 때마다 fetchSearchProducts 호출
 
     // 상품 상세 정보 조회 함수
     const fetchProductDetail = async (productId) => {
@@ -264,14 +278,6 @@ function Manage() {
     const trueKeysArray = Object.keys(filters).filter(key => filters[key] === true);
     setProcessedFilters(trueKeysArray);
   }, [filters]);
-
-  // 검색 및 필터링 핸들러 (POST)
-  const handleSearch = () => {
-    setPagination(
-      pagination.currentPage = 0
-    );
-    fetchSearchProducts();
-  };
 
   const handleReset = () => {
     setSearchTerm('');
