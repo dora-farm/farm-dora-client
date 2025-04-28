@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 function Cancel() {
   return (
-    <div>Cancel</div>
+    <div>내용입니다.</div>
   )
 }
 
-export default Cancel
+export default Cancel;

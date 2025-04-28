@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 function New() {
   return (
-    <div>New</div>
+    <div>내용입니다.</div>
   )
 }
 
-export default New
+export default New;
