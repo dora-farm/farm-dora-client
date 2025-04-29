@@ -57,21 +57,6 @@ const ListForm = ({ orders = [], loading = false, error = null }) => {
     return order.products.saleTitle || "-";
   };
 
-  // 옵션 정보를 포맷팅하는 함수
-  const formatOptions = (order) => {
-  if (Array.isArray(order.products) && order.products.length > 0) {
-    const firstProduct = order.products[0];
-    if (Array.isArray(firstProduct.options) && firstProduct.options.length > 0) {
-      const firstOption = firstProduct.options[0].name || "-";
-      const optionCount = firstProduct.options.length;
-      return optionCount > 1
-        ? `${firstOption} 외 ${optionCount - 1}건`
-        : firstOption;
-    }
-  }
-  return "-";
-};
-
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
