@@ -2,16 +2,10 @@ import React, { useState, useEffect } from "react";
 import GreenSquareCheckbox from "../../../../common/components/GreenSquareCheckbox";
 
 function SearchForm({ onSearch, onReset, initialValues = {} }) {
-  // 날짜 포맷 유틸리티 함수
-  const formatDate = (ago) => {
-    const date = new Date();
-    date.setDate(date.getDate() - ago);
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD 형식
-  };
 
   // 상태 관리
-  const [startDate, setStartDate] = useState(initialValues.startDate || formatDate(7));
-  const [endDate, setEndDate] = useState(initialValues.endDate || formatDate(0));
+  const [startDate, setStartDate] = useState(initialValues.startDate || null);
+  const [endDate, setEndDate] = useState(initialValues.endDate || null);
   const [statusIds, setStatusIds] = useState(initialValues.statusIds || {
     all: true,
     preparing: false,
@@ -21,7 +15,7 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
     refund: false,
     exchange: false,
   });
-  const [searchPeriod, setSearchPeriod] = useState(initialValues.searchPeriod || "WEEK");
+  const [searchPeriod, setSearchPeriod] = useState(initialValues.searchPeriod || "ONE_MONTH");
   const [searchType, setSearchType] = useState(initialValues.searchType || "PRODUCT");
   const [sort, setSort] = useState(initialValues.sort || "LATEST");
   const [keyword, setKeyword] = useState(initialValues.keyword || "");
@@ -40,16 +34,24 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
 
   // 초기 값이 변경될 때 폼 상태 업데이트
   useEffect(() => {
-    if (Object.keys(initialValues).length > 0) {
-      if (initialValues.startDate) setStartDate(initialValues.startDate);
-      if (initialValues.endDate) setEndDate(initialValues.endDate);
-      if (initialValues.statusIds) setStatusIds(initialValues.statusIds);
+      if (initialValues.startDate) {
+        const startDateValue = initialValues.startDate.includes('T') 
+          ? initialValues.startDate.split('T')[0] 
+          : initialValues.startDate;
+        setStartDate(startDateValue);
+      }
+      
+      if (initialValues.endDate) {
+        const endDateValue = initialValues.endDate.includes('T') 
+          ? initialValues.endDate.split('T')[0] 
+          : initialValues.endDate;
+        setEndDate(endDateValue);
+      }
       if (initialValues.searchPeriod) setSearchPeriod(initialValues.searchPeriod);
       if (initialValues.searchType) setSearchType(initialValues.searchType);
-      if (initialValues.sort) setSort(initialValues.sort);
+      // if (initialValues.sort) setSort(initialValues.sort);
       if (initialValues.keyword) setKeyword(initialValues.keyword);
       if (initialValues.itemsPerPage) setItemsPerPage(initialValues.itemsPerPage.toString());
-    }
   }, [initialValues]);
 
   // 검색 제출 핸들러
@@ -64,12 +66,11 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
     // 시작일: 해당일 00:00:00
     const formatStartDate = startDate ? `${startDate}T00:00:00` : null;
 
-    // 종료일: 다음 날 00:00:00 (더 정확한 범위 처리)
+    // 종료일: 해당일 23:59:59.99
     let formatEndDate = null;
     if (endDate) {
       const nextDay = new Date(endDate);
-      nextDay.setDate(nextDay.getDate() + 1);
-      formatEndDate = `${nextDay.toISOString().split('T')[0]}T00:00:00`;
+      formatEndDate = `${nextDay.toLocaleDateString('en-CA')}T23:59:59`;
     }
     
     // 백엔드 API에 맞게 상태 ID 매핑
@@ -82,19 +83,21 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
       exchange: 6,
     };
 
-    // 선택된 상태 ID 배열 생성
-    const selectedStatusIds = statusIds.all
-      ? []  // 전체 선택 시 빈 배열 (모든 상태 포함)
-      : Object.entries(statusIds)
-          .filter(([key, value]) => key !== 'all' && value)
-          .map(([key]) => statusMap[key]);
+    let statusIdsParam = '';
+    if (!statusIds.all) {
+      // 선택된 상태 ID만 필터링하고 바로 문자열로 연결
+      statusIdsParam = Object.entries(statusIds)
+        .filter(([key, value]) => key !== 'all' && value)
+        .map(([key]) => statusMap[key])
+        .join(',');
+    }
     
     // 검색 파라미터 구성
     const searchParams = {
       searchType,
       startDate: formatStartDate,
       endDate: formatEndDate,
-      statusIds: selectedStatusIds,
+      statusIds: statusIdsParam,
       searchPeriod,
       sort,
       keyword,
@@ -108,8 +111,8 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
 
   // 검색 초기화 핸들러
   const handleReset = () => {
-    setStartDate(formatDate(7));
-    setEndDate(formatDate(0));
+    setStartDate(null);
+    setEndDate(null);
     setStatusIds({
       all: true,
       preparing: false,
@@ -119,7 +122,7 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
       refund: false,
       exchange: false,
     });
-    setSearchPeriod("WEEK");
+    setSearchPeriod("ONE_MONTH");
     setSearchType("PRODUCT");
     setSort("LATEST");
     setKeyword("");
@@ -172,24 +175,24 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
 
     switch (period) {
       case "TODAY":
-        startDateValue = today.toISOString().split("T")[0];
+        startDateValue = today.toLocaleDateString('en-CA');
         break;
       case "WEEK": {
         const lastWeek = new Date(today);
         lastWeek.setDate(today.getDate() - 7);
-        startDateValue = lastWeek.toISOString().split("T")[0];
+        startDateValue = lastWeek.toLocaleDateString('en-CA');
         break;
       }
       case "ONE_MONTH": {
         const lastMonth = new Date(today);
         lastMonth.setMonth(today.getMonth() - 1);
-        startDateValue = lastMonth.toISOString().split("T")[0];
+        startDateValue = lastMonth.toLocaleDateString('en-CA');
         break;
       }
       case "THREE_MONTHS": {
         const threeMonthsAgo = new Date(today);
         threeMonthsAgo.setMonth(today.getMonth() - 3);
-        startDateValue = threeMonthsAgo.toISOString().split("T")[0];
+        startDateValue = threeMonthsAgo.toLocaleDateString('en-CA');
         break;
       }
       default:
@@ -197,7 +200,7 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
     }
 
     setStartDate(startDateValue);
-    setEndDate(today.toISOString().split("T")[0]);
+    setEndDate(today.toLocaleDateString('en-CA'));
   };
 
   // 엔터키 검색 처리

@@ -10,14 +10,6 @@ function Order() {
   const [error, setError] = useState(null);
   const [orders, setOrders] = useState([]);
   const [searchParams, setSearchParams] = useState({});
-  const [pagination, setPagination] = useState({
-    currentPage: 0,
-    pageSize: 15,
-    totalElements: 0,
-    totalPages: 1,
-    hasNext: false,
-    hasPrev: false
-  });
 
   const handleSearch = async (params) => {
     try {
@@ -32,17 +24,7 @@ function Order() {
       if (response.status === 200) {
         const responseData = response.data.data;
   
-        // 가공 없이 그대로 전달
         setOrders(responseData.contents || []);
-  
-        setPagination({
-          currentPage: responseData.currentPage,
-          pageSize: responseData.pageSize,
-          totalElements: responseData.totalElements,
-          totalPages: responseData.totalPages,
-          hasNext: responseData.hasNext,
-          hasPrev: responseData.hasPrevious,
-        });
       } else {
         throw new Error(response.data?.message || '주문 정보를 가져오는데 실패했습니다.');
       }
@@ -54,9 +36,22 @@ function Order() {
       setLoading(false);
     }
   };
+
   
   useEffect(() => {
-    handleSearch();
+    // 초기 검색 조건 설정
+    const initialParams = {
+      searchType: "PRODUCT",
+      startDate: null,
+      endDate: null,
+      statusIds: [],
+      searchPeriod: "ONE_MONTH",
+      sort: "LATEST",
+      keyword: "",
+      page: 1
+    };
+    
+    handleSearch(initialParams);
   }, []);
   
   return (
@@ -75,15 +70,16 @@ function Order() {
           error={error}
         />
       </Container>
-      <Pagination 
-        currentPage={pagination.currentPage}
-        totalPages={pagination.totalPages}
-        hasNext={pagination.hasNext}
-        hasPrev={pagination.hasPrev}
-        pageButtonCount={5}
+      {/* <Pagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        hasNext={hasNext}
+        hasPrev={hasPrev}
+        pageButtonCount={10}
+        onPageChange={handlePageChange}
         activeColor="bg-brown"
         hoverColor="hover:bg-gray-100"
-      />
+      /> */}
     </div>
   );
 }
