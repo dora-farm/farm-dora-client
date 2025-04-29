@@ -155,7 +155,7 @@ function Header({ maincategories, subCategories, loading }) {
                 to="/live" 
                 className="block py-1 relative"
               >
-                LIVE
+                동영상
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-green transform translate-y-2 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"></span>
               </Link>
             </li>

@@ -8,7 +8,7 @@ import SellerLayout from './layouts/SellerLayout';
 import MyPage from './pages/user/MyPage';
 import Wishlist from './pages/user/Wishlist';
 import Cart from './pages/user/Cart';
-import MyReviews from './pages/user/MyReviews';
+// import MyReviews from './pages/user/MyReviews';
 import MyInquireies from './pages/user/MyInquireies';
 import Orders from './pages/user/Orders';
 import ManageAddress from './pages/user/ManageAddress';
@@ -23,7 +23,7 @@ import Order from './pages/seller/ordermanage/Order'
 import Refund from './pages/seller/ordermanage/Refund';
 import Review from './pages/seller/ordermanage/Review';
 import SellerHome from './pages/seller/dashboard/SellerHome';
-import LiveSetup from './pages/seller/LiveSetup';
+import VideoManage from './pages/seller/video/VideoManage';
 import Manage from './pages/seller/product/Manage';
 import Register from './pages/seller/product/Register';
 import AdminHome from './pages/adminpage/AdminHome';
@@ -32,14 +32,14 @@ import AdminPopupRegi from './pages/adminpage/AdminPopupRegi';
 import AdminProduct from './pages/adminpage/AdminProduct';
 import AdminReview from './pages/adminpage/AdminReview';
 import AdminUser from './pages/adminpage/AdminUser';
-import Live from './pages/live/Live';
-import StreamView from './pages/live/StreamView';
 import Event from './pages/event/Event';
 import ChatSupport from './pages/support/ChatSupport';
 import AdminLayout from './layouts/AdminLayout';
 import AdminBroadcast from './pages/adminpage/AdminBroadcast';
 import ProductEdit from './pages/seller/product/ProductEdit';
 import './pages/seller/dashboard/utils/ChartRegistry';
+import Live from './pages/live/Live';
+import StreamView from './pages/live/StreamView';
 
 import Category from './pages/category/Category';
 import AdminPopupDetail from './pages/adminpage/AdminPopupDetail';
@@ -50,6 +50,7 @@ function App() {
   return (
     <BrowserRouter>
         <Routes>
+        
           <Route path="/" element={<Layout/>}>
             <Route index element={<Home/>} />
             <Route path="/login" element={<Login/>} />
@@ -59,13 +60,11 @@ function App() {
             <Route path="/event/:id" element={<EventDetail/>} />
             <Route path="/support" element={<ChatSupport/>} />
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
-            <Route path="/live/setup" element={<LiveSetup/>} /> {/* 방송준비화면 */}
             <Route path="/live/view" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
-
+            
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
               <Route path="/my/user/cart" element={<Cart/>} />
-              <Route path="/my/user/review" element={<MyReviews/>} />
               <Route path="/my/user/inquiry" element={<MyInquireies/>} />
               <Route path="/my/user/order" element={<Orders/>} />
               <Route path="/my/user/address" element={<ManageAddress/>} />
@@ -92,11 +91,14 @@ function App() {
               <Route path="/my/seller/item/manage" element={<Manage/>} />
               <Route path="/my/seller/item/register" element={<Register/>} />
               <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
-              <Route path="/my/seller/live" element={<LiveSetup/>} />
+              <Route path="/my/seller/live" element={<VideoManage/>} />
             </Route>
+      
           </Route>
         </Routes>
+        
     </BrowserRouter>
+    
   );
 }
 
