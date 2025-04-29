@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AlertModal2 from '../../common/components/modal/AlertModal2';
 
 const AdminPopupRegi = () => {
   const navigate = useNavigate();
@@ -19,23 +20,30 @@ const AdminPopupRegi = () => {
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
   
-  // 팝업 타입 목록 가져오기
+  // 알림 모달 상태
+  const [modal, setModal] = useState({
+    show: false,
+    title: '',
+    message: '',
+  });
+  
+  // 이벤트 타입 목록 가져오기
   useEffect(() => {
     const fetchPopupTypes = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8080/api/popup/types');
+        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/types`);
         
         if (response.data && response.data.data) {
           setPopupTypes(response.data.data);
         } else {
-          console.error('팝업 타입 데이터 형식이 예상과 다릅니다:', response.data);
+          console.error('이벤트 타입 데이터 형식이 예상과 다릅니다:', response.data);
           setPopupTypes([]);
         }
         
         setLoading(false);
       } catch (error) {
-        console.error('팝업 타입을 불러오는 중 오류가 발생했습니다:', error);
+        console.error('이벤트 타입을 불러오는 중 오류가 발생했습니다:', error);
         setPopupTypes([]);
         setLoading(false);
       }
@@ -62,13 +70,27 @@ const AdminPopupRegi = () => {
     }
   };
   
+  // 모달 닫기 처리
+  const handleCloseModal = () => {
+    setModal(prev => ({ ...prev, show: false }));
+    
+    // 성공 시에만 목록 페이지로 이동
+    if (modal.title === '등록 성공') {
+      navigate('/admin/popup');
+    }
+  };
+  
   // 폼 제출 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     // 필수 필드 검증
     if (!formData.typeId || !formData.title || !file || !formData.startDate || !formData.endDate) {
-      alert('모든 필수 항목을 입력해주세요.');
+      setModal({
+        show: true,
+        title: '입력 오류',
+        message: '모든 필수 항목을 입력해주세요.'
+      });
       return;
     }
     
@@ -84,18 +106,28 @@ const AdminPopupRegi = () => {
       submitData.append('file', file);
       
       // API 호출
-      await axios.post('http://localhost:8080/api/popup', submitData, {
+      await axios.post(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup`, submitData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       
-      alert('팝업/배너가 성공적으로 등록되었습니다.');
-      navigate('/admin/popup'); // 목록 페이지로 이동
+      // 성공 모달 표시
+      setModal({
+        show: true,
+        title: '등록 성공',
+        message: '이벤트/배너가 성공적으로 등록되었습니다.'
+      });
       
     } catch (error) {
-      console.error('팝업/배너 등록 중 오류가 발생했습니다:', error);
-      alert('팝업/배너 등록에 실패했습니다. 다시 시도해주세요.');
+      console.error('이벤트/배너 등록 중 오류가 발생했습니다:', error);
+      
+      // 실패 모달 표시
+      setModal({
+        show: true,
+        title: '등록 실패',
+        message: '이벤트/배너 등록에 실패했습니다. 다시 시도해주세요.'
+      });
     } finally {
       setLoading(false);
     }
@@ -112,7 +144,7 @@ const AdminPopupRegi = () => {
         <h1 className="text-2xl font-bold mb-6 pb-2 border-b">이벤트/배너 등록</h1>
         
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 팝업 타입 선택 */}
+          {/* 이벤트 타입 선택 */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">타입</label>
             <select
@@ -227,6 +259,15 @@ const AdminPopupRegi = () => {
           </div>
         </form>
       </div>
+      
+      {/* 알림 모달 */}
+      {modal.show && (
+        <AlertModal2
+          title={modal.title}
+          message={modal.message}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };

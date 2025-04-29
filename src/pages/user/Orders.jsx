@@ -6,6 +6,7 @@ import ReviewModal from './modal/ReviewModal';
 import PaymentInfo from './modal/PaymentInfo';
 import DateFilter from './components/DateFilter';
 import ChangeOrderModal from './modal/ChangeOrderModal';
+import AlertModal2 from '../../common/components/modal/AlertModal2';
 
 function Orders() {
   const navigate = useNavigate();
@@ -20,6 +21,13 @@ function Orders() {
     hasNext: false,
     hasPrev: false,
     pageSize: 5 // OrderController에서 조정 
+  });
+
+  // 알림 모달 상태
+  const [modal, setModal] = useState({
+    show: false,
+    title: '',
+    message: ''
   });
 
   const [reviewModal, setReviewModal] = useState({
@@ -40,6 +48,11 @@ function Orders() {
     orderId: null,
     saleId: null
   });
+
+  // 알림 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setModal(prev => ({ ...prev, show: false }));
+  };
 
   const openReviewModal = (orderId, orderData, saleData) => {
     setReviewModal({
@@ -136,7 +149,7 @@ function Orders() {
       setLoading(true);
       const { startDate, endDate, page } = getQueryParams();
       
-      const response = await axios.get(`http://localhost:8080/api/my/user/order`, {
+      const response = await axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order`, {
         params: { startDate, endDate, page }
       });
       
@@ -152,9 +165,19 @@ function Orders() {
         });
       } else {
         setError('데이터를 불러오는데 실패했습니다.');
+        setModal({
+          show: true,
+          title: '데이터 로드 실패',
+          message: '주문 데이터를 불러오는데 실패했습니다.'
+        });
       }
     } catch (err) {
       setError('서버 연결에 문제가 발생했습니다: ' + err.message);
+      setModal({
+        show: true,
+        title: '서버 연결 오류',
+        message: '서버 연결에 문제가 발생했습니다: ' + err.message
+      });
     } finally {
       setLoading(false);
     }
@@ -192,17 +215,30 @@ function Orders() {
   };
   
   const handleCancelOrder = async (orderId) => {
-    if(window.confirm("주문을 취소하시겠습니까?")) {
-      try {
-        const response = await axios.put(`http://localhost:8080/api/my/user/order/${orderId}/cancel`);
-        if(response.status == 200) {
-          alert("성공적으로 주문이 취소되었습니다.");
-          getOrdersWithAxios();
-        }
-      } catch (error) {
-        console.log("주문취소실패", error);
-        alert("주문 취소 실패")
+    try {
+      setModal({
+        show: true,
+        title: '주문 취소',
+        message: '주문을 취소하시겠습니까?'
+      });
+      
+      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/${orderId}/cancel`);
+      
+      if(response.status === 200) {
+        setModal({
+          show: true,
+          title: '취소 성공',
+          message: '성공적으로 주문이 취소되었습니다.'
+        });
+        getOrdersWithAxios();
       }
+    } catch (error) {
+      console.log("주문취소실패", error);
+      setModal({
+        show: true,
+        title: '취소 실패',
+        message: '주문 취소에 실패했습니다.'
+      });
     }
   }
 
@@ -226,6 +262,13 @@ function Orders() {
     
     // 업데이트된 주문 목록으로 상태 갱신
     setOrders(updatedOrders);
+    
+    // 리뷰 작성 성공 알림
+    setModal({
+      show: true,
+      title: '리뷰 작성 성공',
+      message: '리뷰가 성공적으로 등록되었습니다.'
+    });
   };
   
   // URL 변경 감지하여 데이터 다시 불러오기
@@ -396,6 +439,15 @@ function Orders() {
         orderData={changeOrderModal.orderData}
         onOrderChanged={handleOrderStatusChanged}
       />
+
+      {/* 알림 모달 */}
+      {modal.show && (
+        <AlertModal2
+          title={modal.title}
+          message={modal.message}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

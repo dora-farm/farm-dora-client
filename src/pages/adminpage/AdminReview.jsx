@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import SearchSection from './components/SearchSection.jsx';
 import ReviewTable from './components/ReviewTable';
 import Pagination from '../../common/components/Pagination';
-import AlertModal from '../../common/components/modal/AlertModal';
 import ReviewDetailModal from './modal/ReviewDetailModal';
 import Loading from '../../common/components/Loading';
+import AlertModal2 from '../../common/components/modal/AlertModal2.jsx';
 
 function AdminReview() {
   // 검색 관련 상태
@@ -22,9 +22,11 @@ function AdminReview() {
   const [loading, setLoading] = useState(false);
   
   // 알림 모달
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [titleMessage, setTitleMessage] = useState('');
+  const [modal, setModal] = useState({
+    show: false,
+    title: '',
+    message: ''
+  });
 
   // 페이지네이션 상태
   const [pagination, setPagination] = useState({
@@ -44,20 +46,27 @@ function AdminReview() {
     }));
   };
 
+  // 알림 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setModal(prev => ({ ...prev, show: false }));
+  };
+
   // 리뷰 상세 조회 함수
   const fetchReviewDetail = async (reviewId) => {
     setLoading(true);
     setModalOpen(true);
     
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/review/${reviewId}`);
+      const response = await fetch(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/${reviewId}`);
       const httpResponse = await response.json();
       setReviewDetail(httpResponse.data);
     } catch (error) {
       console.error('리뷰 상세 조회 오류:', error);
-      setTitleMessage('⚠️ 알림')
-      setModalMessage('리뷰 상세 조회 중 오류가 발생했습니다.');
-      setShowModal(true);
+      setModal({
+        show: true,
+        title: '조회 실패',
+        message: '리뷰 상세 조회 중 오류가 발생했습니다.'
+      });
     } finally {
       setLoading(false);
     }
@@ -68,7 +77,7 @@ function AdminReview() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/review/allreviews?sortType=${sortFilter}&page=0`);
+      const response = await fetch(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/allreviews?sortType=${sortFilter}&page=0`);
       
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -91,9 +100,11 @@ function AdminReview() {
       });
     } catch (error) {
       console.error('초기 리뷰 데이터 로딩 중 오류:', error);
-      setTitleMessage('⚠️ 알림')
-      setModalMessage('리뷰 데이터를 불러오는 중 오류가 발생했습니다.');
-      setShowModal(true);
+      setModal({
+        show: true,
+        title: '데이터 로드 실패',
+        message: '리뷰 데이터를 불러오는 중 오류가 발생했습니다.'
+      });
       setReviews([]); // 오류 시 빈 배열로 설정
     } finally {
       setIsLoading(false);
@@ -115,7 +126,7 @@ function AdminReview() {
     setIsLoading(true);
 
     // 검색 쿼리 파라미터 구성
-    let url = `http://localhost:8080/api/admin/review/allreviews?sortType=${sortFilter}&page=${pagination.currentPage}`;
+    let url = `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/allreviews?sortType=${sortFilter}&page=${pagination.currentPage}`;
     
     // 검색어가 있는 경우에만 검색 파라미터 추가
     if (searchTerm.trim()) {
@@ -146,9 +157,11 @@ function AdminReview() {
       });
     } catch (error) {
       console.error('리뷰 검색 중 오류:', error);
-      setTitleMessage('⚠️ 알림')
-      setModalMessage('리뷰 검색 중 오류가 발생했습니다.');
-      setShowModal(true);
+      setModal({
+        show: true,
+        title: '검색 실패',
+        message: '리뷰 검색 중 오류가 발생했습니다.'
+      });
       setReviews([]); // 오류 시 빈 배열로 설정
     } finally {
       setIsLoading(false);
@@ -179,26 +192,32 @@ function AdminReview() {
   // 리뷰 삭제 핸들러
   const handleDeleteReview = async (reviewId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/review/${reviewId}`, {
+      const response = await fetch(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/${reviewId}`, {
         method: 'DELETE'
       });
       
       if (response.ok) {
-        setTitleMessage('✅ 알림')
-        setModalMessage('리뷰가 성공적으로 삭제되었습니다.');
-        setShowModal(true);
+        setModal({
+          show: true,
+          title: '삭제 성공',
+          message: '리뷰가 성공적으로 삭제되었습니다.'
+        });
         setModalOpen(false);
         fetchSearchReviews();
       } else {
-        setTitleMessage('⚠️ 알림')
-        setModalMessage('리뷰 삭제에 실패했습니다.');
-        setShowModal(true);
+        setModal({
+          show: true,
+          title: '삭제 실패',
+          message: '리뷰 삭제에 실패했습니다.'
+        });
       }
     } catch (error) {
       console.error('리뷰 삭제 중 오류:', error);
-      setTitleMessage('⚠️ 알림')
-      setModalMessage('리뷰 삭제 중 오류가 발생했습니다.');
-      setShowModal(true);
+      setModal({
+        show: true,
+        title: '삭제 실패',
+        message: '리뷰 삭제 중 오류가 발생했습니다.'
+      });
     }
   };
 
@@ -260,11 +279,11 @@ function AdminReview() {
       )}
 
       {/* 알림 모달 */}
-      {showModal && (
-        <AlertModal
-          title={titleMessage}
-          message={modalMessage}
-          onClose={() => setShowModal(false)}
+      {modal.show && (
+        <AlertModal2
+          title={modal.title}
+          message={modal.message}
+          onClose={handleCloseModal}
         />
       )}
     </div>
