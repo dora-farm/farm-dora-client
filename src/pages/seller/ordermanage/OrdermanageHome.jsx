@@ -20,7 +20,6 @@ import Review from './Review';
 import Question from './Inquiry';
 
 function OrdermanageHome() {
-  const sellerId = 1;
   const location = useLocation();
   const [statistics, setStatistics] = useState({
     totalOrders: 0,
@@ -38,7 +37,7 @@ function OrdermanageHome() {
     try {
       setLoading(true);
       
-      const response = await axios.get(`http://localhost:8010/api/my/seller/order?sellerId=${sellerId}`);
+      const response = await axios.get(`http://localhost:8010/api/my/seller/order`);
 
       if (response.status === 200) {
         setStatistics(response.data.data);
@@ -89,13 +88,13 @@ function OrdermanageHome() {
   const renderContent = () => {
     const path = location.pathname;
     
-    if (path === '/my/seller/order') return <Order sellerId={sellerId} />;
-    if (path === '/my/seller/order/new') return <New sellerId={sellerId} />;
-    if (path === '/my/seller/order/exchange') return <Exchange sellerId={sellerId} />;
-    if (path === '/my/seller/order/refund') return <Refund sellerId={sellerId} />;
-    if (path === '/my/seller/order/cancel') return <Cancel sellerId={sellerId} />;
-    if (path === '/my/seller/order/review') return <Review sellerId={sellerId} />;
-    if (path === '/my/seller/order/inquiry') return <Question sellerId={sellerId} />;
+    if (path === '/my/seller/order') return <Order />;
+    if (path === '/my/seller/order/new') return <New />;
+    if (path === '/my/seller/order/exchange') return <Exchange />;
+    if (path === '/my/seller/order/refund') return <Refund />;
+    if (path === '/my/seller/order/cancel') return <Cancel />;
+    if (path === '/my/seller/order/review') return <Review />;
+    if (path === '/my/seller/order/inquiry') return <Question />;
     
     // 기본값
     return <Order />;
@@ -106,7 +105,7 @@ function OrdermanageHome() {
       <DashboardHeader title={"주문 관리"} />
       <div className='mt-4'>
         {loading ? (
-            <div className="text-center py-4">통계 데이터 로딩 중...</div>
+            <div className="text-center py-4">데이터 로딩 중...</div>
           ) : error ? (
             <div className="text-center text-red-500 py-4">{error}</div>
           ) : (

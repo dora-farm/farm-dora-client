@@ -1,38 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GreenSquareCheckbox from "../../../../common/components/GreenSquareCheckbox";
 
-/**
-    검색 폼 컴포넌트
-    @param {Object} props - 컴포넌트 속성
-    @param {Function} props.onSearch - 검색 실행 콜백 함수
-    @param {Function} props.onReset - 검색 초기화 콜백 함수
- */
-function SearchForm({ onSearch, onReset }) {
-  // 상태 관리
+function SearchForm({ onSearch, onReset, initialValues = {} }) {
+  // 날짜 포맷 유틸리티 함수
   const formatDate = (ago) => {
     const date = new Date();
     date.setDate(date.getDate() - ago);
-    return date.toLocaleDateString('en-CA');
-  }
-  const [startDate, setStartDate] = useState(formatDate(7));
-  const [endDate, setEndDate] = useState(formatDate(0));
-  const [orderStatus, setOrderStatus] = useState({
-    all: true, // 전체
-    preparing: false, // 배송준비
-    shipping: false, // 배송중
-    delivered: false, // 배송완료
-    cancel: false, // 취소
-    refund: false, // 반품
-    exchange: false, // 교환
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+  };
+
+  // 상태 관리
+  const [startDate, setStartDate] = useState(initialValues.startDate || formatDate(7));
+  const [endDate, setEndDate] = useState(initialValues.endDate || formatDate(0));
+  const [statusIds, setStatusIds] = useState(initialValues.statusIds || {
+    all: true,
+    preparing: false,
+    shipping: false,
+    delivered: false,
+    cancel: false,
+    refund: false,
+    exchange: false,
   });
-  const [searchPeriod, setSearchPeriod] = useState("WEEK");
-  const [searchType, setSearchType] = useState("PRODUCT");
-  const [sort, setSort] = useState("LATEST");
-  const [searchKeyword, setSearchKeyword] = useState(""); // 검색어
-  const [itemsPerPage, setItemsPerPage] = useState("10"); // 페이지당 아이템 수
+  const [searchPeriod, setSearchPeriod] = useState(initialValues.searchPeriod || "WEEK");
+  const [searchType, setSearchType] = useState(initialValues.searchType || "PRODUCT");
+  const [sort, setSort] = useState(initialValues.sort || "LATEST");
+  const [keyword, setKeyword] = useState(initialValues.keyword || "");
+  const [itemsPerPage, setItemsPerPage] = useState(initialValues.itemsPerPage?.toString() || "10");
 
   // 주문 상태 매핑 (화면 표시용)
-  const orderStatusLabels = {
+  const statusIdsLabels = {
     all: "전체",
     preparing: "배송준비",
     shipping: "배송중",
@@ -42,27 +38,80 @@ function SearchForm({ onSearch, onReset }) {
     exchange: "교환",
   };
 
+  // 초기 값이 변경될 때 폼 상태 업데이트
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      if (initialValues.startDate) setStartDate(initialValues.startDate);
+      if (initialValues.endDate) setEndDate(initialValues.endDate);
+      if (initialValues.statusIds) setStatusIds(initialValues.statusIds);
+      if (initialValues.searchPeriod) setSearchPeriod(initialValues.searchPeriod);
+      if (initialValues.searchType) setSearchType(initialValues.searchType);
+      if (initialValues.sort) setSort(initialValues.sort);
+      if (initialValues.keyword) setKeyword(initialValues.keyword);
+      if (initialValues.itemsPerPage) setItemsPerPage(initialValues.itemsPerPage.toString());
+    }
+  }, [initialValues]);
+
   // 검색 제출 핸들러
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch({
-      startDate,
-      endDate,
-      orderStatus,
-      searchPeriod,
+    
+    // 날짜 유효성 검사
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+      alert('시작 날짜는 종료 날짜보다 앞서야 합니다.');
+      return;
+    }
+    // 시작일: 해당일 00:00:00
+    const formatStartDate = startDate ? `${startDate}T00:00:00` : null;
+
+    // 종료일: 다음 날 00:00:00 (더 정확한 범위 처리)
+    let formatEndDate = null;
+    if (endDate) {
+      const nextDay = new Date(endDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      formatEndDate = `${nextDay.toISOString().split('T')[0]}T00:00:00`;
+    }
+    
+    // 백엔드 API에 맞게 상태 ID 매핑
+    const statusMap = {
+      preparing: 1,
+      shipping: 2,
+      delivered: 3,
+      cancel: 4,
+      refund: 5,
+      exchange: 6,
+    };
+
+    // 선택된 상태 ID 배열 생성
+    const selectedStatusIds = statusIds.all
+      ? []  // 전체 선택 시 빈 배열 (모든 상태 포함)
+      : Object.entries(statusIds)
+          .filter(([key, value]) => key !== 'all' && value)
+          .map(([key]) => statusMap[key]);
+    
+    // 검색 파라미터 구성
+    const searchParams = {
       searchType,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+      statusIds: selectedStatusIds,
+      searchPeriod,
       sort,
-      searchKeyword,
+      keyword,
       itemsPerPage: parseInt(itemsPerPage, 10),
-    });
+      page: 1, // 검색 시 항상 첫 페이지로 초기화
+    };
+    
+    // 검색 콜백 실행
+    if (onSearch) onSearch(searchParams);
   };
 
   // 검색 초기화 핸들러
   const handleReset = () => {
-    setStartDate("");
-    setEndDate("");
-    setOrderStatus({
-      all: false,
+    setStartDate(formatDate(7));
+    setEndDate(formatDate(0));
+    setStatusIds({
+      all: true,
       preparing: false,
       shipping: false,
       delivered: false,
@@ -70,11 +119,13 @@ function SearchForm({ onSearch, onReset }) {
       refund: false,
       exchange: false,
     });
-    setSearchPeriod("");
+    setSearchPeriod("WEEK");
     setSearchType("PRODUCT");
     setSort("LATEST");
-    setSearchKeyword("");
+    setKeyword("");
     setItemsPerPage("10");
+    
+    // 초기화 콜백 실행
     if (onReset) onReset();
   };
 
@@ -85,19 +136,30 @@ function SearchForm({ onSearch, onReset }) {
     // '전체' 옵션 처리 로직
     if (name === "all" && checked) {
       // '전체' 선택 시 다른 모든 체크박스 해제
-      setOrderStatus((prevStatus) => ({
+      setStatusIds((prevStatus) => ({
         ...Object.keys(prevStatus).reduce((acc, key) => {
           acc[key] = key === "all";
           return acc;
         }, {}),
       }));
     } else {
-      // 다른 상태 선택 시 '전체' 해제
-      setOrderStatus((prevStatus) => ({
-        ...prevStatus,
+      // 다른 상태 선택 시 '전체' 해제 및 변경 사항 적용
+      const newStatusIds = {
+        ...statusIds,
         [name]: checked,
         all: name === "all" ? checked : false,
-      }));
+      };
+      
+      // 어떤 상태도 선택되지 않았을 경우 전체 선택
+      const hasAnySelected = Object.entries(newStatusIds)
+        .filter(([key]) => key !== 'all')
+        .some(([_, value]) => value);
+        
+      if (!hasAnySelected) {
+        newStatusIds.all = true;
+      }
+      
+      setStatusIds(newStatusIds);
     }
   };
 
@@ -138,13 +200,20 @@ function SearchForm({ onSearch, onReset }) {
     setEndDate(today.toISOString().split("T")[0]);
   };
 
+  // 엔터키 검색 처리
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
+
   return (
-    <div className="w-full mx-7 select-none">
+    <div className="w-full mx-auto px-4 select-none ml-6">
       <form onSubmit={handleSubmit}>
         {/* 첫 번째 행: 검색어 입력 */}
         <div className="flex items-center mb-3 gap-2">
           <div className="w-full flex items-center">
-            <div className="relative w-20 mr-2">
+            <div className="relative w-24 mr-2">
               <select
                 value={searchType}
                 onChange={(e) => setSearchType(e.target.value)}
@@ -157,21 +226,25 @@ function SearchForm({ onSearch, onReset }) {
             
             <input
               type="text"
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="min-w-[400px] px-2 py-1 border border-gray-300 rounded-md text-sm mr-2"
-              placeholder="검색어를 입력하세요"
+              placeholder={`${searchType === 'PRODUCT' ? '상품명' : '구매자명'} 검색`}
             />
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="px-2 py-1 border border-gray-300 rounded-md text-sm"
-            >
-              <option value="LATEST">최신순</option>
-              <option value="OLDEST">오래된 순</option>
-              <option value="PRICE_ASC">가격 오름차순</option>
-              <option value="PRICE_DESC">가격 내림차순</option>
-            </select>
+            
+            <div className="flex items-center space-x-2">
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
+              >
+                <option value="LATEST">최신순</option>
+                <option value="OLDEST">오래된순</option>
+                <option value="PRICE_ASC">낮은가격순</option>
+                <option value="PRICE_DESC">높은가격순</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -192,8 +265,10 @@ function SearchForm({ onSearch, onReset }) {
                   key={period.id}
                   type="button"
                   className={`px-3 py-1 text-xs border border-gray-300 rounded-md ${
-                    searchPeriod === period.id ? "bg-gray-200" : "bg-white"
-                  } hover:bg-gray-100`}
+                    searchPeriod === period.id 
+                      ? "bg-brown text-white" 
+                      : "bg-white text-gray-700 hover:bg-gray-100"
+                  } transition-colors`}
                   onClick={() => handleSearchPeriodClick(period.id)}
                 >
                   {period.label}
@@ -206,15 +281,21 @@ function SearchForm({ onSearch, onReset }) {
             <input
               type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="px-2 py-1 border border-gray-300 rounded-md text-sm"
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                setSearchPeriod(""); // 커스텀 날짜 선택 시 기간 버튼 선택 해제
+              }}
+              className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
             />
             <span className="text-gray-500">-</span>
             <input
               type="date"
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="px-2 py-1 border border-gray-300 rounded-md text-sm"
+              onChange={(e) => {
+                setEndDate(e.target.value);
+                setSearchPeriod(""); // 커스텀 날짜 선택 시 기간 버튼 선택 해제
+              }}
+              className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
             />
           </div>
         </div>
@@ -225,22 +306,23 @@ function SearchForm({ onSearch, onReset }) {
             주문상태
           </label>
           <div className="flex flex-wrap gap-4">
-            {Object.entries(orderStatusLabels).map(([key, label]) => (
+            {Object.entries(statusIdsLabels).map(([key, label]) => (
               <GreenSquareCheckbox
                 key={key}
                 name={key}
-                checked={orderStatus[key]}
+                checked={statusIds[key]}
                 onChange={handleStatusChange}
                 label={label}
               />
             ))}
           </div>
         </div>
+        
         {/* 버튼 영역 */}
-        <div className="flex justify-center space-x-2">
+        <div className="flex justify-center space-x-3 mt-2">
           <button
             type="submit"
-            className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            className="px-5 py-2 text-sm font-medium text-white bg-brown rounded-md hover:bg-brown-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
           >
             검색
           </button>
@@ -248,7 +330,7 @@ function SearchForm({ onSearch, onReset }) {
           <button
             type="button"
             onClick={handleReset}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
           >
             초기화
           </button>
