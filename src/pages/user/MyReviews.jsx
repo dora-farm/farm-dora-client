@@ -69,33 +69,33 @@
 //         endDate: queryParams.endDate 
 //     });
 
-//     // 리뷰 목록 불러오기
-//     const getReviewsWithAxios = async () => {
-//         try {
-//             setLoading(true);
-//             const { startDate, endDate, page } = getQueryParams();
-//             const response = await axios.get(`http://localhost:8080/api/my/user/order/myreviews`, {
-//                 params: { startDate, endDate, page }
-//             });      
-//             if (response.data.status === 200) {
-//                 setReviews(response.data.data.contents);
-//                 setPagination({
-//                     currentPage: response.data.data.currentPage,
-//                     totalElements: response.data.data.totalElements,
-//                     totalPages: response.data.data.totalPages,
-//                     hasNext: response.data.data.hasNext,
-//                     hasPrev: response.data.data.hasPrev,
-//                     pageSize: response.data.data.pageSize
-//                 });
-//             } else {
-//             setError('리뷰 데이터를 불러오는데 실패했습니다.');
-//             }
-//         } catch (err) {
-//             setError('서버 연결에 문제가 발생했습니다: ' + err.message);
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
+    // 리뷰 목록 불러오기
+    const getReviewsWithAxios = async () => {
+        try {
+            setLoading(true);
+            const { startDate, endDate, page } = getQueryParams();
+            const response = await axios.get(`http://localhost:8020/api/my/user/order/myreviews`, {
+                params: { startDate, endDate, page }
+            });      
+            if (response.data.status === 200) {
+                setReviews(response.data.data.contents);
+                setPagination({
+                    currentPage: response.data.data.currentPage,
+                    totalElements: response.data.data.totalElements,
+                    totalPages: response.data.data.totalPages,
+                    hasNext: response.data.data.hasNext,
+                    hasPrev: response.data.data.hasPrev,
+                    pageSize: response.data.data.pageSize
+                });
+            } else {
+            setError('리뷰 데이터를 불러오는데 실패했습니다.');
+            }
+        } catch (err) {
+            setError('서버 연결에 문제가 발생했습니다: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
 //     // 현재 선택된 날짜 범위 타입
 //     const [selectedRange, setSelectedRange] = useState('');
@@ -148,11 +148,11 @@
 //         });
 //     };
 
-//     // 리뷰 수정 처리
-//     const handleReviewUpdate = async (reviewId, updatedData) => {
-//         try {
-//         // API 호출로 리뷰 업데이트
-//         const response = await axios.put(`http://localhost:8080/api/my/user/order/myreviews/${reviewId}`, updatedData);
+    // 리뷰 수정 처리
+    const handleReviewUpdate = async (reviewId, updatedData) => {
+        try {
+        // API 호출로 리뷰 업데이트
+        const response = await axios.put(`http://localhost:8020/api/my/user/order/myreviews/${reviewId}`, updatedData);
 
 //         if (response.data.status === 200) {
 //             getReviewsWithAxios();
@@ -166,35 +166,36 @@
 //         }
 //     };
 
-//   // 리뷰 삭제 처리
-//     const handleReviewDelete = async (reviewId) => {
-//         try {
-//         const response = await axios.delete(`http://localhost:8080/api/my/user/order/myreviews/${reviewId}`);
+  // 리뷰 삭제 처리
+    const handleReviewDelete = async (reviewId) => {
+        try {
+        const response = await axios.delete(`http://localhost:8020/api/my/user/order/myreviews/${reviewId}/delete`);
 
-//         if (response.data.status === 200) {
-//             // 성공적으로 삭제되면 목록에서도 제거
-//             setReviews(reviews.filter(review => review.reviewId !== reviewId));
-//         } else {
-//             alert('리뷰 삭제에 실패했습니다.');
-//         }
-//         } catch (error) {
-//             alert('리뷰 삭제 중 오류가 발생했습니다: ' + error.message);
-//         }
-//     };
+        if (response.data.status === 200) {
+            // 성공적으로 삭제되면 목록에서도 제거
+            setReviews(reviews.filter(review => review.reviewId !== reviewId));
+            getReviewsWithAxios();
+        } else {
+            alert('리뷰 삭제에 실패했습니다.');
+        }
+        } catch (error) {
+            alert('리뷰 삭제 중 오류가 발생했습니다: ' + error.message);
+        }
+    };
 
 //   // URL 변경 감지하여 데이터 다시 불러오기
 //     useEffect(() => {
 //         getReviewsWithAxios();
 //     }, [location.search]);
 
-//     // 초기 렌더링 시 URL 설정
-//     useEffect(() => {
-//     // URL이 없거나 쿼리 파라미터가 누락된 경우 기본값으로 리다이렉트
-//         if (!location.search || !getQueryParams().startDate || !getQueryParams().endDate) {
-//             navigate(`/my/user/review?startDate=${getFirstDayOfMonth()}&endDate=${getLastDayOfMonth()}&page=0`);
-//             setSelectedRange('month'); // 기본 범위를 '1개월'로 설정
-//         }
-//     }, []);
+    // 초기 렌더링 시 URL 설정
+    useEffect(() => {
+    // URL이 없거나 쿼리 파라미터가 누락된 경우 기본값으로 리다이렉트
+        if (!location.search || !getQueryParams().startDate || !getQueryParams().endDate) {
+            navigate(`/my/user/review?startDate=${getFirstDayOfMonth()}&endDate=${getLastDayOfMonth()}&page=0`);
+            setSelectedRange('all');
+        }
+    }, []);
 
 //     if (loading) return (
 //         <div className="flex justify-center items-center h-64">

@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 function Inquiry() {
   return (
-    <div>Inquiry</div>
+    <div>내용입니다.</div>
   )
 }
 
-export default Inquiry
+export default Inquiry;

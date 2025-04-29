@@ -18,7 +18,8 @@ import Cancel from './pages/seller/ordermanage/Cancel';
 import Exchange from './pages/seller/ordermanage/Exchange';
 import Inquiry from './pages/seller/ordermanage/Inquiry';
 import New from './pages/seller/ordermanage/New';
-import Order from './pages/seller/ordermanage/Order';
+import OrdermanageHome from './pages/seller/ordermanage/OrdermanageHome';
+import Order from './pages/seller/ordermanage/Order'
 import Refund from './pages/seller/ordermanage/Refund';
 import Review from './pages/seller/ordermanage/Review';
 import SellerHome from './pages/seller/dashboard/SellerHome';
@@ -49,16 +50,22 @@ function App() {
             <Route index element={<Home/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/join" element={<Join/>} />
-            
+            <Route path="/category" element={<Category/>} />
+            <Route path="/event" element={<Event/>} />
+            <Route path="/support" element={<ChatSupport/>} />
+            <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
+            <Route path="/live/setup" element={<LiveSetup/>} /> {/* 방송준비화면 */}
+            <Route path="/live/view" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
+
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
-              <Route path="/my/user/wishlist" element={<Wishlist/>} />
               <Route path="/my/user/cart" element={<Cart/>} />
               <Route path="/my/user/inquiry" element={<MyInquireies/>} />
               <Route path="/my/user/order" element={<Orders/>} />
               <Route path="/my/user/address" element={<ManageAddress/>} />
               <Route path="/my/user/profile" element={<EditProfile/>} />
               <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
+              <Route path="/my/user/wishlist" element={<Wishlist/>} />
             </Route>
 
             <Route element={<AdminLayout/>}>
@@ -73,24 +80,12 @@ function App() {
 
             <Route element={<SellerLayout/>}>
               <Route path="/my/seller" element={<SellerHome/>} />
-              <Route path="/my/seller/order" element={<Order/>} />
-              <Route path="/my/seller/order/new" element={<New/>} />
-              <Route path="/my/seller/order/exchange" element={<Exchange/>} />
-              <Route path="/my/seller/order/refund" element={<Refund/>} />
-              <Route path="/my/seller/order/cancel" element={<Cancel/>} />
-              <Route path="/my/seller/order/review" element={<Review/>} />
-              <Route path="/my/seller/order/inquiry" element={<Inquiry/>} />
+              <Route path="/my/seller/order/*" element={<OrdermanageHome/>} />
               <Route path="/my/seller/item/manage" element={<Manage/>} />
               <Route path="/my/seller/item/register" element={<Register/>} />
               <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
               <Route path="/my/seller/live" element={<VideoManage/>} />
             </Route>
-
-            <Route path="/category" element={<Category/>} />
-            <Route path="/event" element={<Event/>} />
-            <Route path="/support" element={<ChatSupport/>} />
-            <Route path="/live" element={<VideoManage/>} /> {/* 방송리스트화면 */}
-      
           </Route>
         </Routes>
         

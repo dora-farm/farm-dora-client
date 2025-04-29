@@ -104,7 +104,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `http://localhost:8080/api/my/seller/dashboard/sales`,
+        `http://localhost:8010/api/my/seller/dashboard/sales`,
         {
           params: {
             sellerId,
@@ -147,7 +147,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
   const loadProductRatioData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/my/seller/dashboard/product`,
+        `http://localhost:8010/api/my/seller/dashboard/product`,
         {
           params: { sellerId },
         }
@@ -193,7 +193,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
   const loadStatusRatioData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/my/seller/dashboard/status`,
+        `http://localhost:8010/api/my/seller/dashboard/status`,
         {
           params: { sellerId },
         }
@@ -247,7 +247,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `http://localhost:8080/api/admin/dashboard/sales`,
+        `http://localhost:8010/api/admin/dashboard/sales`,
         {
           params: {
             startDate,
@@ -299,7 +299,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `http://localhost:8080/api/admin/dashboard/joins`,
+        `http://localhost:8010/api/admin/dashboard/joins`,
         {
           params: {
             startDate,
