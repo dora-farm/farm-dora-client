@@ -42,6 +42,9 @@ import ProductEdit from './pages/seller/product/ProductEdit';
 import './pages/seller/dashboard/utils/ChartRegistry';
 
 import Category from './pages/category/Category';
+import AdminPopupDetail from './pages/adminpage/AdminPopupDetail';
+import AdminPopupEdit from './pages/adminpage/AdminPopupEdit';
+import EventDetail from './pages/event/EventDetail';
 
 function App() {
   return (
@@ -53,6 +56,7 @@ function App() {
             <Route path="/join" element={<Join/>} />
             <Route path="/category" element={<Category/>} />
             <Route path="/event" element={<Event/>} />
+            <Route path="/event/:id" element={<EventDetail/>} />
             <Route path="/support" element={<ChatSupport/>} />
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
             <Route path="/live/setup" element={<LiveSetup/>} /> {/* 방송준비화면 */}
@@ -74,6 +78,8 @@ function App() {
               <Route path="/admin/broadcast" element={<AdminBroadcast/>} />
               <Route path="/admin" element={<AdminHome/>} />
               <Route path="/admin/popup" element={<AdminPopup/>} />
+              <Route path="/admin/popup/:id" element={<AdminPopupDetail/>} />
+              <Route path="/admin/popup/edit/:id" element={<AdminPopupEdit/>} />
               <Route path="/admin/popup/register" element={<AdminPopupRegi/>} />
               <Route path="/admin/product" element={<AdminProduct/>} />
               <Route path="/admin/review" element={<AdminReview/>} />
