@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AlertModal from '../../common/components/modal/AlertModal'; // 경로는 실제 프로젝트 구조에 맞게 조정해주세요
 
 const AdminPopupDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [popup, setPopup] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  
+  // 알림 모달 상태
+  const [modal, setModal] = useState({
+    show: false,
+    title: '',
+    message: '',
+    type: 'alert',
+    onConfirm: null
+  });
   
   // 이벤트/배너 상세 정보 조회
   useEffect(() => {
@@ -20,20 +29,34 @@ const AdminPopupDetail = () => {
           setPopup(response.data.data);
         } else {
           console.error('이벤트/배너 상세 정보 형식이 예상과 다릅니다:', response.data);
-          alert('이벤트/배너 정보를 불러올 수 없습니다.');
-          navigate('/admin/popup');
+          setModal({
+            show: true,
+            title: '데이터 로드 실패',
+            message: '이벤트/배너 정보를 불러올 수 없습니다.',
+            onConfirm: () => navigate('/admin/popup')
+          });
         }
         
         setLoading(false);
       } catch (error) {
         console.error('이벤트/배너 상세 정보를 불러오는 중 오류가 발생했습니다:', error);
-        alert('이벤트/배너 정보를 불러올 수 없습니다.');
-        navigate('/admin/popup');
+        setModal({
+          show: true,
+          title: '데이터 로드 실패',
+          message: '이벤트/배너 정보를 불러올 수 없습니다.',
+          onConfirm: () => navigate('/admin/popup')
+        });
+        setLoading(false);
       }
     };
     
     fetchPopupDetail();
   }, [id, navigate]);
+  
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setModal(prev => ({ ...prev, show: false }));
+  };
   
   // 수정 페이지로 이동
   const handleEdit = () => {
@@ -42,22 +65,32 @@ const AdminPopupDetail = () => {
   
   // 삭제 확인 모달 표시
   const handleDeleteClick = () => {
-    setConfirmDelete(true);
-  };
-  
-  // 삭제 취소
-  const handleCancelDelete = () => {
-    setConfirmDelete(false);
+    setModal({
+      show: true,
+      title: '이벤트/배너 삭제',
+      message: `"${popup.title}" 이벤트/배너를 삭제하시겠습니까?`,
+      type: 'confirm',
+      onConfirm: handleConfirmDelete
+    });
   };
   
   // 삭제 확정
   const handleConfirmDelete = async () => {
     try {
       await axios.delete(`/api/popup/${id}`);
-      navigate('/admin/popup');
+      setModal({
+        show: true,
+        title: '삭제 성공',
+        message: '이벤트/배너가 성공적으로 삭제되었습니다.',
+        onConfirm: () => navigate('/admin/popup')
+      });
     } catch (error) {
       console.error('이벤트/배너 삭제 중 오류가 발생했습니다:', error);
-      setConfirmDelete(false);
+      setModal({
+        show: true,
+        title: '삭제 실패',
+        message: '이벤트/배너 삭제 중 오류가 발생했습니다.',
+      });
     }
   };
   
@@ -179,30 +212,15 @@ const AdminPopupDetail = () => {
         </div>
       </div>
       
-      {/* 삭제 확인 모달 */}
-      {confirmDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md">
-            <h3 className="text-lg text-center font-medium mb-4">⚠️ 이벤트/배너 삭제</h3>
-            <p className="mb-6 text-gray-600">
-              "{popup.title}" 이벤트/배너를 삭제하시겠습니까?
-            </p>
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={handleCancelDelete}
-                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-dark transition-colors"
-              >
-                취소
-              </button>
-              <button
-                onClick={handleConfirmDelete}
-                className="px-4 py-2 bg-danger text-white rounded-md hover:bg-danger-dark transition-colors"
-              >
-                삭제
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* 알림 모달 */}
+      {modal.show && (
+        <AlertModal
+          title={modal.title}
+          message={modal.message}
+          type={modal.type}
+          onClose={handleCloseModal}
+          onConfirm={modal.onConfirm}
+        />
       )}
     </div>
   );

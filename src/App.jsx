@@ -45,6 +45,7 @@ import Category from './pages/category/Category';
 import AdminPopupDetail from './pages/adminpage/AdminPopupDetail';
 import AdminPopupEdit from './pages/adminpage/AdminPopupEdit';
 import EventDetail from './pages/event/EventDetail';
+import MyReviews from './pages/user/MyReviews';
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
             
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
+              <Route path="/my/user/review" element={<MyReviews/>} />
               <Route path="/my/user/cart" element={<Cart/>} />
               <Route path="/my/user/inquiry" element={<MyInquireies/>} />
               <Route path="/my/user/order" element={<Orders/>} />

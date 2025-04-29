@@ -23,11 +23,13 @@ function Orders() {
     pageSize: 5 // OrderController에서 조정 
   });
 
-  // 알림 모달 상태
+  // 알림 모달 상태 - type 필드 추가
   const [modal, setModal] = useState({
     show: false,
     title: '',
-    message: ''
+    message: '',
+    onConfirm: null,
+    type: 'alert' // 'alert' 또는 'confirm'
   });
 
   const [reviewModal, setReviewModal] = useState({
@@ -168,7 +170,8 @@ function Orders() {
         setModal({
           show: true,
           title: '데이터 로드 실패',
-          message: '주문 데이터를 불러오는데 실패했습니다.'
+          message: '주문 데이터를 불러오는데 실패했습니다.',
+          type: 'alert'
         });
       }
     } catch (err) {
@@ -176,7 +179,8 @@ function Orders() {
       setModal({
         show: true,
         title: '서버 연결 오류',
-        message: '서버 연결에 문제가 발생했습니다: ' + err.message
+        message: '서버 연결에 문제가 발생했습니다: ' + err.message,
+        type: 'alert'
       });
     } finally {
       setLoading(false);
@@ -214,21 +218,29 @@ function Orders() {
     return statusMap[statusId] || { name: '알 수 없음', color: 'bg-gray-100 text-gray-800' };
   };
   
-  const handleCancelOrder = async (orderId) => {
+  // 주문 취소 함수 수정 - confirm 타입 모달 사용
+  const handleCancelOrder = (orderId) => {
+    // 확인 모달 표시
+    setModal({
+      show: true,
+      title: '주문 취소',
+      message: '주문을 취소하시겠습니까?',
+      onConfirm: () => processCancelOrder(orderId),
+      type: 'confirm' // confirm 타입으로 설정
+    });
+  };
+
+  // 실제 주문 취소 처리 함수 추가
+  const processCancelOrder = async (orderId) => {
     try {
-      setModal({
-        show: true,
-        title: '주문 취소',
-        message: '주문을 취소하시겠습니까?'
-      });
-      
       const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/${orderId}/cancel`);
       
       if(response.status === 200) {
         setModal({
           show: true,
           title: '취소 성공',
-          message: '성공적으로 주문이 취소되었습니다.'
+          message: '성공적으로 주문이 취소되었습니다.',
+          type: 'alert'
         });
         getOrdersWithAxios();
       }
@@ -237,10 +249,11 @@ function Orders() {
       setModal({
         show: true,
         title: '취소 실패',
-        message: '주문 취소에 실패했습니다.'
+        message: '주문 취소에 실패했습니다.',
+        type: 'alert'
       });
     }
-  }
+  };
 
   // 리뷰 완료 처리 함수
   const handleReviewComplete = (orderId, saleId) => {
@@ -267,7 +280,8 @@ function Orders() {
     setModal({
       show: true,
       title: '리뷰 작성 성공',
-      message: '리뷰가 성공적으로 등록되었습니다.'
+      message: '리뷰가 성공적으로 등록되었습니다.',
+      type: 'alert'
     });
   };
   
@@ -440,12 +454,13 @@ function Orders() {
         onOrderChanged={handleOrderStatusChanged}
       />
 
-      {/* 알림 모달 */}
       {modal.show && (
         <AlertModal2
           title={modal.title}
           message={modal.message}
           onClose={handleCloseModal}
+          onConfirm={modal.onConfirm}
+          type={modal.type || 'alert'}
         />
       )}
     </div>
