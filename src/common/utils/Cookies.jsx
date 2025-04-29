@@ -1,4 +1,5 @@
 export const getCookie = (name) => {
+    //쿠키에 있느 jwt 토큰 꺼내옴
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
         const [cookieName, cookieValue] = cookie.split('=');

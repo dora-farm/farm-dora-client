@@ -1,10 +1,11 @@
 import React, {useRef, useState} from 'react';
 import glass from '../../../assets/images/glass.png';
-import FindModalForm from "./FindModalForm.jsx";
-import FindVerifyModalForm from "./FindVerifyModalForm.jsx";
+import FindModalForm from "./modal/FindModalForm.jsx";
+import EmailVerifyModalForm from "./modal/EmailVerifyModalForm.jsx";
 import { findId, findPassword, findVerificationCode } from '../services/findService.js';
 import { useFindModal } from "../hooks/useFindModal.js";
 import AlertModal from "../../../common/components/modal/AlertModal.jsx";
+import {useEmailVerifyModal} from "../hooks/useEmailVerifyModal.js";
 
 const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) => {
     // 💬 useState 제거 → useRef로 값 관리
@@ -18,19 +19,42 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
     const [modalMessage, setModalMessage] = useState("");
 
     // 🔥 모달 관리 훅
+    // const {
+    //     isOpen,
+    //     title,
+    //     content,
+    //     inputs,
+    //     onSubmitAction,
+    //     openModal,
+    //     closeModal,
+    //     isVerifyModal,
+    //     openVerifyModal,
+    //     closeVerifyModal,
+    //     onSubmitCode,
+    // } = useFindModal();
+
+    // 🔥 일반 찾기 모달
     const {
         isOpen,
-        title,
-        content,
-        inputs,
+        title: findTitle,
+        content: findContent,
+        inputs: findInputs,
         onSubmitAction,
         openModal,
         closeModal,
+    } = useFindModal();
+
+// 🔥 인증번호 입력 모달
+    const {
         isVerifyModal,
+        title: verifyTitle,
+        content: verifyContent,
+        inputs: verifyInputs,
+        onSubmitCode,
         openVerifyModal,
         closeVerifyModal,
-        onSubmitCode,
-    } = useFindModal();
+    } = useEmailVerifyModal();
+
 
     // 🔥 ID / PWD 찾기 모달 열기
     const handleFindModal = (type) => {
@@ -150,20 +174,20 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
 
             {/* 모달 연결 */}
             <FindModalForm
-                title={title}
-                content={content}
+                title={findTitle}
+                content={findContent}
                 isOpen={isOpen}
                 onClose={closeModal}
                 onSubmit={onSubmitAction}
-                inputs={inputs}
+                inputs={findInputs}
             />
-            <FindVerifyModalForm
-                title={title}
-                content={content}
+            <EmailVerifyModalForm
+                title={verifyTitle}
+                content={verifyContent}
                 isOpen={isVerifyModal}
                 onClose={closeVerifyModal}
                 onSubmit={onSubmitCode}
-                inputs={inputs}
+                inputs={verifyInputs}
             />
             {showModal && (
                 <AlertModal

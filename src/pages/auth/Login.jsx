@@ -44,7 +44,7 @@ const Login = () => {
                 <div className="hidden md:block w-px bg-gray-300 h-full"></div>
 
                 {/* 소셜 로그인 버튼 */}
-                <SocialLoginButton onLogin={loginSocial} />
+                <SocialLoginButton onLogin={loginSocial} title="간편 로그인" className="text-xl font-semibold text-center" />
             </div>
             {showModal && (
                 <AlertModal

@@ -5,7 +5,7 @@ import kakaoI from '../../../assets/images/kakaoI.png';
 import google from '../../../assets/images/google.png';
 
 
-const SocialLoginButton = ({ onLogin, onRegister }) => {
+const SocialLoginButton = ({ onLogin, onRegister, title, className }) => {
     const handleCheck = (provider) => {
         if (onLogin) {
             onLogin(provider);
@@ -18,7 +18,7 @@ const SocialLoginButton = ({ onLogin, onRegister }) => {
 
     return (
         <div className="flex flex-col space-y-3 w-full max-w-2xl p-4 h-full">
-            <h2 className="text-xl font-semibold text-center">간편 로그인</h2>
+            <h2 className={className}>{title}</h2>
             <div className="flex items-center justify-center py-2 border cursor-pointer" onClick={() => handleCheck("naver")}>
                 <img src={naver} className="w-20 h-4 mr-2" alt="네이버 로그인" />
                 <span>간편 로그인</span>

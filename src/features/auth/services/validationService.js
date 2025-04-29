@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const focusSpan = (id, message) => {
     const span = document.getElementById(id);
     span.innerText = message;
@@ -69,21 +71,14 @@ export const validateEmail = async (setValid) => {
     setValid((prev) => ({ ...prev, email: available }));
 };
 
-export const sendVerificationEmail = async (setValid) => {
+export const sendVerificationEmail = async () => {
     const email = document.getElementById("email").value;
     const res = await fetch(`http://localhost:8080/api/auth/register/send/email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
     });
-    const result = await res.json();
-    if (result.data) {
-        document.getElementById("emailModal").classList.remove("hidden");
-        return result;
-    // } else {
-    //     alert("인증 메일 보내기 실패");
-    }
-    setValid((prev) => ({ ...prev, email_verified: result.data }));
+    return await res.json();
 };
 
 export const verifyEmailCode = async (email, code, setValid) => {
@@ -95,17 +90,14 @@ export const verifyEmailCode = async (email, code, setValid) => {
     const result = await res.json();
     if (result.data) {
         // alert("이메일 인증 성공!");
-        document.getElementById("emailModal").classList.add("hidden");
         setValid((prev) => ({ ...prev, email_verified: true }));
-        document.getElementById("emailCodeInput").value = '';
         return result;
     } else {
-        document.getElementById("emailCodeInput").value = '';
         return result;
     }
 };
 
-const formatPhoneNumber = (value) => {
+export const formatPhoneNumber = (value) => {
     // 숫자만 남기기
     const onlyNums = value.replace(/[^\d]/g, '');
 

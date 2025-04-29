@@ -6,8 +6,6 @@ export const useFindModal = () => {
   const [content, setContent] = useState('');
   const [inputs, setInputs] = useState([]);
   const [onSubmitAction, setOnSubmitAction] = useState(() => {});
-  const [onSubmitCode, setOnSubmitCode] = useState(()=>{});
-  const [isVerifyModal, setIsVerifyModal] = useState(false);
 
   const openModal = ({ modalTitle, modalContent, modalInputs, onSubmit }) => {
     setTitle(modalTitle);
@@ -21,18 +19,6 @@ export const useFindModal = () => {
     setIsOpen(false);
   };
 
-  const openVerifyModal = ({ modalTitle, modalContent, modalInputs, onSubmit }) => {
-    setTitle(modalTitle);
-    setContent(modalContent);
-    setInputs(modalInputs);
-    setOnSubmitCode(() => onSubmit);
-    setIsVerifyModal(true);
-  };
-
-  const closeVerifyModal = () => {
-    setIsVerifyModal(false);
-  }
-
   return {
     isOpen,
     title,
@@ -41,9 +27,5 @@ export const useFindModal = () => {
     onSubmitAction,
     openModal,
     closeModal,
-    isVerifyModal,
-    openVerifyModal,
-    closeVerifyModal,
-    onSubmitCode,
   };
 };
