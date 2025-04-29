@@ -3,14 +3,12 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Pagination from "../../common/components/Pagination";
+import { useCategory } from '../../layouts/CategoryContext';
 
 function Category() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const type_big_id = parseInt(searchParams.get('type_big_id') || '0', 10);
   const type_id = parseInt(searchParams.get('type_id') || '0', 10);
-  const [mainCategory, setMainCategory] = useState(null);
-  const [subCategory, setSubCategory] = useState(null);
-  const [subCategories, setSubCategories] = useState([]);
+  const initialTypeBigId = parseInt(searchParams.get('type_big_id') || '0', 10);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState(searchParams.get('sort') || 'RECOMMEND');
@@ -18,6 +16,23 @@ function Category() {
   const [page, setPage] = useState(parseInt(searchParams.get('page') || '1', 10));
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
+
+  // Context에서 카테고리 정보 가져오기
+  const { 
+    loading: categoryLoading, 
+    getMainCategoryById, 
+    getSubCategoryById, 
+    getSubCategoriesByMainId 
+  } = useCategory();
+
+  // 소분류(type_id)로부터 대분류(type_big_id)를 가져오기
+  const subCategory = type_id > 0 ? getSubCategoryById(type_id) : null;
+  // subCategory가 있으면 그것으로부터 type_big_id를 가져오고, 없으면 URL의 값을 사용
+  const type_big_id = subCategory ? subCategory.type_big_id : initialTypeBigId;
+  
+  // Context를 사용하여 현재 선택된 카테고리 정보 가져오기
+  const mainCategory = type_big_id > 0 ? getMainCategoryById(type_big_id) : null;
+  const subCategories = type_big_id > 0 ? getSubCategoriesByMainId(type_big_id) : [];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,7 +113,7 @@ function Category() {
     }
   };
 
-  if (loading) {
+  if (loading || categoryLoading) {
     return <div className="flex justify-center items-center h-screen">로딩 중...</div>;
   }
 
@@ -177,6 +192,21 @@ function Category() {
         </div>
 
         {renderProductList(products)}
+
+        {totalPages > 1 && (
+          <div className="mt-6">
+            <Pagination
+              currentPage={page - 1}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              hasPrev={page > 1}
+              hasNext={page < totalPages}
+              pageButtonCount={5}
+              activeColor="bg-green"
+              hoverColor="hover:bg-gray-100"
+            />
+          </div>
+        )}
       </div>
     );
   }
@@ -195,7 +225,7 @@ function Category() {
           {subCategories.map(subCategory => (
             <Link
               key={subCategory.type_id}
-              to={`/category?type_big_id=${type_big_id}&type_id=${subCategory.type_id}`}
+              to={`/category?type_id=${subCategory.type_id}`}
               className="block p-4 border rounded-lg text-center hover:border-green hover:text-green transition-colors"
             >
               {subCategory.name}

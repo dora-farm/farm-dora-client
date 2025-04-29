@@ -8,7 +8,6 @@ import SellerLayout from './layouts/SellerLayout';
 import MyPage from './pages/user/MyPage';
 import Wishlist from './pages/user/Wishlist';
 import Cart from './pages/user/Cart';
-// import MyReviews from './pages/user/MyReviews';
 import MyInquireies from './pages/user/MyInquireies';
 import Orders from './pages/user/Orders';
 import ManageAddress from './pages/user/ManageAddress';
@@ -47,12 +46,13 @@ import AdminPopupDetail from './pages/adminpage/AdminPopupDetail';
 import AdminPopupEdit from './pages/adminpage/AdminPopupEdit';
 import EventDetail from './pages/event/EventDetail';
 import MyReviews from './pages/user/MyReviews';
+import { CategoryProvider } from './layouts/CategoryContext';
 
 function App() {
   return (
-    <BrowserRouter>
+    <CategoryProvider>
+      <BrowserRouter>
         <Routes>
-        
           <Route path="/" element={<Layout/>}>
             <Route index element={<Home/>} />
             <Route path="/login" element={<Login/>} />
@@ -97,12 +97,10 @@ function App() {
               <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
               <Route path="/my/seller/live" element={<VideoManage/>} />
             </Route>
-      
           </Route>
         </Routes>
-        
-    </BrowserRouter>
-    
+      </BrowserRouter>
+    </CategoryProvider>
   );
 }
 
