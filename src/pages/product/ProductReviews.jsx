@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Pagination from '../../common/components/Pagination'; // 적절한 경로로 수정 필요
+import Pagination from '../../common/components/Pagination';
 import StarIcon from '@mui/icons-material/Star';
 
 const ProductReviews = ({ saleId }) => {
