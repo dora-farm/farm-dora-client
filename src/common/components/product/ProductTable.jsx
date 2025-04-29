@@ -31,16 +31,16 @@ function ProductTable({
         </TableHead>
         <TableBody>
           {products.map((product, index) => (
-            <TableRow key={product.id}>
+            <TableRow key={product.saleId}>
               <TableCell padding="checkbox">
                 <Checkbox color="default" 
                           checked={product.isChecked || false}
-                          onChange={() => handleItemCheck(product.id)}
+                          onChange={() => handleItemCheck(product.saleId)}
                 />
               </TableCell>
               <TableCell>{pagination.currentPage * pagination.pageSize + index + 1}</TableCell>
               <TableCell 
-                onClick={() => handleProductClick(product.id)}
+                onClick={() => handleProductClick(product.saleId)}
                 className="cursor-pointer hover:bg-gray-100"
               >{product.title}</TableCell>
               <TableCell>{product.price}</TableCell>
@@ -51,7 +51,7 @@ function ProductTable({
                       ? 'bg-red-500 hover:bg-red-600 text-white' 
                       : 'bg-teal-500 hover:bg-teal-600 text-white'
                   }`}
-                  onClick={() => handleProductStatusClick(product.id)}
+                  onClick={() => handleProductStatusClick(product.saleId)}
                 >
                   {product.blind === true ? "판매 중지" : "판매 중"}
                 </button>
