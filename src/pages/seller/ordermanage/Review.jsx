@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 function Review() {
   return (
-    <div>Review</div>
+    <div>내용입니다.</div>
   )
 }
 
-export default Review
+export default Review;

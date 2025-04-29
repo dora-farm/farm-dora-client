@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 function Order() {
   return (
-    <div>Order</div>
+    <div>내용입니다.</div>
   )
 }
 
-export default Order
+export default Order;

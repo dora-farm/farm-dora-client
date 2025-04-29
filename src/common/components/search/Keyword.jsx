@@ -1,7 +1,7 @@
 // src/components/Keyword.jsx
 import React from 'react';
 
-function Keyword({ searchTerm, setSearchTerm, sortFilter, setSortFilter }) {
+function Keyword({ searchTerm, setSearchTerm, sortFilter, setSortFilter, onKeyPress }) {
   return (
     <div className="flex items-center mb-3">
       <div className="w-24 font-medium">키워드</div>
@@ -11,10 +11,11 @@ function Keyword({ searchTerm, setSearchTerm, sortFilter, setSortFilter }) {
         className="flex-grow border rounded px-3 py-2 mr-3"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyPress={onKeyPress} // 여기에 onKeyDown 이벤트 핸들러 추가
       />
-      <div className="w-48">
-        <select 
-          className="w-full border rounded px-3 py-2"
+      <div className="ml-auto">
+        <select
+          className="border rounded px-3 py-2"
           value={sortFilter}
           onChange={(e) => setSortFilter(e.target.value)}
         >

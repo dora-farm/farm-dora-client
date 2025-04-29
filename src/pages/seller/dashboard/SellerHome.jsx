@@ -9,6 +9,9 @@ import StatusRatioChart from "./components/StatusRatioChart";
 import useDashboardData from "./hooks/useDashboardData";
 
 function SellerHome() {
+  
+  const sellerId = 1;
+
   // 날짜 필터 상태
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
@@ -22,9 +25,6 @@ function SellerHome() {
   });
   
   const [period, setPeriod] = useState('day'); // 'day', 'week', 'month'
-  
-  // 판매자 ID (실제로는 로그인 정보에서 가져와야 함)
-  const sellerId = 1;
 
   // 커스텀 훅을 통해 데이터 로직 분리
   const { 
