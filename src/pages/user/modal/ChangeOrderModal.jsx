@@ -211,7 +211,7 @@ const ChangeOrderModal = ({ isOpen, onClose, orderId, onOrderChanged }) => {
 							))}
 							<div className="mt-2 text-lg font-medium flex justify-between px-4">
 								<span>총 환불 금액</span>
-								<span>{paymentDetail.amount.toLocaleString() || 0}원</span>
+								<span>{paymentDetail.amount || 0}원</span>
 							</div>
 							{/* 처리 유형 선택 (반품/교환) */}
 							<div className="p-4 border-b">

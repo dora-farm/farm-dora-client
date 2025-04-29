@@ -1,7 +1,7 @@
 // src/hooks/useCheckboxes.js
 import { useState, useCallback } from 'react';
 
-export function useCheckboxes(initialItems = [], itemIdKey = 'saleId') {
+export function useCheckboxes(initialItems = [], itemIdKey = 'id') { // 전해져 온 값이 있는 경우 id 대신 해당 값으로 사용
   const [items, setItems] = useState(initialItems);
   const [isAllChecked, setIsAllChecked] = useState(false);
   

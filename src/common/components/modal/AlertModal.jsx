@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function AlertModal({ message, onClose }) {
+function AlertModal({ title, message, onClose }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function AlertModal({ message, onClose }) {
           isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
         }`}
       >
-        <h2 className="text-red-600 text-lg font-semibold mb-3">⚠️알림⚠️</h2>
+        <h2 className="text-red-600 text-lg font-semibold mb-3">{title}</h2>
         <p className="text-gray-800">{message}</p>
         <button
           onClick={handleClose}
