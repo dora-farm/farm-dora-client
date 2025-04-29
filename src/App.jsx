@@ -40,6 +40,7 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminBroadcast from './pages/adminpage/AdminBroadcast';
 import ProductEdit from './pages/seller/product/ProductEdit';
 import './pages/seller/dashboard/utils/ChartRegistry';
+import ProductDetail from './pages/product/ProductDetail';
 
 import Category from './pages/category/Category';
 import AdminPopupDetail from './pages/adminpage/AdminPopupDetail';
@@ -61,6 +62,7 @@ function App() {
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
             <Route path="/live/setup" element={<LiveSetup/>} /> {/* 방송준비화면 */}
             <Route path="/live/view" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
+            <Route path="/sale/:saleId" element={<ProductDetail />} />
 
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
