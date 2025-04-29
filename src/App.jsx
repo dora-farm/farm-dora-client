@@ -38,6 +38,8 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminBroadcast from './pages/adminpage/AdminBroadcast';
 import ProductEdit from './pages/seller/product/ProductEdit';
 import './pages/seller/dashboard/utils/ChartRegistry';
+import Live from './pages/live/Live';
+import StreamView from './pages/live/StreamView';
 
 import Category from './pages/category/Category';
 
@@ -50,17 +52,12 @@ function App() {
             <Route index element={<Home/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/join" element={<Join/>} />
-<<<<<<< HEAD
-=======
-
->>>>>>> 06420bef1e1e27ca4ee2309ac6b5384e4365d15f
             <Route path="/category" element={<Category/>} />
             <Route path="/event" element={<Event/>} />
             <Route path="/support" element={<ChatSupport/>} />
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
-            <Route path="/live/setup" element={<LiveSetup/>} /> {/* 방송준비화면 */}
             <Route path="/live/view" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
-
+            
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
               <Route path="/my/user/cart" element={<Cart/>} />
@@ -90,10 +87,7 @@ function App() {
               <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
               <Route path="/my/seller/live" element={<VideoManage/>} />
             </Route>
-<<<<<<< HEAD
-=======
       
->>>>>>> 06420bef1e1e27ca4ee2309ac6b5384e4365d15f
           </Route>
         </Routes>
         
