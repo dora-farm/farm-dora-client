@@ -50,6 +50,10 @@ function App() {
             <Route index element={<Home/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/join" element={<Join/>} />
+<<<<<<< HEAD
+=======
+
+>>>>>>> 06420bef1e1e27ca4ee2309ac6b5384e4365d15f
             <Route path="/category" element={<Category/>} />
             <Route path="/event" element={<Event/>} />
             <Route path="/support" element={<ChatSupport/>} />
@@ -86,6 +90,10 @@ function App() {
               <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
               <Route path="/my/seller/live" element={<VideoManage/>} />
             </Route>
+<<<<<<< HEAD
+=======
+      
+>>>>>>> 06420bef1e1e27ca4ee2309ac6b5384e4365d15f
           </Route>
         </Routes>
         
