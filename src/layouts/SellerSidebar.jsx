@@ -31,7 +31,7 @@ function SellerSidebar() {
       <nav className="flex flex-col gap-1">
         <Link to="/my/seller/item/manage" className={activePath === "/my/seller/item/manage" ? activeBtn : btnHover}>상품 관리</Link>
         <Link to="/my/seller/item/register" className={activePath === "/my/seller/item/register" ? activeBtn : btnHover}>상품 등록</Link>
-        <Link to="/my/seller/live" className={activePath === "/my/seller/live" ? activeBtn : btnHover}>LIVE 스트리밍</Link>
+        <Link to="/my/seller/live" className={activePath === "/my/seller/live" ? activeBtn : btnHover}>동영상 스트리밍</Link>
       </nav>
     </div>
   );
