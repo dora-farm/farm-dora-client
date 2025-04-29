@@ -17,6 +17,7 @@
     "@mui/icons-material": "^7.0.1",
     "@mui/material": "^7.0.1",
     "@mui/styled-engine-sc": "^7.0.1",
+    "@tailwindcss/typography": "^0.5.16",
     "axios": "^1.8.4",
     "chart.js": "^4.4.8",
     "lucide-react": "^0.488.0",

@@ -251,7 +251,7 @@ const handleMainImageChange = (e) => {
       }
     });
     
-    fetch('http://localhost:8080/my/seller/item/update', {
+    fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/update`, {
       method: 'PUT',
       body: formData
     })
