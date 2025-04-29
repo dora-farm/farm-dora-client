@@ -107,7 +107,7 @@ const ProductSummary = ({ saleId, setContent }) => {
 
   const handleLike = async () => {
     try {
-      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/like/${saleId}`);
+      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`);
 
       if (response.status === 200) {
         const isCurrentlyLiked = like;

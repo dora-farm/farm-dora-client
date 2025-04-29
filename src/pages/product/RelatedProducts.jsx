@@ -30,7 +30,7 @@ const RelatedProducts = ({ saleId }) => {
 
   const handleLike = async (saleId) => {
     try {
-      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/like/${saleId}`);
+      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`);
 
       if (response.status === 200) {
         setRelatedProducts(prev =>
