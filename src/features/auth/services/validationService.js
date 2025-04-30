@@ -97,11 +97,20 @@ export const verifyEmailCode = async (email, code, setValid) => {
 };
 
 export const formatPhoneNumber = (value) => {
-    // 숫자만 남기기
     const onlyNums = value.replace(/[^\d]/g, '');
 
+    // 서울 번호 (02)
+    if (onlyNums.startsWith('02')) {
+        if (onlyNums.length <= 2) return onlyNums;
+        if (onlyNums.length <= 5) return onlyNums.slice(0, 2) + '-' + onlyNums.slice(2);
+        if (onlyNums.length <= 9) return onlyNums.slice(0, 2) + '-' + onlyNums.slice(2, 5) + '-' + onlyNums.slice(5);
+        return onlyNums.slice(0, 2) + '-' + onlyNums.slice(2, 6) + '-' + onlyNums.slice(6, 10);
+    }
+
+    // 휴대폰 또는 일반 지역번호 (031, 010 등 3자리 지역번호)
     if (onlyNums.length <= 3) return onlyNums;
-    if (onlyNums.length <= 7) return onlyNums.slice(0, 3) + '-' + onlyNums.slice(3);
+    if (onlyNums.length <= 6) return onlyNums.slice(0, 3) + '-' + onlyNums.slice(3);
+    if (onlyNums.length <= 10) return onlyNums.slice(0, 3) + '-' + onlyNums.slice(3, 6) + '-' + onlyNums.slice(6);
     return onlyNums.slice(0, 3) + '-' + onlyNums.slice(3, 7) + '-' + onlyNums.slice(7, 11);
 };
 
