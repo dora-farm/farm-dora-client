@@ -9,26 +9,19 @@ function Order() {
   const itemsPerPage = 10;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [allOrders, setAllOrders] = useState([]); // 모든 주문 데이터 저장
+  const [allOrders, setAllOrders] = useState([]);
   const [searchParams, setSearchParams] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
 
-  // 백엔드에서 모든 데이터를 가져오는 함수
   const handleSearch = async (params) => {
     try {
       setLoading(true);
       setSearchParams(params);
-      setCurrentPage(0); // 검색 시 첫 페이지로 이동
-  
-      // 백엔드에서 모든 데이터 가져오기 (size: 10000 설정)
-      const searchParamsWithSize = {
-        ...params,
-        size: 10000 // 충분히 큰 값으로 설정
-      };
+      setCurrentPage(0);
   
       const response = await axios.get(
         `http://localhost:8030/my/seller/order/search`,
-        { params: searchParamsWithSize }
+        { params }
       );
   
       if (response.status === 200) {
@@ -51,19 +44,20 @@ function Order() {
 
   const startDate = `${oneMonthAgo.toLocaleDateString('en-CA')}T00:00:00`;
   const endDate = `${today.toLocaleDateString('en-CA')}T23:59:59`;
+
+  const initialParams = useMemo(() => ({
+    searchType: "PRODUCT",
+    startDate: startDate,
+    endDate: endDate,
+    statusIds: [],
+    searchPeriod: "ONE_MONTH",
+    sort: "LATEST",
+    keyword: "",
+    size: 10000,
+  }), [startDate, endDate]);
   
   useEffect(() => {
-    // 초기 검색 조건 설정
-    const initialParams = {
-      searchType: "PRODUCT",
-      startDate: startDate,
-      endDate: endDate,
-      statusIds: [],
-      searchPeriod: "ONE_MONTH",
-      sort: "LATEST",
-      keyword: "",
-    };
-    
+    setSearchParams(initialParams); // ← 초기값 저장
     handleSearch(initialParams);
   }, []);
 
@@ -87,13 +81,13 @@ function Order() {
   
   return (
     <div className="space-y-6">
-      <Container className="">
+      <Container>
         <SearchForm 
           onSearch={handleSearch}
           initialValues={searchParams}
+          showStatusFilter={true}
         />
       </Container>
-      
       <Container>        
         <ListForm 
           orders={currentOrders}
@@ -101,7 +95,6 @@ function Order() {
           error={error}
         />
       </Container>
-
       {totalPages > 1 && (
         <Pagination 
           currentPage={currentPage}
