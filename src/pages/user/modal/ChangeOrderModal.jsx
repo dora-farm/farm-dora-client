@@ -25,7 +25,7 @@ const ChangeOrderModal = ({ isOpen, onClose, orderId, onOrderChanged }) => {
 	useEffect(() => {
 		const fetchRefundTypes = async () => {
 			try {
-				const response = await axios.get('http://localhost:8080/api/my/user/order/refundTypes');
+				const response = await axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/refundTypes`);
 				if (response.data.status === 200) {
 					setRefundTypes(response.data.data);
 					if (response.data.data.length > 0) {
@@ -39,7 +39,7 @@ const ChangeOrderModal = ({ isOpen, onClose, orderId, onOrderChanged }) => {
 
 		const fetchOrderOptions = async () => {
 			try {
-				const response = await axios.get(`http://localhost:8080/api/my/user/order/pay?orderId=${orderId}`);
+				const response = await axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/pay?orderId=${orderId}`);
 				if (response.status === 200) {
 					setSales(response.data.data.sales || []);
 					// 모든 필드에 기본값 설정하여 undefined 방지
@@ -165,7 +165,7 @@ const ChangeOrderModal = ({ isOpen, onClose, orderId, onOrderChanged }) => {
 			
 			// 환불/교환 요청 API 호출
 			const response = await axios.post(
-				'http://localhost:8080/api/my/user/order/refund', 
+				`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/refund`, 
 				formData,
 				{
 					headers: {

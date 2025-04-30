@@ -27,13 +27,15 @@ function Header({ maincategories, subCategories, loading }) {
 
   // 메인 카테고리 선택 처리
   const handleCategorySelect = (typeBigId) => {
+    // 환경 변수를 사용한 URL로 이동
     navigate(`/category?type_big_id=${typeBigId}`);
     setIsCategoryOpen(false);  // 드롭다운 닫기
   };
 
   // 서브 카테고리 선택 처리
-  const handleSubCategorySelect = (typeBigId, typeId) => {
-    navigate(`/category?type_big_id=${typeBigId}&type_id=${typeId}`);
+  const handleSubCategorySelect = (typeId) => {
+    // 소분류만 파라미터로 전달 (환경 변수 사용)
+    navigate(`/category?type_id=${typeId}`);
     setIsCategoryOpen(false);  // 드롭다운 닫기
   };
 
@@ -132,7 +134,7 @@ function Header({ maincategories, subCategories, loading }) {
                       <div
                         key={subCategory.type_id} 
                         className="block px-4 py-2 hover:bg-green hover:text-white cursor-pointer"
-                        onClick={() => handleSubCategorySelect(activeCategory, subCategory.type_id)}
+                        onClick={() => handleSubCategorySelect(subCategory.type_id)}
                       >
                         {subCategory.name}
                       </div>

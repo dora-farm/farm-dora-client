@@ -97,7 +97,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) =
         formData.append('images', image);
       });
       
-      const response = await fetch('http://localhost:8080/api/my/user/order/review', {
+      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/review`, {
         method: 'POST',
         body: formData
       });
@@ -111,10 +111,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) =
         onReviewComplete(orderId, saleData.saleId);
       }
       
-      // 추후 모달 처리 예정
-      alert('리뷰가 성공적으로 등록되었습니다.');
       onClose();
-      // window.location.reload();
     } catch (error) {
       console.error('리뷰 등록 오류:', error);
       alert('리뷰 등록 중 오류가 발생했습니다.');
