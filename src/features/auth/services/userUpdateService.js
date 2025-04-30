@@ -1,29 +1,36 @@
 import axios from "axios";
+import {getCookie} from "../../../common/utils/Cookies.jsx";
+
+const token = getCookie("jwt_token");
 
 export const userPasswordCheck = async (pwd) => {
     return await axios.post('http://localhost:8080/api/mypage/user/update/verify',{ pwd :pwd}, {
-        withCredentials: true,
         headers: {
-            "Content-Type": "application/json"
-        }
+            Authorization: `Bearer ${token}`,
+        },
     });
 };
 
 export const getUserInfo = async () => {
     return await axios.get('http://localhost:8080/api/mypage/user/update/detail',{
-        withCredentials: true
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
     });
 };
 
 export const updateProfile = async (dto) => {
     return await axios.put('http://localhost:8080/api/mypage/user/update/modify', dto, {
-        withCredentials: true,
         headers: {
-            'Content-Type': 'application/json'
-        }
+            Authorization: `Bearer ${token}`,
+        },
     });
 };
 
-export const blindUser = async () => {
-
+export const expireUser  = async (pwd) => {
+    return await axios.put('http://localhost:8080/api/mypage/user/update/expire',{ pwd :pwd},{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };

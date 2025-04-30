@@ -62,7 +62,7 @@ export default function ManageAddressModal({isOpen, onClose, form, handleChange,
                 <label className="flex items-center gap-1 my-2 text-sm font-normal">
                     <input
                         className="w-5 h-5"
-                        type="checkbox" name="defaultAddress" checked={form.defaultAddress} onChange={handleChange}/>
+                        type="checkbox" name="defaultAddress" checked={form.defaultAddress} onChange={handleChange} />
                     기본 배송지로 설정
                 </label>
 

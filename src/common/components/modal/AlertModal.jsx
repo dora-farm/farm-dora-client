@@ -29,7 +29,7 @@ function AlertModal({ title, message, onClose }) {
       >
         <h2 className="text-red-600 text-lg font-semibold mb-3">{title}</h2>
         <p className="text-gray-800">{message}</p>
-        <button
+        <button type="button"
           onClick={handleClose}
           className="mt-5 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
         >

@@ -61,6 +61,7 @@ const AddressManagePage = () => {
     const handleEditClick = async (depotId) => {
         try {
             const detail = await detailAddress(depotId);
+            console.log("zzz "+detail.defaultAddr);
             setAddressForm({
                 depotId: detail.depotId,
                 deliveryName: detail.deliveryName ?? '',
@@ -70,7 +71,7 @@ const AddressManagePage = () => {
                 addr: detail.address?.addr ?? '',
                 detailAddr: detail.address?.detailAddr ?? '',
                 require: detail.require ?? '',
-                defaultAddress: detail.defaultAddr ?? false
+                defaultAddress: detail.defaultAddr?? false,
             });
             setTitle('배송지 수정');
             openModal();

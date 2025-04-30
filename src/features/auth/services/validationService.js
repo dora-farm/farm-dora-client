@@ -1,4 +1,3 @@
-import axios from "axios";
 
 export const focusSpan = (id, message) => {
     const span = document.getElementById(id);

@@ -42,6 +42,7 @@ import ProductEdit from './pages/seller/product/ProductEdit';
 import './pages/seller/dashboard/utils/ChartRegistry';
 
 import Category from './pages/category/Category';
+import JoinSeller from "./pages/user/JoinSeller.jsx";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
               <Route path="/my/user/inquiry" element={<MyInquireies/>} />
               <Route path="/my/user/order" element={<Orders/>} />
               <Route path="/my/user/address" element={<ManageAddress/>} />
+              <Route path="/my/user/join/seller" element={<JoinSeller/>} />
               <Route path="/my/user/profile" element={<EditProfile/>} />
               <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
               <Route path="/my/user/wishlist" element={<Wishlist/>} />

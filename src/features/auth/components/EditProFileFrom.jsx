@@ -14,6 +14,7 @@ import {
 import useFormValidation from "../hooks/useFormValidation.js";
 import {useEmailVerifyModal} from "../hooks/useEmailVerifyModal.js";
 import EmailVerifyModalForm from "./modal/EmailVerifyModalForm.jsx";
+import {useNavigate} from "react-router-dom";
 
 const EditProFileFrom = () => {
     const findVerifyCodeRef = useRef('');
@@ -21,6 +22,8 @@ const EditProFileFrom = () => {
 
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
+    const navigate = useNavigate();
+    const [navigateOn, setNavigateOn] = useState(false);
 
     const [form, setForm] = useState({
         name: '',
@@ -162,11 +165,22 @@ const EditProFileFrom = () => {
         }
         try {
             const result = await updateProfile(requestDto);
-            console.log(result);
-        }catch (error) {
+            if (result.data.data) {
+                setModalMessage(result.data.message);
+                setNavigateOn(true);         // ✅ 성공 시에만 이동 플래그 ON
+                setShowModal(true);          // ✅ 모달 표시
+            } else {
+                setModalMessage(result.data.message); // 실패 메시지
+                setNavigateOn(false);                // 이동 안 함
+                setShowModal(true);
+            }
+        } catch (error) {
             console.error(error);
+            setModalMessage("오류가 발생했습니다.");
+            setNavigateOn(false);                  // 오류 발생 시도 이동 안 함
+            setShowModal(true);
         }
-    }
+    };
 
     return (
         <div className="w-full flex flex-col justify-center items-center">
@@ -329,7 +343,12 @@ const EditProFileFrom = () => {
             {showModal && (
                 <AlertModal
                     message={modalMessage}
-                    onClose={() => setShowModal(false)}
+                    onClose={() => {
+                        setShowModal(false);
+                        if (navigateOn) {
+                            navigate("/my/user"); // 또는 원하는 경로
+                        }
+                    }}
                 />
             )}
         </div>
