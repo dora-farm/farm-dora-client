@@ -1,7 +1,17 @@
-import React from 'react';
-import Rating from '@mui/material/Rating'; // Material-UI Rating import 추가
+import React, { useState } from 'react';
+import Rating from '@mui/material/Rating'; 
+import AlertModal2 from '../../../common/components/modal/AlertModal2';
 
 function ReviewItem({ review, onOpenImageViewer, onEditReview, onDeleteReview }) {
+  // 알림 모달 상태
+  const [modal, setModal] = useState({
+    show: false,
+    title: '',
+    message: '',
+    type: 'alert',
+    onConfirm: null
+  });
+
   // 별점에 따른 메시지
   const ratingMessages = {
     1: '1점',
@@ -9,6 +19,22 @@ function ReviewItem({ review, onOpenImageViewer, onEditReview, onDeleteReview })
     3: '3점',
     4: '4점',
     5: '5점'
+  };
+
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setModal(prev => ({ ...prev, show: false }));
+  };
+
+  // 삭제 버튼 클릭 핸들러
+  const handleDeleteClick = () => {
+    setModal({
+      show: true,
+      title: '리뷰 삭제',
+      message: '리뷰를 삭제하시겠습니까?',
+      type: 'confirm',
+      onConfirm: () => onDeleteReview(review.reviewId)
+    });
   };
 
   // 날짜 포맷팅 함수
@@ -119,8 +145,6 @@ function ReviewItem({ review, onOpenImageViewer, onEditReview, onDeleteReview })
               </div>
             </div>
           )}
-          
-          
         </div>
         
         <div className="ml-7 flex flex-col items-end space-y-3">
@@ -132,16 +156,23 @@ function ReviewItem({ review, onOpenImageViewer, onEditReview, onDeleteReview })
           </button>
           <button 
             className="px-3 py-1 bg-danger text-white rounded text-sm hover:bg-danger-dark transition-colors"
-            onClick={() => {
-              if (window.confirm('리뷰를 삭제하시겠습니까?')) {
-                onDeleteReview(review.reviewId);
-              }
-            }}
+            onClick={handleDeleteClick}
           >
             리뷰 삭제
           </button>
         </div>
       </div>
+
+      {/* 알림 모달 */}
+      {modal.show && (
+        <AlertModal2
+          title={modal.title}
+          message={modal.message}
+          type={modal.type}
+          onClose={handleCloseModal}
+          onConfirm={modal.onConfirm}
+        />
+      )}
     </div>
   );
 }

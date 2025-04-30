@@ -8,7 +8,6 @@ import SellerLayout from './layouts/SellerLayout';
 import MyPage from './pages/user/MyPage';
 import Wishlist from './pages/user/Wishlist';
 import Cart from './pages/user/Cart';
-// import MyReviews from './pages/user/MyReviews';
 import MyInquireies from './pages/user/MyInquireies';
 import Orders from './pages/user/Orders';
 import ManageAddress from './pages/user/ManageAddress';
@@ -38,6 +37,7 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminBroadcast from './pages/adminpage/AdminBroadcast';
 import ProductEdit from './pages/seller/product/ProductEdit';
 import './pages/seller/dashboard/utils/ChartRegistry';
+import ProductDetail from './pages/product/ProductDetail';
 import Live from './pages/live/Live';
 import StreamView from './pages/live/StreamView';
 
@@ -45,12 +45,14 @@ import Category from './pages/category/Category';
 import AdminPopupDetail from './pages/adminpage/AdminPopupDetail';
 import AdminPopupEdit from './pages/adminpage/AdminPopupEdit';
 import EventDetail from './pages/event/EventDetail';
+import MyReviews from './pages/user/MyReviews';
+import { CategoryProvider } from './layouts/CategoryContext';
 
 function App() {
   return (
-    <BrowserRouter>
+    <CategoryProvider>
+      <BrowserRouter>
         <Routes>
-        
           <Route path="/" element={<Layout/>}>
             <Route index element={<Home/>} />
             <Route path="/login" element={<Login/>} />
@@ -61,9 +63,11 @@ function App() {
             <Route path="/support" element={<ChatSupport/>} />
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
             <Route path="/live/view/:id" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
-            
+            <Route path="/sale/:saleId" element={<ProductDetail />} />
+              
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
+              <Route path="/my/user/review" element={<MyReviews/>} />
               <Route path="/my/user/cart" element={<Cart/>} />
               <Route path="/my/user/inquiry" element={<MyInquireies/>} />
               <Route path="/my/user/order" element={<Orders/>} />
@@ -93,12 +97,10 @@ function App() {
               <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
               <Route path="/my/seller/live" element={<VideoManage/>} />
             </Route>
-      
           </Route>
         </Routes>
-        
-    </BrowserRouter>
-    
+      </BrowserRouter>
+    </CategoryProvider>
   );
 }
 
