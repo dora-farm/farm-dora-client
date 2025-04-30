@@ -40,18 +40,18 @@ function Order() {
   
   useEffect(() => {
     // 초기 검색 조건 설정
-    const initialParams = {
-      searchType: "PRODUCT",
-      startDate: null,
-      endDate: null,
-      statusIds: [],
-      searchPeriod: "ONE_MONTH",
-      sort: "LATEST",
-      keyword: "",
-      page: 1
-    };
+    // const initialParams = {
+    //   searchType: "PRODUCT",
+    //   startDate: null,
+    //   endDate: null,
+    //   statusIds: [],
+    //   searchPeriod: "ONE_MONTH",
+    //   sort: "LATEST",
+    //   keyword: "",
+    //   page: 1
+    // };
     
-    handleSearch(initialParams);
+    handleSearch();
   }, []);
   
   return (
@@ -70,16 +70,10 @@ function Order() {
           error={error}
         />
       </Container>
-      {/* <Pagination 
-        currentPage={currentPage}
-        totalPages={totalPages}
-        hasNext={hasNext}
-        hasPrev={hasPrev}
-        pageButtonCount={10}
-        onPageChange={handlePageChange}
+      <Pagination 
         activeColor="bg-brown"
         hoverColor="hover:bg-gray-100"
-      /> */}
+      />
     </div>
   );
 }

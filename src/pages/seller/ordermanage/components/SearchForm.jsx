@@ -49,7 +49,6 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
       }
       if (initialValues.searchPeriod) setSearchPeriod(initialValues.searchPeriod);
       if (initialValues.searchType) setSearchType(initialValues.searchType);
-      // if (initialValues.sort) setSort(initialValues.sort);
       if (initialValues.keyword) setKeyword(initialValues.keyword);
       if (initialValues.itemsPerPage) setItemsPerPage(initialValues.itemsPerPage.toString());
   }, [initialValues]);
@@ -65,13 +64,9 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
     }
     // 시작일: 해당일 00:00:00
     const formatStartDate = startDate ? `${startDate}T00:00:00` : null;
+    // 종료일: 해당일 23:59:59
+    const formatEndDate = endDate ? `${endDate}T23:59:59` : null;
 
-    // 종료일: 해당일 23:59:59.99
-    let formatEndDate = null;
-    if (endDate) {
-      const nextDay = new Date(endDate);
-      formatEndDate = `${nextDay.toLocaleDateString('en-CA')}T23:59:59`;
-    }
     
     // 백엔드 API에 맞게 상태 ID 매핑
     const statusMap = {
@@ -101,8 +96,6 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
       searchPeriod,
       sort,
       keyword,
-      itemsPerPage: parseInt(itemsPerPage, 10),
-      page: 1, // 검색 시 항상 첫 페이지로 초기화
     };
     
     // 검색 콜백 실행
