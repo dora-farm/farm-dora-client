@@ -40,11 +40,12 @@ function Category() {
       try {
         let apiUrl = `${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/type?sort=${sort}&page=${page - 1}`;
 
-        if (type_big_id > 0) {
-          apiUrl += `&bigTypeId=${type_big_id}`;
-        } else if (type_id > 0) {
+        if (type_id > 0) {
           apiUrl += `&typeId=${type_id}`;
         }
+        else if (type_big_id > 0) {
+          apiUrl += `&bigTypeId=${type_big_id}`;
+        } 
 
         console.log('요청: ', apiUrl);
 
