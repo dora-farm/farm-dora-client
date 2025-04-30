@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const ProductSlider = ({ products = [] }) => {
+const HomeVideoSlider = ({ videos = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   
@@ -32,7 +32,7 @@ const ProductSlider = ({ products = [] }) => {
   useEffect(() => {
     let intervalId;
     
-    if (isAutoPlaying && products.length > visibleItems) {
+    if (isAutoPlaying && videos.length > visibleItems) {
       intervalId = setInterval(() => {
         handleNext();
       }, 5000);
@@ -41,18 +41,18 @@ const ProductSlider = ({ products = [] }) => {
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [currentIndex, isAutoPlaying, products.length, visibleItems]);
+  }, [currentIndex, isAutoPlaying, videos.length, visibleItems]);
   
   const handlePrev = () => {
     setIsAutoPlaying(false);
     setCurrentIndex(prevIndex => 
-      prevIndex === 0 ? Math.max(0, products.length - visibleItems) : prevIndex - 1
+      prevIndex === 0 ? Math.max(0, videos.length - visibleItems) : prevIndex - 1
     );
   };
   
   const handleNext = () => {
     setCurrentIndex(prevIndex => 
-      prevIndex >= Math.max(0, products.length - visibleItems) ? 0 : prevIndex + 1
+      prevIndex >= Math.max(0, videos.length - visibleItems) ? 0 : prevIndex + 1
     );
   };
   
@@ -62,18 +62,17 @@ const ProductSlider = ({ products = [] }) => {
   };
   
   // 빈 배열 체크
-  if (!products || products.length === 0) {
+  if (!videos || videos.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
-        판매중인 상품이 없습니다.
+        현재 게시 된 동영상이 없습니다.
       </div>
     );
   }
   
   return (
     <div className="relative w-full max-w-6xl mx-auto px-4 py-8">
-      <h3 className="text-xl font-bold mb-6 text-green-800 border-b pb-2">판매자의 다른 상품</h3>
-      
+  
       <div className="relative overflow-hidden">
         {/* 슬라이더 컨트롤 - 이전 버튼 */}
         <button 
@@ -87,20 +86,20 @@ const ProductSlider = ({ products = [] }) => {
         {/* 슬라이더 내용 */}
         <div className="flex transition-transform duration-500 ease-in-out"
              style={{ transform: `translateX(-${currentIndex * (100 / visibleItems)}%)` }}>
-          {products.map((product) => (
+          {videos.map((video) => (
             <div 
-              key={product.id} 
+              key={video.id} 
               className={`flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2 transition-opacity duration-300`}
               style={{ opacity: 1 }}
             >
               <a 
-                href={`/sale/${product.id}`} 
+                href={`/live/view/${video.id}`} 
                 className="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full"
               >
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src={product.mainImage || '/api/placeholder/400/300'} 
-                    alt={product.title}
+                    src={video.thumbnailImage || '/api/placeholder/400/300'} 
+                    alt={video.title}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     onError={(e) => {
                       e.target.src = '/api/placeholder/400/300';
@@ -109,10 +108,10 @@ const ProductSlider = ({ products = [] }) => {
                   />
                 </div>
                 <div className="p-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-2 truncate">{product.title}</h4>
-                  <p className="text-sm text-gray-500 mb-1 truncate">{product.name}</p>
+                  <h4 className="text-lg font-bold text-gray-800 mb-2 truncate">{video.title}</h4>
+                  <p className="text-sm text-gray-500 mb-1 truncate">{video.sellerName}</p>
                   <p className="text-base text-gray-600 font-medium">
-                    {product.price.toLocaleString()}원
+                    {video.desc}
                   </p>
                 </div>
               </a>
@@ -132,7 +131,7 @@ const ProductSlider = ({ products = [] }) => {
       
       {/* 인디케이터 (페이지 도트) */}
       <div className="flex justify-center mt-4 space-x-2">
-        {Array.from({ length: Math.ceil(products.length / visibleItems) }).map((_, index) => (
+        {Array.from({ length: Math.ceil(videos.length / visibleItems) }).map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index * visibleItems)}
@@ -150,4 +149,4 @@ const ProductSlider = ({ products = [] }) => {
   );
 };
 
-export default ProductSlider;
+export default HomeVideoSlider;
