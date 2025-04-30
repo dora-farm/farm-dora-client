@@ -40,7 +40,8 @@ function UserSidebar() {
         개인정보
       </h2>
       <nav className="mt-6 flex flex-col gap-1">
-        <Link to="/my/user/profile" className={activePath === "/my/user/profile" ? activeBtn : btnHover}>회원정보 수정</Link>
+          <Link to="/my/user/join/seller" className={activePath === "/my/user/join/seller" ? activeBtn : btnHover}>입점 신청</Link>
+          <Link to="/my/user/profile" className={activePath === "/my/user/profile" ? activeBtn : btnHover}>회원정보 수정</Link>
         <Link to="/my/user/withdraw" className={activePath === "/my/user/withdraw" ? activeBtn : btnHover}>회원 탈퇴</Link>
       </nav>
     </div>

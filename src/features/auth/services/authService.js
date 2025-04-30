@@ -1,11 +1,13 @@
+import {getCookie} from "../../../common/utils/Cookies.jsx";
+const token = getCookie("jwt_token");
+
 export const registerSocial = async (provider) => {
-    alert("소셜연동");
     await fetch("http://localhost:8080/oauth/id/save", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
         body: JSON.stringify({ provider }),
     })
         .then((res) => res.json())
@@ -23,7 +25,7 @@ export const loginSocial = async (provider) => {
     window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`;
 };
 
-export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal) => {
+export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal, navigate) => {
     const loginFormData = new FormData();
     loginFormData.append('id', id);
     loginFormData.append('pwd', document.getElementById('pwd').value);
@@ -49,5 +51,30 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
         document.cookie = `username=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
     }
 
-    window.location.href = '/';
+    navigate("/");
+};
+
+export const logoutUser = async (setModalMessage, setShowModal, navigate) => {
+    try {
+        const response = await fetch('http://localhost:8080/login/logout', {
+            method: 'POST',
+            Authorization: `Bearer ${token}`,
+        });
+
+        const result = await response.json();
+
+        if (result.status === 200) {
+            console.log(result.message);
+
+            document.cookie = "jwt_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+
+            navigate("/");
+        } else {
+            setModalMessage("로그아웃 실패");
+            setShowModal(true);
+        }
+    } catch (error) {
+        console.error("로그아웃 중 오류 발생", error);
+        alert("서버 오류로 로그아웃에 실패했습니다.");
+    }
 };

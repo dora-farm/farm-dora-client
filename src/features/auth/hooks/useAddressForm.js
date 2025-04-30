@@ -67,7 +67,7 @@ export default function useAddressForm() {
             addr: data.addr ?? '',
             detailAddr: data.detailAddr ?? '',
             require: data.require ?? '',
-            defaultAddress: data.defaultAddr ?? false,
+            defaultAddress: data.defaultAddress ?? false,
         });
     };
 

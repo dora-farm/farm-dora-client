@@ -1,24 +1,31 @@
 import React, {useEffect, useState} from "react";
 
-const FindVerifyModalForm = ({isOpen, onClose, inputs, title, onSubmit, content}) => {
+const EmailVerifyModalForm = ({isOpen, onClose, inputs, title, onSubmit, content}) => {
     const [timeLeft, setTimeLeft] = useState(300);
 
-    useEffect(()=>{
-        if (!isOpen){setTimeLeft(300); return;}
+    useEffect(() => {
+        if (title === "인증번호 입력") {
+            if (!isOpen) {
+                setTimeLeft(300);
+                return;
+            }
 
-        const timer = setInterval(()=>{
-            setTimeLeft(prev =>{
-                if (prev <= 1){
-                    clearInterval(timer);
-                    alert("인증 시간이 만료되었습니다.")
-                    onClose();
-                    return 0;
-                }
-                return prev-1;
-            });
-        },1000);
-        return () => {clearInterval(timer);};
-    },[isOpen]);
+            const timer = setInterval(() => {
+                setTimeLeft(prev => {
+                    if (prev <= 1) {
+                        clearInterval(timer);
+                        alert("인증 시간이 만료되었습니다.")
+                        onClose();
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+            return () => {
+                clearInterval(timer);
+            };
+        }
+    }, [isOpen]);
 
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
@@ -39,18 +46,20 @@ const FindVerifyModalForm = ({isOpen, onClose, inputs, title, onSubmit, content}
                     }}
                     className="space-y-3"
                 >
-                    {inputs.map(({ label, type, name, onChange }, idx) => (
+                    {inputs.map(({label, type, name, onChange}, idx) => (
                         <div key={idx} className="flex-row  flex p-2 justify-between items-center border">
                             <label className="block text-xs text-gray-600 px-2">{label}</label>
                             <input
                                 type={type}
                                 name={name}
+                                id={name}
                                 onChange={onChange}
                                 className="w-4/5 p-1 border rounded focus:outline-none"
                             />
                         </div>
                     ))}
-                    <p className="text-center text-red-500 mb-4">남은 시간: {formatTime(timeLeft)}</p>
+                    {title === "인증번호 입력" &&
+                        <p className="text-center text-red-500 mb-4">남은 시간: {formatTime(timeLeft)}</p>}
                     <button type="submit" className="w-full bg-[#575757] text-white p-2 rounded">확인</button>
                     <button
                         type="button"
@@ -65,4 +74,4 @@ const FindVerifyModalForm = ({isOpen, onClose, inputs, title, onSubmit, content}
     );
 };
 
-export default FindVerifyModalForm;
+export default EmailVerifyModalForm;
