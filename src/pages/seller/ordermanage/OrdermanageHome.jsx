@@ -20,7 +20,6 @@ import Review from './Review';
 import Question from './Inquiry';
 
 function OrdermanageHome() {
-  const sellerId = 1;
   const location = useLocation();
   const [statistics, setStatistics] = useState({
     totalOrders: 0,
@@ -38,7 +37,7 @@ function OrdermanageHome() {
     try {
       setLoading(true);
       
-      const response = await axios.get(`http://localhost:8010/api/my/seller/order?sellerId=${sellerId}`);
+      const response = await axios.get(`http://localhost:8010/api/my/seller/order`);
 
       if (response.status === 200) {
         setStatistics(response.data.data);
@@ -104,9 +103,9 @@ function OrdermanageHome() {
   return (
     <DashboardLayout>
       <DashboardHeader title={"주문 관리"} />
-      <div className='mt-4 border-b pb-4'>
+      <div className='mt-4'>
         {loading ? (
-            <div className="text-center py-4">통계 데이터 로딩 중...</div>
+            <div className="text-center py-4">데이터 로딩 중...</div>
           ) : error ? (
             <div className="text-center text-red-500 py-4">{error}</div>
           ) : (
@@ -132,7 +131,7 @@ function OrdermanageHome() {
       </div>
       
       {/* 동적으로 콘텐츠 표시 */}
-      <div className='mt-4 border-2 p-4'>
+      <div className='mt-4'>
         {renderContent()}
       </div>
     </DashboardLayout>
