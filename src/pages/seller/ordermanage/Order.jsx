@@ -45,13 +45,19 @@ function Order() {
       setLoading(false);
     }
   };
+  const today = new Date();
+  const oneMonthAgo = new Date(today);
+  oneMonthAgo.setMonth(today.getMonth() - 1);
+
+  const startDate = `${oneMonthAgo.toLocaleDateString('en-CA')}T00:00:00`;
+  const endDate = `${today.toLocaleDateString('en-CA')}T23:59:59`;
   
   useEffect(() => {
     // 초기 검색 조건 설정
     const initialParams = {
       searchType: "PRODUCT",
-      startDate: null,
-      endDate: null,
+      startDate: startDate,
+      endDate: endDate,
       statusIds: [],
       searchPeriod: "ONE_MONTH",
       sort: "LATEST",
