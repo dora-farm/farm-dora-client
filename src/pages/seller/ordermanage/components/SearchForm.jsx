@@ -96,6 +96,7 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
       searchPeriod,
       sort,
       keyword,
+      size: 10000,
     };
     
     // 검색 콜백 실행
