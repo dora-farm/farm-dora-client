@@ -1,43 +1,32 @@
 // src/pages/seller/Manage.jsx
 import { useState, useEffect, useRef } from 'react';
 
-import Keyword from '../../common/components/search/Keyword';
-import ProductStatus from '../../common/components/search/ProductStatus';
-import ProductCategory from '../../common/components/search/ProductCategory';
-import BasicBtn from '../../common/components/search/BasicBtn';
-import Pagination from '../../common/components/Pagination';
-import ProductDetailModal from './ProductModalAdmin';
-
-import { bigCategories, smallCategories } from '../../common/js/categories'
+import Keyword from '../../../common/components/search/Keyword';
+import BasicBtn from '../../../common/components/search/BasicBtn';
+import Pagination from '../../../common/components/Pagination';
+import RegistModal from './RegistModal';
 
 //componentes
-import AlertModal from '../../common/components/modal/AlertModal';
-import Loading from '../../common/components/Loading';
-import ProductTable from '../../common/components/product/ProductTable';
+import AlertModal from '../../../common/components/modal/AlertModal';
+import Loading from '../../../common/components/Loading';
+import VideoTable from '../../../common/components/product/VideoTable';
 //hooks
-import { useCheckboxes } from '../../common/hooks/useCheckboxes';
+import { useCheckboxes } from '../../../common/hooks/useCheckboxes';
 
-function AdminProduct() {
+function VideoManage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({ INSTOCK: false, PREORDER: false });
-  // true 값만 포함하는 새로운 state
-  const [processedFilters, setProcessedFilters] = useState({});
-  const [category, setCategory] = useState('');
-  const [subCategory, setSubCategory] = useState('');
   const [products, setProducts] = useState([]);
-
   const [sortFilter, setSortFilter] = useState('LATEST');
-  const [smallCategoriesFiltered, setSmallCategoriesFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 검색 트리거 상태 추가
+  const [searchTrigger, setSearchTrigger] = useState(0);
 
   // 검색창 포커스
   const searchInputRef = useRef(null);
 
-
   // 모달(상세페이지)
   const [modalOpen, setModalOpen] = useState(false);
-  const [productDetail, setProductDetail] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // 모달(알림)
@@ -50,7 +39,7 @@ function AdminProduct() {
     totalPages: 0,
     hasNext: false,
     hasPrev: false,
-    pageSize: 15
+    pageSize: 5
   });
 
   const {
@@ -60,27 +49,19 @@ function AdminProduct() {
     handleItemCheck,
     getSelectedIds,
     setItems: setCheckboxItems
-  } = useCheckboxes([]);
+  } = useCheckboxes([], `id`);
 
   // 검색 결과가 변경되면 체크박스 상태 업데이트
   useEffect(() => {
     setCheckboxItems(products);
   }, [products, setCheckboxItems]);
 
-  // 페이지 변경 핸들러 (POST)
-  const handlePageChange = (page) => {
-    setPagination(prevState => ({
-      ...prevState,  // 이전 상태의 모든 속성을 복사
-      currentPage: page // currentPage만 업데이트
-    }));
-  };
-
-  const handleStatusCheck = async (productId) => {
+  const handleStatusCheck = async (videoId) => {
 
     try {
 
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/updateStatus/${productId}`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/updateStatus/${videoId}`, {
         method: 'PUT',
       });
 
@@ -100,38 +81,36 @@ function AdminProduct() {
   }
 
 
+  // 페이지 변경 핸들러 (POST)
+  const handlePageChange = (page) => {
+    setPagination(prevState => ({
+      ...prevState,  // 이전 상태의 모든 속성을 복사
+      currentPage: page // currentPage만 업데이트
+    }));
+  };
+
+  // 검색 및 필터링 핸들러
+  const handleSearch = () => {
+    setPagination(prevPagination => ({
+      ...prevPagination,
+      currentPage: 0
+    }));
+    // 트리거 상태 업데이트
+    setSearchTrigger(prev => prev + 1);
+  };
+
+  // useEffect 수정
   useEffect(() => {
     fetchSearchProducts();
-  }, [pagination.currentPage]); // pagination.currentPage가 변경될 때마다 fetchSearchProducts 호출
-
-  // 상품 상세 정보 조회 함수
-  const fetchProductDetail = async (productId) => {
-    setLoading(true);
-    setModalOpen(true);
-
-    try {
-      // 백엔드 API 호출
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/detail/${productId}`);
-
-      const httpResponse = await response.json();
-      // console.log('조회된 상품 정보:', httpResponse);
-
-      // 조회 성공 시 상태 업데이트
-      setProductDetail(httpResponse.data);
-    } catch (error) {
-      console.error('상품 상세 조회 오류:', error);
-    } finally {
-      setLoading(false);
-    };
-  };
+  }, [pagination.currentPage, searchTrigger]);
 
   // 초기 GET 데이터 로드 함수
   const fetchInitialProducts = async () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale/search`);
-
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/seller/list/${pagination.pageSize}`);
+      console.log(response.ok);
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
       }
@@ -151,7 +130,7 @@ function AdminProduct() {
       console.error('초기 상품 데이터 로딩 중 오류:', error);
     } finally {
       setIsLoading(false);
-      // 초기화 후 즉시 검색 실행
+      // 초기 로드 후 포커스
       setTimeout(() => {
         if (searchInputRef.current) {
           searchInputRef.current.focus();
@@ -171,18 +150,14 @@ function AdminProduct() {
 
     // JSON 데이터 준비
     const jsonData = {
-      sellerId: 1, // 추후 JWT 토큰으로 백에서 처리 예정
       keyword: searchTerm,
       sort: sortFilter,
-      filters: processedFilters,
-      typeBigId: category,
-      typeId: subCategory,
       page: pagination.currentPage,
       size: pagination.pageSize
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale/search`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/seller/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -192,7 +167,7 @@ function AdminProduct() {
 
       // 응답 텍스트 확인
       const httpResponse = await response.json();
-      // console.log('서버 응답:', httpResponse.data);
+      console.log('서버 응답:', httpResponse.data);
       setProducts(httpResponse.data.contents);
       setPagination({
         currentPage: httpResponse.data.currentPage,
@@ -214,6 +189,7 @@ function AdminProduct() {
       }, 0);
     }
   };
+
   const deleteSelectedItems = async () => {
     // useCheckboxes의 getSelectedIds 함수 사용
     const selectedProductIds = getSelectedIds();
@@ -227,11 +203,11 @@ function AdminProduct() {
     try {
       // JSON 형태로 가공
       const request = {
-        saleIds: selectedProductIds
+        broadcastIds: selectedProductIds
       };
 
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/delete`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -256,51 +232,9 @@ function AdminProduct() {
     }
   }
 
-  // 대분류 선택 시 소분류 필터링
-  useEffect(() => {
-    if (category) {
-      const filteredCategories = smallCategories.filter(
-        item => item.bigCategoryId === parseInt(category)
-      );
-      setSmallCategoriesFiltered(filteredCategories);
-      setSubCategory('');
-    } else {
-      setSmallCategoriesFiltered([]);
-      setSubCategory('');
-    }
-  }, [category]);
-
-  const handleFilterChange = (event) => {
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      [event.target.name]: event.target.checked
-    }));
-  };
-
-  useEffect(() => {
-    // true 값을 가진 키만 배열로 추출
-    const trueKeysArray = Object.keys(filters).filter(key => filters[key] === true);
-    setProcessedFilters(trueKeysArray);
-  }, [filters]);
-
-  // 검색 및 필터링 핸들러 (POST)
-  const handleSearch = () => {
-    setPagination(
-      pagination.currentPage = 0
-    );
-    fetchSearchProducts();
-  };
-
   const handleReset = () => {
     setSearchTerm('');
-    setFilters({
-      INSTOCK: false,
-      PREORDER: false
-    });
-    setCategory('');
-    setSubCategory('');
     setSortFilter('LATEST');
-    fetchInitialProducts(); //get방식 데이터 불러오기
   };
 
   // 로딩 상태 렌더링
@@ -310,7 +244,7 @@ function AdminProduct() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b">상품 조회</h1>
+      <h1 className="text-2xl font-semibold mb-6 pb-2 border-b">동영상 조회</h1>
 
       <div className="bg-white rounded-lg shadow-sm mb-6 p-4">
         <form onSubmit={(e) => {
@@ -325,18 +259,7 @@ function AdminProduct() {
             setSortFilter={setSortFilter}
             inputRef={searchInputRef}
           />
-          <ProductStatus
-            filters={filters}
-            handleFilterChange={handleFilterChange}
-          />
-          <ProductCategory
-            category={category}
-            setCategory={setCategory}
-            subCategory={subCategory}
-            setSubCategory={setSubCategory}
-            bigCategories={bigCategories}
-            smallCategoriesFiltered={smallCategoriesFiltered}
-          />
+
           <BasicBtn
             handleSearch={handleSearch}
             handleReset={handleReset}
@@ -347,23 +270,32 @@ function AdminProduct() {
       {/* 결과 목록 */}
       <div className="bg-white rounded-lg shadow-sm p-4">
         <div className="flex justify-between items-center mb-2">
-          <div>상품 목록 (총 {pagination.totalElements}개)</div>
-          <button
-            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm"
-            onClick={deleteSelectedItems}
-          >
-            선택 삭제
-          </button>
+          <div>동영상 목록 (총 {pagination.totalElements}개)</div>
+          <div className="flex space-x-2">
+            <button
+              className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm"
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            >
+              등록
+            </button>
+            <button
+              className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm"
+              onClick={deleteSelectedItems}
+            >
+              삭제
+            </button>
+          </div>
         </div>
 
         {/* 테이블 */}
-        <ProductTable
+        <VideoTable
           products={checkedProducts}
           pagination={pagination}
           isAllChecked={isAllChecked}
           handleAllCheck={handleAllCheck}
           handleItemCheck={handleItemCheck}
-          handleProductClick={fetchProductDetail}
           handleProductStatusClick={handleStatusCheck}
         />
 
@@ -378,12 +310,12 @@ function AdminProduct() {
           hoverColor="hover:bg-gray"
         />
 
-        {/* 상품 상세 정보 모달 */}
-        <ProductDetailModal
+        {/* 상품 등록 모달 */}
+        <RegistModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
-          productDetail={productDetail}
           loading={loading}
+          refreshProducts={fetchInitialProducts}
         />
 
         {showModal && (
@@ -398,4 +330,4 @@ function AdminProduct() {
   );
 }
 
-export default AdminProduct;
+export default VideoManage;

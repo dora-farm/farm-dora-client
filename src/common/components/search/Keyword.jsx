@@ -1,17 +1,17 @@
 // src/components/Keyword.jsx
 import React from 'react';
 
-function Keyword({ searchTerm, setSearchTerm, sortFilter, setSortFilter, onKeyPress }) {
+function Keyword({ searchTerm, setSearchTerm, sortFilter, setSortFilter, inputRef }) {
   return (
     <div className="flex items-center mb-3">
       <div className="w-24 font-medium">키워드</div>
       <input 
+        ref={inputRef}
         type="text"
-        placeholder="상품명을 입력하세요" 
+        placeholder="검색어를 입력하세요" 
         className="flex-grow border rounded px-3 py-2 mr-3"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyPress={onKeyPress} // 여기에 onKeyDown 이벤트 핸들러 추가
       />
       <div className="ml-auto">
         <select
