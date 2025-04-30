@@ -62,9 +62,9 @@ function App() {
             <Route path="/event/:id" element={<EventDetail/>} />
             <Route path="/support" element={<ChatSupport/>} />
             <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
-            <Route path="/live/view" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
+            <Route path="/live/view/:id" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
             <Route path="/sale/:saleId" element={<ProductDetail />} />
-
+              
             <Route element={<UserLayout/>}>
               <Route path="/my/user" element={<MyPage/>} />
               <Route path="/my/user/review" element={<MyReviews/>} />
