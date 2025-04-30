@@ -11,7 +11,12 @@ function Cancel() {
   const [error, setError] = useState(null);
   const [cancelOrders, setCancelOrders] = useState([]);
   const [searchParams, setSearchParams] = useState([]);
+
   const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalElements, setTotalElements] = useState(0);
+  const [hasPrev, setHasPrev] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
 
   const handleSearch = async (params) => {
     try {
@@ -19,9 +24,12 @@ function Cancel() {
 
       const modifiedParams = {
         ...params,
-        statusIds: 4 // 항상 배송준비 상태만 조회
+        statusIds: 4,
+        page: 0,
+        size: itemsPerPage
       };
-      setSearchParams(modifiedParams); // 수정된 파라미터 저장
+
+      setSearchParams(modifiedParams); 
       setCurrentPage(0);
 
       const response = await axios.get(
@@ -32,6 +40,13 @@ function Cancel() {
       if (response.status === 200) {
         const responseData = response.data.data;
         setCancelOrders(responseData.contents || []);
+
+        setCurrentPage(responseData.currentPage || 0);
+        setTotalPages(responseData.totalPages || 1);
+        setTotalElements(responseData.totalElements || 0);
+        setHasPrev(responseData.hasPrevious || false);
+        setHasNext(responseData.hasNext || false);
+
       } else {
         throw new Error(response.data?.message || '주문 정보를 가져오는데 실패했습니다.');
       }
@@ -57,31 +72,56 @@ function Cancel() {
       searchPeriod: "ONE_MONTH",
       sort: "LATEST",
       keyword: "",
-      size: 10000,
+      page: 0,
+      size: itemsPerPage,
     }), [startDate, endDate]);
     
     useEffect(() => {
       setSearchParams(initialParams); // ← 초기값 저장
       handleSearch(initialParams);
     }, []);
-  
-    // 페이지네이션 계산
-    const totalElements = cancelOrders.length;
-    const totalPages = Math.max(1, Math.ceil(totalElements / itemsPerPage));
-    const hasPrev = currentPage > 0;
-    const hasNext = currentPage < totalPages - 1;
-    
-    // 현재 페이지에 해당하는 주문만 필터링
-    const currentOrders = useMemo(() => {
-      const startIndex = currentPage * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      return cancelOrders.slice(startIndex, endIndex);
-    }, [cancelOrders, currentPage, itemsPerPage]);
     
     // 페이지 변경 핸들러
-    const handlePageChange = useCallback((newPage) => {
-      setCurrentPage(newPage);
-    }, []);
+  const handlePageChange = useCallback((newPage) => {
+    setCurrentPage(newPage);
+    
+    // 페이지 변경 시 API 재호출
+    const pageParams = {
+      ...searchParams,
+      page: newPage,
+      size: itemsPerPage
+    };
+    
+    // 페이지 데이터 요청
+    (async () => {
+      try {
+        setLoading(true);
+        
+        const response = await axios.get(
+          `http://localhost:8030/my/seller/order/search`,
+          { params: pageParams }
+        );
+        
+        if (response.status === 200) {
+          const responseData = response.data.data;
+          
+          // 응답에서 주문 데이터와 페이지네이션 정보 업데이트
+          setCancelOrders(responseData.contents || []);
+          setTotalPages(responseData.totalPages || 1);
+          setTotalElements(responseData.totalElements || 0);
+          setHasPrev(responseData.hasPrevious || false);
+          setHasNext(responseData.hasNext || false);
+        } else {
+          throw new Error(response.data?.message || '주문 정보를 가져오는데 실패했습니다.');
+        }
+      } catch (error) {
+        console.error("페이지 데이터를 가져올 수 없습니다.", error.message);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [searchParams, itemsPerPage]);
   
   return (
     <div className="space-y-6">
@@ -95,7 +135,7 @@ function Cancel() {
       
       <Container>        
         <ListForm 
-          orders={currentOrders}
+          orders={cancelOrders}
           loading={loading}
           error={error}
         />
