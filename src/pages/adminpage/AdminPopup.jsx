@@ -54,7 +54,7 @@ const AdminPopup = () => {
         params.endDate = `${searchParams.endDate}T23:59:59`;
       }
       
-      const response = await axios.get('http://localhost:8080/api/popup', { params });
+      const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup`, { params });
       
       if (response.data && response.data.data) {
         const pageData = response.data.data;

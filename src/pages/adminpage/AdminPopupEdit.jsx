@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AlertModal2 from '../../common/components/modal/AlertModal2';
 
 const AdminPopupEdit = () => {
   const { id } = useParams();
@@ -20,6 +21,13 @@ const AdminPopupEdit = () => {
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
   
+  // 알림 모달 상태
+  const [modal, setModal] = useState({
+    show: false,
+    title: '',
+    message: '',
+  });
+  
   // 팝업 타입 목록과 상세 정보 가져오기
   useEffect(() => {
     const fetchData = async () => {
@@ -27,13 +35,13 @@ const AdminPopupEdit = () => {
         setLoading(true);
         
         // 팝업 타입 목록 가져오기
-        const typesResponse = await axios.get('http://localhost:8080/api/popup/types');
+        const typesResponse = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/types`);
         if (typesResponse.data && typesResponse.data.data) {
           setPopupTypes(typesResponse.data.data);
         }
         
         // 팝업 상세 정보 가져오기
-        const popupResponse = await axios.get(`http://localhost:8080/api/popup/${id}`);
+        const popupResponse = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/${id}`);
         if (popupResponse.data && popupResponse.data.data) {
           const popupData = popupResponse.data.data;
           
@@ -61,20 +69,39 @@ const AdminPopupEdit = () => {
           setFilePreview(popupData.imageUrl);
         } else {
           console.error('팝업/배너 상세 정보 형식이 예상과 다릅니다:', popupResponse.data);
-          alert('팝업/배너 정보를 불러올 수 없습니다.');
-          navigate('/admin/popup');
+          setModal({
+            show: true,
+            title: '데이터 로드 실패',
+            message: '팝업/배너 정보를 불러올 수 없습니다.'
+          });
         }
         
         setLoading(false);
       } catch (error) {
         console.error('팝업/배너 정보를 불러오는 중 오류가 발생했습니다:', error);
-        alert('팝업/배너 정보를 불러올 수 없습니다.');
-        navigate('/admin/popup');
+        setModal({
+          show: true,
+          title: '데이터 로드 실패',
+          message: '팝업/배너 정보를 불러올 수 없습니다.'
+        });
+        setLoading(false);
       }
     };
     
     fetchData();
   }, [id, navigate]);
+  
+  // 모달 닫기 처리
+  const handleCloseModal = () => {
+    setModal(prev => ({ ...prev, show: false }));
+    
+    // 성공 시나 데이터 로드 실패 시 적절한 페이지로 이동
+    if (modal.title === '수정 성공') {
+      navigate(`/admin/popup/${id}`); // 상세 페이지로 이동
+    } else if (modal.title === '데이터 로드 실패') {
+      navigate('/admin/popup'); // 목록 페이지로 이동
+    }
+  };
   
   // 입력 필드 변경 처리
   const handleChange = (e) => {
@@ -100,7 +127,11 @@ const AdminPopupEdit = () => {
     
     // 필수 필드 검증
     if (!formData.typeId || !formData.title || !formData.startDate || !formData.endDate) {
-      alert('모든 필수 항목을 입력해주세요.');
+      setModal({
+        show: true,
+        title: '입력 오류',
+        message: '모든 필수 항목을 입력해주세요.'
+      });
       return;
     }
     
@@ -120,18 +151,28 @@ const AdminPopupEdit = () => {
       }
       
       // API 호출
-      await axios.put(`http://localhost:8080/api/popup/edit/${id}`, submitData, {
+      await axios.put(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/edit/${id}`, submitData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       
-      alert('팝업/배너가 성공적으로 수정되었습니다.');
-      navigate(`/admin/popup/${id}`); // 상세 페이지로 이동
+      // 성공 모달 표시
+      setModal({
+        show: true,
+        title: '수정 성공',
+        message: '팝업/배너가 성공적으로 수정되었습니다.'
+      });
       
     } catch (error) {
       console.error('팝업/배너 수정 중 오류가 발생했습니다:', error);
-      alert('팝업/배너 수정에 실패했습니다. 다시 시도해주세요.');
+      
+      // 실패 모달 표시
+      setModal({
+        show: true,
+        title: '수정 실패',
+        message: '팝업/배너 수정에 실패했습니다. 다시 시도해주세요.'
+      });
     } finally {
       setLoading(false);
     }
@@ -273,6 +314,15 @@ const AdminPopupEdit = () => {
           </div>
         </form>
       </div>
+      
+      {/* 알림 모달 */}
+      {modal.show && (
+        <AlertModal2
+          title={modal.title}
+          message={modal.message}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
