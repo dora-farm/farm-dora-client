@@ -15,7 +15,7 @@ const NCPlayer = (props) => {
 
         // 스크립트가 없으면 동적으로 로드
         const script = document.createElement('script');
-        script.src = 'https://player.vpe.naverncp.com/ncplayer.1.1.3.js?access_key=a1ea7c50126a00603e3331c499dee169';
+        script.src = 'https://player.vpe.naverncp.com/ncplayer.1.1.3.js?access_key=63fc8d6c0fde5650b8ebc3394017b4f3';
         script.async = true;
         document.body.appendChild(script);
       });
