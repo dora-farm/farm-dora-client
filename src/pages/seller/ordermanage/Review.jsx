@@ -106,7 +106,7 @@ function Review() {
           `http://localhost:8030/my/seller/order/review`,
           { 
             params: {
-              ...searchParams,
+              ...pageParams,
               sellerId: 1,
             }
           }
