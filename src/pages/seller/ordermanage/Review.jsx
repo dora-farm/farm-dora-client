@@ -4,6 +4,7 @@ import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
 import ReviewList from './components/ReviewList';
 import Pagination from '../../../common/components/Pagination';
+import ReviewDetailModal from './components/ReviewDetailModal';
 
 function Review() {
   const itemsPerPage = 10;

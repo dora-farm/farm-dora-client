@@ -23,6 +23,9 @@ function Refund() {
   const [modalOpen, setModalOpen] = useState(false);
   const [orderDetail, setOrderDetail] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
+
+  const [refundDetail, setRefundDetail] = useState(null);
+
   const handleSearch = async (params) => {
     try {
       setLoading(true);
@@ -86,17 +89,43 @@ function Refund() {
   
       try {
         setDetailLoading(true);
-        const response = await axios.get(
+        const orderResponse = await axios.get(
           `http://localhost:8010/api/my/seller/order/detail`, 
           { params: { orderId } }
         );
+
+        const refundResponse = await axios.get(
+          `http://localhost:8010/api/my/seller/order/refund`,
+          { params: { orderId } }
+        );
   
-        if (response.status === 200) {
-          setOrderDetail(response.data.data);
+        if (orderResponse.status === 200) {
+          setOrderDetail(orderResponse.data.data);
+          
+          if (refundResponse.status === 200 && refundResponse.data.data.length > 0) {
+            // 환불 기본 정보는 첫 번째 항목에서 가져옴
+            const refundInfo = refundResponse.data.data[0];
+            
+            // 파일 정보는 배열에서 추출
+            const fileList = refundResponse.data.data
+              .filter(item => item.saveFile !== null)
+              .map(item => item.saveFile);
+            
+            // 환불 정보 객체 생성
+            const refundData = {
+              createdDate: refundInfo.createdDate,
+              typeName: refundInfo.typeName,
+              content: refundInfo.content,
+              files: fileList
+            };
+            
+            setRefundDetail(refundData);
+          }
           setModalOpen(true);
         } else {
-          throw new Error(response.data?.message || '주문 상세 정보를 가져오는데 실패했습니다.');
+          throw new Error(orderResponse.data?.message || '주문 정보를 가져오는데 실패했습니다.');
         }
+        setModalOpen(true);
       } catch (error) {
         console.log("주문 상세정보를 불러올 수 없습니다.", error.message);
         setError(error.message);
@@ -192,11 +221,13 @@ function Refund() {
       <OrderDetailModal
         detail={orderDetail}
         order={selectedOrder}
+        refund={refundDetail}
         loading={detailLoading}
         isOpen={modalOpen}
         onClose={() => {
           setModalOpen(false);
           setOrderDetail(null);
+          setRefundDetail(null);
         }}
       />
     </div>

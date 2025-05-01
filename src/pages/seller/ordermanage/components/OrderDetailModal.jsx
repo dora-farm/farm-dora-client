@@ -4,10 +4,14 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ReceiptIcon from "@mui/icons-material/Receipt";
+import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
-const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
+// refund 매개변수 추가
+const OrderDetailModal = ({ order, detail, refund, loading, isOpen, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("product");
+  const [imageErrors, setImageErrors] = useState({});
 
   useEffect(() => {
     if (isOpen) {
@@ -20,6 +24,15 @@ const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
       setIsVisible(false);
     }
   }, [isOpen]);
+
+  // refund가 있으면 기본 탭을 refund로 설정
+  useEffect(() => {
+    if (refund) {
+      setActiveTab("refund");
+    } else {
+      setActiveTab("product");
+    }
+  }, [refund]);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -79,6 +92,31 @@ const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
     }, 0);
   };
 
+  // 모달 타이틀 설정
+  const getModalTitle = () => {
+    if (refund) {
+      return "환불/교환 상세 정보";
+    }
+    return "주문 상세 정보";
+  };
+
+  // 이미지 URL 포맷팅
+  const formatImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+
+    const baseUrl = "https://u7ouobpu9909.edge.naverncp.com/cdie6Z8lNS/wishlist/";
+    const params = "?type=f&w=216&h=180";
+
+    return imagePath.startsWith("http")
+      ? imagePath
+      : `${baseUrl}${imagePath}${params}`;
+  };
+
+  // 이미지 로드 에러 핸들링
+  const handleImageError = (fileIndex) => {
+    setImageErrors((prev) => ({ ...prev, [fileIndex]: true }));
+  };
+
   return (
     <div
       className={`fixed inset-0 bg-black transition-opacity duration-300 flex items-center justify-center z-50 select-none ${
@@ -96,7 +134,7 @@ const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
         <div className="bg-brown text-white py-4 px-6 flex justify-between items-center">
           <h2 className="text-xl font-bold flex items-center">
             <ReceiptIcon className="mr-2" />
-            주문 상세 정보
+            {getModalTitle()}
           </h2>
           <button
             onClick={handleClose}
@@ -109,6 +147,21 @@ const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
         {/* 탭 네비게이션 */}
         <div className="border-b border-gray-200 px-6">
           <div className="flex space-x-6">
+            {/* 환불 정보 탭 (refund가 있을 때만 표시) */}
+            {refund && (
+              <button
+                onClick={() => setActiveTab("refund")}
+                className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
+                  activeTab === "refund"
+                    ? "border-amber-600 text-amber-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <AssignmentReturnIcon className="mr-2" fontSize="small" />
+                환불 정보
+              </button>
+            )}
+            
             <button
               onClick={() => setActiveTab("product")}
               className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
@@ -120,6 +173,7 @@ const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
               <ShoppingBagIcon className="mr-2" fontSize="small" />
               상품 정보
             </button>
+            
             <button
               onClick={() => setActiveTab("shipping")}
               className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
@@ -135,6 +189,67 @@ const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+          {/* 환불 정보 탭 */}
+          {activeTab === "refund" && refund && (
+            <div className="space-y-6">
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-bold text-gray-800">환불 정보</h3>
+                  <div className="text-sm text-gray-500">
+                    접수일자: {formatDate(refund.createdDate)}
+                  </div>
+                </div>
+                <div className="bg-amber-50 px-4 py-3 rounded-lg mb-4 text-amber-900 text-sm">
+                  환불 유형: <span className="font-semibold">{refund.typeName || "-"}</span>
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <div className="mb-4">
+                  <div className="text-sm text-gray-500 mb-1">환불 사유</div>
+                  <div className="bg-gray-50 p-4 rounded-md text-gray-700">
+                    {refund.content || "-"}
+                  </div>
+                </div>
+                
+                {/* 사진 목록 */}
+                {refund.files && refund.files.length > 0 ? (
+                  <div className="mt-6">
+                    <div className="text-sm text-gray-500 mb-3">첨부 사진</div>
+                    <div className="grid grid-cols-2 gap-4">
+                      {refund.files.map((file, index) => (
+                        <div 
+                          key={`file-${index}`}
+                          className="border border-gray-200 rounded-lg overflow-hidden shadow-sm"
+                        >
+                          {!imageErrors[index] ? (
+                            <img
+                              src={formatImageUrl(file)}
+                              alt={`환불 이미지 ${index + 1}`}
+                              className="w-full h-48 object-cover"
+                              onError={() => handleImageError(index)}
+                            />
+                          ) : (
+                            <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
+                              <div className="text-gray-400 text-sm">이미지를 불러올 수 없습니다</div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-6">
+                    <div className="text-sm text-gray-500 mb-1">첨부 사진</div>
+                    <div className="text-center py-6 bg-gray-50 rounded-lg">
+                      <div className="text-gray-500">첨부된 사진이 없습니다.</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* 상품 정보 탭 */}
           {activeTab === "product" && (
             <div className="space-y-6">
