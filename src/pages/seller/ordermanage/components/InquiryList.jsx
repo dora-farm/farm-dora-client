@@ -40,8 +40,8 @@ const InquiryList = ({loading = false, error = null, questions = [],}) => {
 
   const formatProcess = (process) => {
     if (process) {
-      return <CheckIcon color="success" fontSize="small" />;
-    } return <CloseIcon color="warning" fontSize="small" />;
+      return <CheckIcon sx={{ color: "#1CA673" }} fontSize="small" />;
+    } return <CloseIcon sx={{ color: "#F29B30" }} fontSize="small" />;
   }
 
   return (
