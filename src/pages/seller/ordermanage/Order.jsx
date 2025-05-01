@@ -4,6 +4,7 @@ import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
 import OrderList from './components/OrderList';
 import Pagination from '../../../common/components/Pagination';
+import OrderDetailModal from './components/OrderDetailModal';
 
 function Order() {
   const itemsPerPage = 10;
@@ -18,6 +19,12 @@ function Order() {
   const [totalElements, setTotalElements] = useState(0);
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(false);
+
+  // 모달 상태 추가
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [orderDetail, setOrderDetail] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
 
   const handleSearch = async (params) => {
     try {
@@ -81,6 +88,30 @@ function Order() {
     page: 0,          // 페이지 번호 추가
     size: itemsPerPage, // 페이지 크기 설정
   }), [startDate, endDate, itemsPerPage]);
+
+  const loadOrderDetail = async (orderId) => {
+    if (!orderId) return;
+
+    try {
+      setDetailLoading(true);
+      const response = await axios.get(
+        `http://localhost:8010/api/my/seller/order/detail`, 
+        { params: { orderId } }
+      );
+
+      if (response.status === 200) {
+        setOrderDetail(response.data.data);
+        setModalOpen(true);
+      } else {
+        throw new Error(response.data?.message || '주문 상세 정보를 가져오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.log("주문 상세정보를 불러올 수 없습니다.", error.message);
+      setError(error.message);
+    } finally {
+      setDetailLoading(false);
+    }
+  };
   
   useEffect(() => {
     setSearchParams(initialParams);
@@ -128,6 +159,11 @@ function Order() {
       }
     })();
   }, [searchParams, itemsPerPage]);
+
+  const handleOrderClick = (order) => {
+    setSelectedOrder(order);
+    loadOrderDetail(order.orderId);
+  }
   
   return (
     <div className="space-y-6">
@@ -144,6 +180,7 @@ function Order() {
           orders={orders} // 이제 currentOrders가 아닌 orders 사용
           loading={loading}
           error={error}
+          onOrderClick={handleOrderClick}
         />
       </Container>
       {totalPages > 1 && (
@@ -158,6 +195,17 @@ function Order() {
           hoverColor="hover:bg-gray-100"
         />
       )}
+
+      <OrderDetailModal
+        detail={orderDetail}
+        order={orders}
+        loading={detailLoading}
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setOrderDetail(null);
+        }}
+      />
     </div>
   );
 }
