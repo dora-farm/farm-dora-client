@@ -4,13 +4,14 @@ import {loginUser as loginUserService, loginSocial} from '../../features/auth/se
 import LoginForm from "../../features/auth/components/LoginForm.jsx";
 import SocialLoginButton from "../../features/auth/components/SocialLoginForm.jsx";
 import AlertModal from "../../common/components/modal/AlertModal.jsx";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const Login = () => {
     const { id, setId, saveIdChecked, setSaveIdChecked } = useLogin();
     const location = useLocation();
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -24,7 +25,7 @@ const Login = () => {
         }
     }, [location]);
 
-    const loginUser = () => loginUserService(id, saveIdChecked, setModalMessage, setShowModal);
+    const loginUser = () => loginUserService(id, saveIdChecked, setModalMessage, setShowModal, navigate);
 
 
     return (
@@ -44,7 +45,7 @@ const Login = () => {
                 <div className="hidden md:block w-px bg-gray-300 h-full"></div>
 
                 {/* 소셜 로그인 버튼 */}
-                <SocialLoginButton onLogin={loginSocial} />
+                <SocialLoginButton onLogin={loginSocial} title="간편 로그인" className="text-xl font-semibold text-center" />
             </div>
             {showModal && (
                 <AlertModal

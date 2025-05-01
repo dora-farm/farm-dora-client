@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useRef, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFormValidation from "../hooks/useFormValidation";
 import DaumPostcode from 'react-daum-postcode';
@@ -10,6 +10,8 @@ import {
     verifyEmailCode, phoneNumContainDash
 } from "../services/validationService";
 import AlertModal from "../../../common/components/modal/AlertModal.jsx";
+import {useEmailVerifyModal} from "../hooks/useEmailVerifyModal.js";
+import EmailVerifyModalForm from "./modal/EmailVerifyModalForm.jsx";
 
 const JoinForm = () => {
     const [formValid, setFormValid] = useFormValidation();
@@ -18,24 +20,73 @@ const JoinForm = () => {
     const [modalMessage, setModalMessage] = useState('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const verifyBtn = document.getElementById("emailVerifyBtn");
+    const findVerifyCodeRef = useRef('');
 
-        if (verifyBtn) {
-            const handleVerifyClick = async () => {
-                const code = document.getElementById("emailCodeInput").value;
-                const email = document.getElementById("email").value;
-                const result = await verifyEmailCode(email, code, setFormValid);
-                setModalMessage(result.message);
-                setShowModal(true);
-            };
+    const {
+        isVerifyModal,
+        title: verifyTitle,
+        content: verifyContent,
+        inputs: verifyInputs,
+        onSubmitCode,
+        openVerifyModal,
+        closeVerifyModal,
+    } = useEmailVerifyModal();
 
-            verifyBtn.addEventListener("click", handleVerifyClick);
-
-            // cleanup (메모리 누수 방지)
-            return () => verifyBtn.removeEventListener("click", handleVerifyClick);
+    const handleSendEmailCode = async () => {
+        const result = await sendVerificationEmail();
+        console.log(result.data);
+        if (result.data) {
+            openRegisterVerifyModal();
         }
-    }, []);
+    };
+
+
+    const openRegisterVerifyModal = () => {
+        openVerifyModal({
+            modalTitle: "인증번호 입력",
+            modalContent: "입력한 이메일로 발송된 인증번호를 입력하세요.",
+            modalInputs: [
+                { label: "인증코드", type: "text", name: "code", onChange: (e) => findVerifyCodeRef.current = e.target.value },
+            ],
+            onSubmit: async () => {
+                try {
+                    console.log(document.getElementById('email').value);
+                    const result = await verifyEmailCode(document.getElementById('email').value, findVerifyCodeRef.current, setFormValid);
+                    if(result.data){
+                    setModalMessage(result.message);
+                    setShowModal(true);
+                    closeVerifyModal();
+                    }else {
+                        setModalMessage("인증에 실패하였습니다.");
+                        setShowModal(true);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    setModalMessage("인증에 실패하였습니다.");
+                    setShowModal(true);
+                }
+            },
+        });
+    };
+
+    // useEffect(() => {
+    //     const verifyBtn = document.getElementById("emailVerifyBtn");
+    //
+    //     if (verifyBtn) {
+    //         const handleVerifyClick = async () => {
+    //             const code = document.getElementById("emailCodeInput").value;
+    //             const email = document.getElementById("email").value;
+    //             const result = await verifyEmailCode(email, code, setFormValid);
+    //             setModalMessage(result.message);
+    //             setShowModal(true);
+    //         };
+    //
+    //         verifyBtn.addEventListener("click", handleVerifyClick);
+    //
+    //         // cleanup (메모리 누수 방지)
+    //         return () => verifyBtn.removeEventListener("click", handleVerifyClick);
+    //     }
+    // }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -155,7 +206,7 @@ const JoinForm = () => {
                     <input id="email" name="email" type="email" className="p-1 w-full focus:outline-none"
                            onKeyUp={() => validateEmail(setFormValid)}
                     />
-                    <button type="button" onClick={() => sendVerificationEmail(setFormValid)} className="mt-2 bg-gray-200 text-xs rounded-md p-1 mb-2">
+                    <button type="button" onClick={handleSendEmailCode} className="mt-2 bg-gray-200 text-xs rounded-md p-1 mb-2">
                         인증 메일 보내기
                     </button>
                 </div>
@@ -221,16 +272,14 @@ const JoinForm = () => {
             </form>
 
             {/* 이메일 인증 모달 */}
-            <div id="emailModal" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 hidden">
-                <div className="bg-white p-6 rounded-md shadow-md">
-                    <h2 className="text-lg font-semibold mb-4">이메일 인증</h2>
-                    <input id="emailCodeInput" type="text" placeholder="인증번호 입력" className="p-2 border w-full rounded-md mb-3" />
-                    <div className="flex justify-end space-x-2">
-                        <button id="emailVerifyBtn" className="bg-blue-500 text-white px-4 py-2 rounded-md">확인</button>
-                        <button onClick={() => document.getElementById("emailModal").classList.add("hidden")} className="border px-4 py-2 rounded-md">취소</button>
-                    </div>
-                </div>
-            </div>
+            <EmailVerifyModalForm
+                title={verifyTitle}
+                content={verifyContent}
+                isOpen={isVerifyModal}
+                onClose={closeVerifyModal}
+                onSubmit={onSubmitCode}
+                inputs={verifyInputs}
+            />
 
             {/* Alert 모달 */}
             {showModal && (
