@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
-import ListForm from './components/ListForm';
+import OrderList from './components/OrderList';
 import Pagination from '../../../common/components/Pagination';
 
 function Inquiry() {
@@ -14,7 +14,7 @@ function Inquiry() {
       </Container>
       
       <Container>        
-        <ListForm 
+        <OrderList 
         />
       </Container>
         <Pagination 

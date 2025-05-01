@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
-import ListForm from './components/ListForm';
+import OrderList from './components/OrderList';
 import Pagination from '../../../common/components/Pagination';
 
 function Order() {
@@ -136,10 +136,11 @@ function Order() {
           onSearch={handleSearch}
           initialValues={searchParams}
           showStatusFilter={true}
+          showSortedFilter={true}
         />
       </Container>
       <Container>        
-        <ListForm 
+        <OrderList 
           orders={orders} // 이제 currentOrders가 아닌 orders 사용
           loading={loading}
           error={error}

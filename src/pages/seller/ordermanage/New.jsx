@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
-import ListForm from './components/ListForm';
+import OrderList from './components/OrderList';
 import Pagination from '../../../common/components/Pagination';
 
 function New() {
@@ -130,11 +130,12 @@ function New() {
           onSearch={handleSearch}
           initialValues={searchParams}
           showStatusFilter={false}
+          showSortedFilter={true}
         />
       </Container>
       
       <Container>        
-        <ListForm 
+        <OrderList 
           orders={newOrders}
           loading={loading}
           error={error}

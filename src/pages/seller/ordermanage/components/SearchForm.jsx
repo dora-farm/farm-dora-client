@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GreenSquareCheckbox from "../../../../common/components/GreenSquareCheckbox";
 
-function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = false }) {
+function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = false, showSortedFilter = false, }) {
 
   // 상태 관리
   const [startDate, setStartDate] = useState(initialValues.startDate || null);
@@ -94,7 +94,6 @@ function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = f
       searchPeriod,
       sort: sorted,
       keyword,
-      size: 10000,
     };
     
     // 검색 콜백 실행
@@ -235,8 +234,12 @@ function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = f
               >
                 <option value="LATEST">최신순</option>
                 <option value="OLDEST">오래된순</option>
-                <option value="PRICE_ASC">낮은가격순</option>
-                <option value="PRICE_DESC">높은가격순</option>
+                {showSortedFilter && (
+                  <>
+                    <option value="PRICE_ASC">낮은가격순</option>
+                    <option value="PRICE_DESC">높은가격순</option>
+                  </>
+                )}
               </select>
             </div>
           </div>

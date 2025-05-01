@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ListForm = ({ orders = [], loading = false, error = null }) => {
+const OrderList = ({ orders = [], loading = false, error = null }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -102,4 +102,4 @@ const ListForm = ({ orders = [], loading = false, error = null }) => {
   );
 };
 
-export default ListForm;
+export default OrderList;
