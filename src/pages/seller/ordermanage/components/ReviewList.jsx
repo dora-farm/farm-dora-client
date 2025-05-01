@@ -79,9 +79,11 @@ const ReviewList = ({reviews = [], loading = false, error = null}) => {
                   size="small"
                   precision={1}
                   sx={{
-                    color: '#1CA673', // 초록색 별점
+                    color: '#1CA673', // 채워진 별 색상
                     '& .MuiRating-iconEmpty': {
-                      color: '#E5E7EB' // 빈 별 색상
+                      color: '#E5E7EB', // 빈 별 색상
+                      stroke: '#1CA673', // 빈 별 테두리 색상
+                      strokeWidth: 0.5 // 테두리 두께
                     }
                   }}
                 />
