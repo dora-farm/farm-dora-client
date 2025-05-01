@@ -4,6 +4,7 @@ import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
 import OrderList from './components/OrderList';
 import Pagination from '../../../common/components/Pagination';
+import OrderDetailModal from './components/OrderDetailModal';
 
 function Refund() {
   const itemsPerPage = 10;
@@ -18,6 +19,10 @@ function Refund() {
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(false);
 
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [orderDetail, setOrderDetail] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
   const handleSearch = async (params) => {
     try {
       setLoading(true);
@@ -74,7 +79,31 @@ function Refund() {
       keyword: "",
       page: 0,
       size: itemsPerPage,
-    }), [startDate, endDate]);
+    }), [startDate, endDate, itemsPerPage]);
+
+    const loadOrderDetail = async (orderId) => {
+      if (!orderId) return;
+  
+      try {
+        setDetailLoading(true);
+        const response = await axios.get(
+          `http://localhost:8010/api/my/seller/order/detail`, 
+          { params: { orderId } }
+        );
+  
+        if (response.status === 200) {
+          setOrderDetail(response.data.data);
+          setModalOpen(true);
+        } else {
+          throw new Error(response.data?.message || '주문 상세 정보를 가져오는데 실패했습니다.');
+        }
+      } catch (error) {
+        console.log("주문 상세정보를 불러올 수 없습니다.", error.message);
+        setError(error.message);
+      } finally {
+        setDetailLoading(false);
+      }
+    };
     
     useEffect(() => {
       setSearchParams(initialParams); // ← 초기값 저장
@@ -122,6 +151,11 @@ function Refund() {
       }
     })();
   }, [searchParams, itemsPerPage]);
+
+  const handleOrderClick = (newOrder) => {
+    setSelectedOrder(newOrder);
+    loadOrderDetail(newOrder.orderId);
+  }
   
   return (
     <div className="space-y-6">
@@ -139,6 +173,7 @@ function Refund() {
           orders={refundOrders}
           loading={loading}
           error={error}
+          onOrderClick={handleOrderClick}
         />
       </Container>
       {totalPages > 1 && (
@@ -153,6 +188,17 @@ function Refund() {
           hoverColor="hover:bg-gray-100"
         />
       )}
+
+      <OrderDetailModal
+        detail={orderDetail}
+        order={selectedOrder}
+        loading={detailLoading}
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setOrderDetail(null);
+        }}
+      />
     </div>
   )
 }

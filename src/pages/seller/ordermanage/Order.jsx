@@ -177,7 +177,7 @@ function Order() {
       </Container>
       <Container>        
         <OrderList 
-          orders={orders} // 이제 currentOrders가 아닌 orders 사용
+          orders={orders}
           loading={loading}
           error={error}
           onOrderClick={handleOrderClick}
@@ -198,7 +198,7 @@ function Order() {
 
       <OrderDetailModal
         detail={orderDetail}
-        order={orders}
+        order={selectedOrder}
         loading={detailLoading}
         isOpen={modalOpen}
         onClose={() => {

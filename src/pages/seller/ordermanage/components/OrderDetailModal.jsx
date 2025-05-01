@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import ClearIcon from '@mui/icons-material/Clear';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-
+import React, { useState, useEffect } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 
 const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState("product");
 
   useEffect(() => {
     if (isOpen) {
@@ -20,20 +23,22 @@ const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
 
   const handleClose = () => {
     setIsVisible(false);
-    // 애니메이션 시간만큼 지연 후 실제 닫기 함수 호출
     setTimeout(() => {
       onClose();
-    }, 300); // 트랜지션 시간과 일치시킴 (300ms)
+    }, 300);
   };
 
   if (!isOpen) return null;
-  
+
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-lg w-full max-w-2xl">
+        <div className="bg-white p-6 rounded-lg w-full max-w-2xl shadow-xl">
           <div className="flex justify-center items-center p-8">
-            <div className="text-gray-500">상세 정보를 불러오는 중입니다...</div>
+            <div className="flex flex-col items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
+              <div className="text-gray-700 font-medium">상세 정보를 불러오는 중입니다...</div>
+            </div>
           </div>
         </div>
       </div>
@@ -42,131 +47,208 @@ const OrderDetailModal = ({ order, detail, loading, isOpen, onClose }) => {
 
   const formatDate = (dateString) => {
     if (!dateString) return "-";
-    
+
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
   const formatPrice = (price) => {
     if (price === undefined || price === null) return "-";
-    return price.toLocaleString() + '원';
+    return price.toLocaleString() + "원";
   };
 
-  const formatProductTitle = (order) => {
-    if (!order.products) return "-";
+  // 총 상품 가격 계산
+  const calculateTotalPrice = () => {
+    if (!order || !order.products) return 0;
     
-    // products가 배열인 경우
-    if (Array.isArray(order.products)) {
-      if (order.products.length === 0) return "-";
-      if (order.products.length === 1) return order.products[0].saleTitle || "-";
-      return `${order.products[0].saleTitle} 외 ${order.products.length - 1}건`;
-    }
-    
-    // products가 객체인 경우 (이미 변환된 데이터)
-    return order.products.saleTitle || "-";
+    return order.products.reduce((total, product) => {
+      if (!product.options) return total;
+      
+      const productTotal = product.options.reduce(
+        (sum, option) => sum + option.price,
+        0
+      );
+      
+      return total + productTotal;
+    }, 0);
   };
 
   return (
-    <div 
-      className={`fixed inset-0 bg-black transition-opacity duration-300 flex items-center justify-center z-50 ${
-        isVisible ? 'bg-opacity-50' : 'bg-opacity-0'
-      } ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+    <div
+      className={`fixed inset-0 bg-black transition-opacity duration-300 flex items-center justify-center z-50 select-none ${
+        isVisible ? "bg-opacity-60" : "bg-opacity-0"
+      } ${isVisible ? "opacity-100" : "opacity-0"}`}
       onClick={handleClose}
     >
-      <div 
-        className={`bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto transition-transform duration-300 ${
-          isVisible ? 'translate-y-0 scale-100' : 'translate-y-8 scale-95'
+      <div
+        className={`bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-hidden transition-transform duration-300 shadow-2xl ${
+          isVisible ? "translate-y-0 scale-100" : "translate-y-8 scale-95"
         }`}
-        onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 이벤트 버블링 방지
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">주문 상세 정보</h2>
-          <button 
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none"
+        {/* 헤더 섹션 - 좀 더 눈에 띄게 */}
+        <div className="bg-brown text-white py-4 px-6 flex justify-between items-center">
+          <h2 className="text-xl font-bold flex items-center">
+            <ReceiptIcon className="mr-2" />
+            주문 상세 정보
+          </h2>
+          <button
+            onClick={handleClose}
+            className="text-white hover:text-gray-200 focus:outline-none"
           >
             <ClearIcon />
           </button>
         </div>
-        
-        <div className="pb-4 mb-8">
-          <h3 className="font-bold mb-4">주문 기본 정보</h3>
-          <div className="border-2 p-3 rounded-lg flex flex-col space-y-2">
-            <div className="grid grid-cols-4 gap-2">
-              <div className="text-gray-600">주문자</div>
-              <div>{detail.userName || "-"}</div>
-              <div className="text-gray-600">전화번호</div>
-              <div>{detail.phoneNum}</div>
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              <div className="text-gray-600">주소</div>
-              <div className="text-left col-span-3">
-                <div className="text-left col-span-3 flex items-center p-2">
-                  <LocationOnIcon />
-                  <div className="ml-4">
-                    {detail.address.postNum && (
-                      <div className="text-gray-500 text-xs mt-1">우편번호: {detail.address.postNum}</div>
-                    )}
-                    <span className="font-medium">{detail.address.addr}</span>
-                    <span className="text-gray-600 text-sm">{detail.address.detailAddr}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+        {/* 탭 네비게이션 */}
+        <div className="border-b border-gray-200 px-6">
+          <div className="flex space-x-6">
+            <button
+              onClick={() => setActiveTab("product")}
+              className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
+                activeTab === "product"
+                  ? "border-amber-600 text-amber-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <ShoppingBagIcon className="mr-2" fontSize="small" />
+              상품 정보
+            </button>
+            <button
+              onClick={() => setActiveTab("shipping")}
+              className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
+                activeTab === "shipping"
+                  ? "border-amber-600 text-amber-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <LocalShippingIcon className="mr-2" fontSize="small" />
+              배송지 정보
+            </button>
           </div>
         </div>
-        
-        <div className="pb-4 mb-4">
-          <h3 className="font-bold mb-2">상품 정보</h3>
-          <div className="space-y-4">
-            <div className="border-2 p-3 rounded-lg">
-              <div className="grid grid-cols-1 gap-2">
-                {/* 상품명 섹션 */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="text-gray-600">상품명</div>
-                  <div>-</div>
+
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+          {/* 상품 정보 탭 */}
+          {activeTab === "product" && (
+            <div className="space-y-6">
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-bold text-gray-800">상품 목록</h3>
+                  <div className="text-sm text-gray-500">
+                    주문일자: {formatDate(order?.createdDate)}
+                  </div>
                 </div>
-                
-                {/* 옵션 섹션 */}
-                <div>
-                  <div className="text-gray-600 mb-2 font-medium">옵션</div>
-                  <div className="ml-2 pl-3 border-gray-200">
-                    {/* 옵션 항목들 */}
-                    <div className="grid grid-cols-3 gap-2 mb-2">
-                      <div className="text-gray-600">옵션명</div>
-                      <div className="text-gray-600">수량</div>
-                      <div className="text-gray-600">가격</div>
+                <div className="bg-amber-50 px-4 py-3 rounded-lg mb-2 text-amber-900 text-sm">
+                  주문 상태: <span className="font-semibold">{order?.orderStatus || "-"}</span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {order && order.products && order.products.length > 0 ? (
+                  order.products.map((product, productIndex) => (
+                    <div
+                      key={`product-${product.saleId}-${productIndex}`}
+                      className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div className="p-4">
+                        {/* 옵션 섹션 */}
+                        <div className="mt-3">
+                          <div className="bg-gray-50 py-2 px-3 rounded-t-md border border-gray-200">
+                            <div className="grid grid-cols-3 text-sm font-medium text-gray-600">
+                              <div>옵션명</div>
+                              <div>수량</div>
+                              <div>가격</div>
+                            </div>
+                          </div>
+                          <div className="border-x border-b border-gray-200 rounded-b-md overflow-hidden">
+                            {product.options &&
+                              product.options.map((option, optionIndex) => (
+                                <div
+                                  key={`option-${option.optionId}-${optionIndex}`}
+                                  className="grid grid-cols-3 py-2 px-3 text-sm"
+                                >
+                                  <div className="font-medium text-gray-700">{option.name}</div>
+                                  <div>{option.count}개</div>
+                                  <div className="font-semibold text-amber-700">
+                                    {formatPrice(option.price)}
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    
-                    {/* 옵션 값 (여러 개일 경우 map으로 반복) */}
-                    <div className="grid grid-cols-3 gap-2">
-                      <div>옵션 A</div>
-                      <div>2개</div>
-                      <div>10,000원</div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="text-gray-500">상품 정보가 없습니다.</div>
+                  </div>
+                )}
+              </div>
+
+              {/* 총 결제금액 */}
+              <div className="bg-gray-100 p-4 rounded-lg mt-4">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium text-gray-700">총 결제금액</span>
+                  <span className="text-xl font-bold text-amber-700">
+                    {formatPrice(order?.totalPrice || calculateTotalPrice())}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 배송 정보 탭 */}
+          {activeTab === "shipping" && (
+            <div className="space-y-6">
+              <div className="mb-4">
+                <h3 className="text-lg font-bold text-gray-800 mb-3">배송 정보</h3>
+                <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">주문자</div>
+                      <div className="font-medium text-gray-800">{detail.userName || "-"}</div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div>옵션 B</div>
-                      <div>1개</div>
-                      <div>5,000원</div>
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">연락처</div>
+                      <div className="font-medium text-gray-800">{detail.phoneNum || "-"}</div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="text-sm text-gray-500 mb-1">배송지</div>
+                    <div className="bg-gray-50 rounded-md p-3 flex items-start mt-1">
+                      <LocationOnIcon className="text-amber-600 mr-2 mt-1" />
+                      <div>
+                        {detail.address?.postNum && (
+                          <div className="text-xs text-gray-500 mb-1">
+                            우편번호: {detail.address.postNum}
+                          </div>
+                        )}
+                        <div className="font-medium text-gray-800">{detail.address?.addr || "-"}</div>
+                        <div className="text-gray-600 text-sm mt-1">
+                          {detail.address?.detailAddr || "-"}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            </div>
-            <div className="text-gray-500">상품 정보가 없습니다.</div>
+          )}
         </div>
-        
-        <div className="flex justify-end mt-6">
+
+        <div className="bg-gray-50 px-6 py-4 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 focus:outline-none"
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors font-medium"
           >
             닫기
           </button>
