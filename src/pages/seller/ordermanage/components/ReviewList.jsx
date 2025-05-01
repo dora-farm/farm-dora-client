@@ -38,17 +38,17 @@ const ReviewList = ({reviews = [], loading = false, error = null}) => {
   };
   
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto">
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
         <thead className="bg-brown text-white">
           <tr>
-            <th className="border px-4 py-2 min-w-[80px] text-center">리뷰번호</th>
-            <th className="border px-4 py-2 min-w-[70px] text-center">작성자</th>
+            <th className="border px-4 py-2 min-w-[50px] text-center">No.</th>
+            <th className="border px-4 py-2 min-w-[80px] text-center">작성자</th>
             <th className="border px-4 py-2 min-w-[150px] text-center">상품명</th>
-            <th className="border px-4 py-2 min-w-[200px] text-center">내용</th>
+            <th className="border px-4 py-2 min-w-[230px] text-center">내용</th>
             <th className="border px-4 py-2 min-w-[100px] text-center">작성시간</th>
             <th className="border px-4 py-2 min-w-[100px] text-center">별점</th>
-            <th className="border px-4 py-2 min-w-[58px] text-center">답변</th>
+            <th className="border px-4 py-2 min-w-[68px] text-center">답변</th>
           </tr>
         </thead>
         <tbody>

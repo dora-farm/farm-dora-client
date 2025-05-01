@@ -45,16 +45,16 @@ const InquiryList = ({loading = false, error = null, questions = [],}) => {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto">
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
         <thead className="bg-brown text-white">
           <tr>
-            <th className="border px-4 py-2 min-w-[80px] text-center">문의번호</th>
+            <th className="border px-4 py-2 min-w-[50px] text-center">No.</th>
             <th className="border px-4 py-2 min-w-[200px] text-center">상품명</th>
             <th className="border px-4 py-2 min-w-[240px] text-center">문의명</th>
-            <th className="border px-4 py-2 min-w-[70px] text-center">작성자</th>
+            <th className="border px-4 py-2 min-w-[75px] text-center">작성자</th>
             <th className="border px-4 py-2 min-w-[100px] text-center">작성시간</th>
-            <th className="border px-4 py-2 min-w-[58px] text-center">답변</th>
+            <th className="border px-4 py-2 min-w-[68px] text-center">답변</th>
           </tr>
         </thead>
         <tbody>
@@ -80,8 +80,6 @@ const InquiryList = ({loading = false, error = null, questions = [],}) => {
               </td>
               <td className={"border-b border-gray-300 px-4 py-4 text-center text-sm font-medium"}>
               {formatProcess(question.process)}
-              </td>
-              <td className="border-b border-gray-300 px-4 py-4 text-center text-sm font-medium">
               </td>
             </tr>
           ))}

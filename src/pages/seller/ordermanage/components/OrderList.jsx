@@ -58,16 +58,16 @@ const OrderList = ({ orders = [], loading = false, error = null, onOrderClick = 
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto">
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
         <thead className="bg-brown text-white">
           <tr>
-            <th className="border px-4 py-2 min-w-[80px] text-center">주문번호</th>
-            <th className="border px-4 py-2 min-w-[280px] text-center">상품명</th>
+            <th className="border px-4 py-2 min-w-[50px] text-center">No.</th>
+            <th className="border px-4 py-2 min-w-[330px] text-center">상품명</th>
             <th className="border px-4 py-2 min-w-[100px] text-center">주문일시</th>
             <th className="border px-4 py-2 min-w-[100px] text-center">주문자</th>
             <th className="border px-4 py-2 min-w-[100px] text-center">주문금액</th>
-            <th className="border px-4 py-2 min-w-[98px] text-center">주문상태</th>
+            <th className="border px-4 py-2 min-w-[100px] text-center">주문상태</th>
           </tr>
         </thead>
         <tbody>
