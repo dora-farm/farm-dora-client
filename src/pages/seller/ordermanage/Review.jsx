@@ -8,7 +8,7 @@ import Pagination from '../../../common/components/Pagination';
 function Review() {
   const itemsPerPage = 10;
   const [loading, setLoading] = useState(false);
-  const[error, setError] = useState(null);
+  const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [searchParams, setSearchParams] = useState([]);
 

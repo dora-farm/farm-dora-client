@@ -1,13 +1,14 @@
-import React from "react";
-import Rating from '@mui/material/Rating';
+import React from 'react'
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
-const ReviewList = ({reviews = [], loading = false, error = null}) => {
+const InquiryList = ({loading = false, error = null, questions = [],}) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
         <div className="text-gray-500">데이터를 불러오는 중입니다...</div>
       </div>
-    );
+    )
   }
   if (error) {
     return (
@@ -17,7 +18,7 @@ const ReviewList = ({reviews = [], loading = false, error = null}) => {
     );
   }
 
-  if (!reviews || reviews.length === 0) {
+  if (!questions || questions.length === 0) {
     return (
       <div className="flex justify-center items-center p-8">
         <div className="text-gray-500">주문 내역이 없습니다.</div>
@@ -36,58 +37,51 @@ const ReviewList = ({reviews = [], loading = false, error = null}) => {
     
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
-  
+
+  const formatProcess = (process) => {
+    if (process) {
+      return <CheckIcon color="success" fontSize="small" />;
+    } return <CloseIcon color="warning" fontSize="small" />;
+  }
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
         <thead className="bg-brown text-white">
           <tr>
-            <th className="border px-4 py-2 min-w-[80px] text-center">리뷰번호</th>
+            <th className="border px-4 py-2 min-w-[80px] text-center">문의번호</th>
+            <th className="border px-4 py-2 min-w-[200px] text-center">상품명</th>
+            <th className="border px-4 py-2 min-w-[240px] text-center">문의명</th>
             <th className="border px-4 py-2 min-w-[70px] text-center">작성자</th>
-            <th className="border px-4 py-2 min-w-[150px] text-center">상품명</th>
-            <th className="border px-4 py-2 min-w-[200px] text-center">내용</th>
             <th className="border px-4 py-2 min-w-[100px] text-center">작성시간</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">별점</th>
             <th className="border px-4 py-2 min-w-[58px] text-center">답변</th>
           </tr>
         </thead>
         <tbody>
-          {reviews.map((review) => (
+          {questions.map((question) => (
             <tr 
-              key={review.reviewId} 
+              key={question.questionId} 
               className="hover:bg-gray-100 transition-colors cursor-default"
             >
               <td className="border-b border-gray-300 px-5 py-4 text-center text-sm font-medium">
-                {review.reviewId}
+                {question.questionId}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm">
-                {review.writer}
+              {question.saleTitle}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm">
-              {review.saleTitle}
+              {question.questionTitle}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm">
-              {review.reviewContent}
+              {question.userName}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm font-medium">
-              {formatDate(review.createdDate)}
+              {formatDate(question.createdDate)}
               </td>
               <td className={"border-b border-gray-300 px-4 py-4 text-center text-sm font-medium"}>
-                <Rating
-                  value={review.score}
-                  readOnly
-                  size="small"
-                  precision={1}
-                  sx={{
-                    color: '#1CA673', // 초록색 별점
-                    '& .MuiRating-iconEmpty': {
-                      color: '#E5E7EB' // 빈 별 색상
-                    }
-                  }}
-                />
+              {formatProcess(question.process)}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm font-medium">
-              {review.reply}
               </td>
             </tr>
           ))}
@@ -97,4 +91,4 @@ const ReviewList = ({reviews = [], loading = false, error = null}) => {
   );
 }
 
-export default ReviewList;
+export default InquiryList;
