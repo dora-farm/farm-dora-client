@@ -120,18 +120,6 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
             </button>
             
             <button
-              onClick={() => setActiveTab("product")}
-              className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
-                activeTab === "product"
-                  ? "border-amber-600 text-amber-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              <ShoppingBagIcon className="mr-2" fontSize="small" />
-              상품 정보
-            </button>
-            
-            <button
               onClick={() => setActiveTab("reply")}
               className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
                 activeTab === "reply"
@@ -141,6 +129,18 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
             >
               <CommentIcon className="mr-2" fontSize="small" />
               답변 관리
+            </button>
+            
+            <button
+              onClick={() => setActiveTab("product")}
+              className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
+                activeTab === "product"
+                  ? "border-amber-600 text-amber-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <ShoppingBagIcon className="mr-2" fontSize="small" />
+              상품 정보
             </button>
           </div>
         </div>
