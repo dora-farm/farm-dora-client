@@ -21,7 +21,7 @@ function WishlistItem({
   if (previewMode) {
     return (
       <Link
-        to={`/product/${item.saleId}`}
+        to={`/sale/${item.saleId}`}
         className="bg-white border border-gray-dark rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
       >
         <div className="relative h-48 overflow-hidden">
