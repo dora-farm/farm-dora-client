@@ -6,12 +6,28 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+    }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+        if (id.includes('node_modules/@ckeditor')) {
+          return 'vendor-ckeditor';
+        }
+        if (id.includes('node_modules/react') || 
+            id.includes('node_modules/react-dom')) {
+          return 'vendor-react';
+        }
+        if (id.includes('node_modules')) {
+          return 'vendor';
+        }
+      }
     }
   },
   server: {
@@ -21,5 +37,6 @@ export default defineConfig({
       'distinguished-venezuela-household-rangers.trycloudflare.com', //cloudflare 임시테스트
       // 다른 허용할 호스트들...
     ]
+  }
   }
 }); 
