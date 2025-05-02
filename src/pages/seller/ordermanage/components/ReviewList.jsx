@@ -1,7 +1,7 @@
 import React from "react";
 import Rating from '@mui/material/Rating';
 
-const ReviewList = ({reviews = [], loading = false, error = null}) => {
+const ReviewList = ({reviews = [], loading = false, error = null, onReviewClick = () => {} }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -42,20 +42,21 @@ const ReviewList = ({reviews = [], loading = false, error = null}) => {
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
         <thead className="bg-brown text-white">
           <tr>
-            <th className="border px-4 py-2 min-w-[50px] text-center">No.</th>
-            <th className="border px-4 py-2 min-w-[80px] text-center">작성자</th>
-            <th className="border px-4 py-2 min-w-[150px] text-center">상품명</th>
-            <th className="border px-4 py-2 min-w-[230px] text-center">내용</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">작성시간</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">별점</th>
-            <th className="border px-4 py-2 min-w-[68px] text-center">답변</th>
+            <th className="border px-2 py-2 w-[5%] text-center">No.</th>
+            <th className="border px-2 py-2 w-[10%] text-center">작성자</th>
+            <th className="border px-2 py-2 w-[15%] text-center">상품명</th>
+            <th className="border px-2 py-2 w-[35%] text-center">내용</th>
+            <th className="border px-2 py-2 w-[15%] text-center">작성시간</th>
+            <th className="border px-2 py-2 w-[12%] text-center">별점</th>
+            <th className="border px-2 py-2 w-[8%] text-center">답변</th>
           </tr>
         </thead>
         <tbody>
           {reviews.map((review) => (
             <tr 
               key={review.reviewId} 
-              className="hover:bg-gray-100 transition-colors cursor-default"
+              className="hover:bg-gray-100 transition-colors cursor-pointer"
+              onClick={() => onReviewClick(review)}
             >
               <td className="border-b border-gray-300 px-5 py-4 text-center text-sm font-medium">
                 {review.reviewId}

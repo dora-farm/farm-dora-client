@@ -19,6 +19,12 @@ function Review() {
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
 
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [reviewDetail, setReviewDetail] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  
+
   const handleSearch = async (params) => {
     try {
       setLoading(true);
@@ -82,6 +88,30 @@ function Review() {
     size: itemsPerPage, // 페이지 크기 설정
   }), [startDate, endDate, itemsPerPage]);
   
+  const loadReviewDetail = async (reviewId) => {
+    if (!reviewId) return;
+
+    try {
+      setDetailLoading(true);
+      const response = await axios.get(
+        `http://localhost:8010/api/my/seller/order/review`, 
+        { params: { reviewId } }
+      );
+
+      if (response.status === 200) {
+        setReviewDetail(response.data.data);
+        setModalOpen(true);
+      } else {
+        throw new Error(response.data?.message || '주문 상세 정보를 가져오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.log("주문 상세정보를 불러올 수 없습니다.", error.message);
+      setError(error.message);
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+  
   useEffect(() => {
     setSearchParams(initialParams);
     handleSearch(initialParams);
@@ -134,6 +164,11 @@ function Review() {
     })();
   }, [searchParams, itemsPerPage]);
 
+  const handleReviewClick = (review) => {
+    setSelectedReview(review);
+    loadReviewDetail(review.reviewId);
+  }
+
   return (
     <div className="space-y-6">
       <Container>
@@ -148,6 +183,7 @@ function Review() {
           reviews={reviews}
           loading={loading}
           error={error}
+          onReviewClick={handleReviewClick}
         />
       </Container>
       {totalPages > 1 && (
@@ -162,6 +198,16 @@ function Review() {
           hoverColor="hover:bg-gray-100"
         />
       )}
+      <ReviewDetailModal 
+        detail={reviewDetail}
+        review={selectedReview}
+        loading={detailLoading}
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setReviewDetail(null);
+        }}
+      />
     </div>
   )
 }

@@ -49,12 +49,12 @@ const InquiryList = ({loading = false, error = null, questions = [],}) => {
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
         <thead className="bg-brown text-white">
           <tr>
-            <th className="border px-4 py-2 min-w-[50px] text-center">No.</th>
-            <th className="border px-4 py-2 min-w-[200px] text-center">상품명</th>
-            <th className="border px-4 py-2 min-w-[240px] text-center">문의명</th>
-            <th className="border px-4 py-2 min-w-[75px] text-center">작성자</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">작성시간</th>
-            <th className="border px-4 py-2 min-w-[68px] text-center">답변</th>
+            <th className="border px-4 py-2 w-[7%] text-center">No.</th>
+            <th className="border px-4 py-2 w-[22%] text-center">상품명</th>
+            <th className="border px-4 py-2 w-[30%] text-center">문의명</th>
+            <th className="border px-4 py-2 w-[11%] text-center">작성자</th>
+            <th className="border px-4 py-2 w-[18%] text-center">작성시간</th>
+            <th className="border px-4 py-2 w-[12%] text-center">답변</th>
           </tr>
         </thead>
         <tbody>

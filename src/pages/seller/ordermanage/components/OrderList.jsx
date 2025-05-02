@@ -62,12 +62,12 @@ const OrderList = ({ orders = [], loading = false, error = null, onOrderClick = 
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
         <thead className="bg-brown text-white">
           <tr>
-            <th className="border px-4 py-2 min-w-[50px] text-center">No.</th>
-            <th className="border px-4 py-2 min-w-[330px] text-center">상품명</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">주문일시</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">주문자</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">주문금액</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">주문상태</th>
+            <th className="border px-4 py-2 w-[7%] text-center">No.</th>
+            <th className="border px-4 py-2 w-[30%] text-center">상품명</th>
+            <th className="border px-4 py-2 w-[22%] text-center">주문일시</th>
+            <th className="border px-4 py-2 w-[11%] text-center">주문자</th>
+            <th className="border px-4 py-2 w-[18%] text-center">주문금액</th>
+            <th className="border px-4 py-2 w-[12%] text-center">주문상태</th>
           </tr>
         </thead>
         <tbody>

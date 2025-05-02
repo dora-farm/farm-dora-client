@@ -5,7 +5,6 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 // refund 매개변수 추가
 const OrderDetailModal = ({ order, detail, refund, loading, isOpen, onClose }) => {
