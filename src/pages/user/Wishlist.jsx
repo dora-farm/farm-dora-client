@@ -139,7 +139,7 @@ function Wishlist() {
     <div className="container mx-auto px-4 py-8 select-none cursor-default">
       <h1 className="text-2xl font-bold text-center mb-8">찜 리스트</h1>
 
-      <div className="border-y-2 border-gray-dark py-4 mb-4">
+      <div className="border-y-2 border-gray py-4 mb-4">
         <div className="flex items-center ml-4 justify-between">
           <div className="flex items-center ml-14">
             <GreenCircleCheckbox checked={isAllSelected} onChange={toggleSelectAll}/>
