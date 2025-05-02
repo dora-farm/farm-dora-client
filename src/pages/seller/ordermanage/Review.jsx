@@ -39,7 +39,7 @@ function Review() {
       setCurrentPage(0);
 
       const response = await axios.get(
-        `http://localhost:8030/my/seller/order/review`,
+        `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/review`,
         { 
           params: {
             ...searchParams,
@@ -94,7 +94,7 @@ function Review() {
     try {
       setDetailLoading(true);
       const response = await axios.get(
-        `http://localhost:8010/api/my/seller/order/review`, 
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review`, 
         { params: { reviewId } }
       );
 
@@ -134,7 +134,7 @@ function Review() {
         setLoading(true);
         
         const response = await axios.get(
-          `http://localhost:8030/my/seller/order/review`,
+          `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/review`,
           { 
             params: {
               ...pageParams,

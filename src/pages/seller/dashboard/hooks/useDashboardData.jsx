@@ -104,7 +104,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `http://localhost:8010/api/my/seller/dashboard/sales`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/sales`,
         {
           params: {
             sellerId,
@@ -147,7 +147,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
   const loadProductRatioData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8010/api/my/seller/dashboard/product`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/product`,
         {
           params: { sellerId },
         }
@@ -193,7 +193,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
   const loadStatusRatioData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8010/api/my/seller/dashboard/status`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/status`,
         {
           params: { sellerId },
         }
@@ -247,7 +247,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `http://localhost:8010/api/admin/dashboard/sales`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/dashboard/sales`,
         {
           params: {
             startDate,
@@ -299,7 +299,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `http://localhost:8010/api/admin/dashboard/joins`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/dashboard/joins`,
         {
           params: {
             startDate,

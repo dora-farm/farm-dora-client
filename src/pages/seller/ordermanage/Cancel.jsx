@@ -39,7 +39,7 @@ function Cancel() {
       setCurrentPage(0);
 
       const response = await axios.get(
-        `http://localhost:8030/my/seller/order/search`,
+        `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
         { params: modifiedParams }
       );
 
@@ -88,7 +88,7 @@ function Cancel() {
       try {
         setDetailLoading(true);
         const response = await axios.get(
-          `http://localhost:8010/api/my/seller/order/detail`, 
+          `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/detail`, 
           { params: { orderId } }
         );
   
@@ -128,7 +128,7 @@ function Cancel() {
         setLoading(true);
         
         const response = await axios.get(
-          `http://localhost:8030/my/seller/order/search`,
+          `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
           { params: pageParams }
         );
         

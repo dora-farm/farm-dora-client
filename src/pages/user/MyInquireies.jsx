@@ -36,7 +36,7 @@ function MyInquiries() {
     try {
 
       const response = await axios.get(
-        `http://localhost:8010/api/my/user/question`, 
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/question`, 
         {
           params: {
             userId,

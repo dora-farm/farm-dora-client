@@ -32,7 +32,7 @@ function Inquiry() {
       setCurrentPage(0);
 
       const response = await axios.get(
-        `http://localhost:8030/my/seller/order/inquiry`,
+        `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/inquiry`,
         { 
           params: {
             ...searchParams,
@@ -103,7 +103,7 @@ function Inquiry() {
         setLoading(true);
         
         const response = await axios.get(
-          `http://localhost:8030/my/seller/order/inquiry`,
+          `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/inquiry`,
           { 
             params: {
               ...pageParams,
