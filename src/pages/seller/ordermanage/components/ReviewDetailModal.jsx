@@ -191,18 +191,18 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                 </div>
                 
                 {/* 사진 목록 */}
-                {detail?.saveFile && detail.saveFile.length > 0 ? (
+                {Array.isArray(detail) && detail.length > 0 ? (
                   <div className="mt-6">
                     <div className="text-sm text-gray-500 mb-3">첨부 사진</div>
                     <div className="grid grid-cols-2 gap-4">
-                      {detail.saveFile.map((file, index) => (
+                      {detail.map((item, index) => (
                         <div 
                           key={`file-${index}`}
                           className="border border-gray-200 rounded-lg overflow-hidden shadow-sm"
                         >
                           {!imageErrors[index] ? (
                             <img
-                              src={formatImageUrl(file)}
+                              src={formatImageUrl(item.saveFile)}
                               alt={`리뷰 이미지 ${index + 1}`}
                               className="w-full h-48 object-cover"
                               onError={() => handleImageError(index)}
