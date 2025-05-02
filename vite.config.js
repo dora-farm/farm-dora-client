@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default defineConfig({
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
@@ -29,7 +30,7 @@ export default defineConfig({
         }
       }
     }
-  },
+  }},
   server: {
     port: 3000,
     allowedHosts: [
@@ -37,6 +38,5 @@ export default defineConfig({
       'distinguished-venezuela-household-rangers.trycloudflare.com', //cloudflare 임시테스트
       // 다른 허용할 호스트들...
     ]
-  }
   }
 }); 
