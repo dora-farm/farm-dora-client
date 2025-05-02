@@ -1,8 +1,8 @@
 import React from 'react';
-import naver from '../../../assets/images/naver.png';
-import kakaoN from '../../../assets/images/kakaoN.png';
-import kakaoI from '../../../assets/images/kakaoI.png';
-import google from '../../../assets/images/google.png';
+import naver from '@/assets/images/naver.png';
+import kakaoN from '@/assets/images/kakaoN.png';
+import kakaoI from '@/assets/images/kakaoI.png';
+import google from '@/assets/images/google.png';
 
 
 const SocialLoginButton = ({ onLogin, onRegister, title, className }) => {
