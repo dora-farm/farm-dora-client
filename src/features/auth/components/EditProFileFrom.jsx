@@ -288,7 +288,7 @@ const EditProFileFrom = () => {
                                 주소 검색
                             </button>
                             {isPostOpen && (
-                                <div className="absolute z-50 mt-2 w-1/4 bg-white border rounded shadow">
+                                <div className="absolute z-50 mt-2 bg-white border rounded shadow">
                                     <DaumPostcode onComplete={handleComplete} autoClose/>
                                     <button type="button" onClick={() => setIsPostOpen(false)}
                                             className="w-full text-center text-sm py-1 border-t">

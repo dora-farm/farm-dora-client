@@ -1,6 +1,10 @@
+import JoinSellerForm from "../../features/auth/components/JoinSellerForm.jsx";
+
 function JoinSeller() {
     return (
-        <div>JoinSeller</div>
+        <div className={`w-full`}>
+            <JoinSellerForm />
+        </div>
     )
 }
 
