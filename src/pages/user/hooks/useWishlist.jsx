@@ -89,7 +89,7 @@ export function useWishlist(userId, previewMode) {
   const deleteSingleItem = useCallback(async (likeId) => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}api/my/user/like`, {
+      const response = await axios.delete(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/like`, {
         data: [likeId],
       });
       

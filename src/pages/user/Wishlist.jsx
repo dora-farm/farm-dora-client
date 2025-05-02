@@ -125,7 +125,7 @@ function Wishlist() {
         <div className="flex flex-col items-center justify-center h-64 border border-gray-300 rounded-lg">
           <p className="text-gray-500 mb-4">찜한 상품이 없습니다.</p>
           <button 
-            onClick={() => window.location.href = '/products'}
+            onClick={() => window.location.href = '/'}
             className="px-4 py-2 bg-brown text-white rounded-md hover:bg-brown-dark transition-colors"
           >
             상품 둘러보기
