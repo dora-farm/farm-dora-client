@@ -37,7 +37,7 @@ function OrdermanageHome() {
     try {
       setLoading(true);
       
-      const response = await axios.get(`http://localhost:8010/api/my/seller/order`);
+      const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order`);
 
       if (response.status === 200) {
         setStatistics(response.data.data);

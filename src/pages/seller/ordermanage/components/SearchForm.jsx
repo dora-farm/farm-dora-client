@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GreenSquareCheckbox from "../../../../common/components/GreenSquareCheckbox";
 
-function SearchForm({ onSearch, onReset, initialValues = {} }) {
+function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = false, showSortedFilter = false, }) {
 
   // 상태 관리
   const [startDate, setStartDate] = useState(initialValues.startDate || null);
@@ -17,9 +17,8 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
   });
   const [searchPeriod, setSearchPeriod] = useState(initialValues.searchPeriod || "ONE_MONTH");
   const [searchType, setSearchType] = useState(initialValues.searchType || "PRODUCT");
-  const [sort, setSort] = useState(initialValues.sort || "LATEST");
+  const [sorted, setSorted] = useState(initialValues.sorted || "LATEST");
   const [keyword, setKeyword] = useState(initialValues.keyword || "");
-  const [itemsPerPage, setItemsPerPage] = useState(initialValues.itemsPerPage?.toString() || "10");
 
   // 주문 상태 매핑 (화면 표시용)
   const statusIdsLabels = {
@@ -50,7 +49,6 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
       if (initialValues.searchPeriod) setSearchPeriod(initialValues.searchPeriod);
       if (initialValues.searchType) setSearchType(initialValues.searchType);
       if (initialValues.keyword) setKeyword(initialValues.keyword);
-      if (initialValues.itemsPerPage) setItemsPerPage(initialValues.itemsPerPage.toString());
   }, [initialValues]);
 
   // 검색 제출 핸들러
@@ -94,9 +92,8 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
       endDate: formatEndDate,
       statusIds: statusIdsParam,
       searchPeriod,
-      sort,
+      sort: sorted,
       keyword,
-      size: 10000,
     };
     
     // 검색 콜백 실행
@@ -118,9 +115,8 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
     });
     setSearchPeriod("ONE_MONTH");
     setSearchType("PRODUCT");
-    setSort("LATEST");
+    setSorted("LATEST");
     setKeyword("");
-    setItemsPerPage("10");
     
     // 초기화 콜백 실행
     if (onReset) onReset();
@@ -232,14 +228,18 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
             
             <div className="flex items-center space-x-2">
               <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
+                value={sorted}
+                onChange={(e) => setSorted(e.target.value)}
                 className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
               >
                 <option value="LATEST">최신순</option>
                 <option value="OLDEST">오래된순</option>
-                <option value="PRICE_ASC">낮은가격순</option>
-                <option value="PRICE_DESC">높은가격순</option>
+                {showSortedFilter && (
+                  <>
+                    <option value="PRICE_ASC">낮은가격순</option>
+                    <option value="PRICE_DESC">높은가격순</option>
+                  </>
+                )}
               </select>
             </div>
           </div>
@@ -298,22 +298,24 @@ function SearchForm({ onSearch, onReset, initialValues = {} }) {
         </div>
 
         {/* 세 번째 행: 주문 상태 체크박스 */}
-        <div className="flex flex-wrap items-center mb-4">
-          <label className="w-[75px] text-sm font-medium text-gray-700">
-            주문상태
-          </label>
-          <div className="flex flex-wrap gap-4">
-            {Object.entries(statusIdsLabels).map(([key, label]) => (
-              <GreenSquareCheckbox
-                key={key}
-                name={key}
-                checked={statusIds[key]}
-                onChange={handleStatusChange}
-                label={label}
-              />
-            ))}
+        {showStatusFilter && (
+          <div className="flex flex-wrap items-center mb-4">
+            <label className="w-[75px] text-sm font-medium text-gray-700">
+              주문상태
+            </label>
+            <div className="flex flex-wrap gap-4">
+              {Object.entries(statusIdsLabels).map(([key, label]) => (
+                <GreenSquareCheckbox
+                  key={key}
+                  name={key}
+                  checked={statusIds[key]}
+                  onChange={handleStatusChange}
+                  label={label}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
         
         {/* 버튼 영역 */}
         <div className="flex justify-center space-x-3 mt-2">

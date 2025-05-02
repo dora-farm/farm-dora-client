@@ -1,6 +1,7 @@
-import React from 'react';
+import React from "react";
+import Rating from '@mui/material/Rating';
 
-const ListForm = ({ orders = [], loading = false, error = null }) => {
+const ReviewList = ({reviews = [], loading = false, error = null, onReviewClick = () => {} }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -8,7 +9,6 @@ const ListForm = ({ orders = [], loading = false, error = null }) => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -17,7 +17,7 @@ const ListForm = ({ orders = [], loading = false, error = null }) => {
     );
   }
 
-  if (!orders || orders.length === 0) {
+  if (!reviews || reviews.length === 0) {
     return (
       <div className="flex justify-center items-center p-8">
         <div className="text-gray-500">주문 내역이 없습니다.</div>
@@ -36,63 +36,61 @@ const ListForm = ({ orders = [], loading = false, error = null }) => {
     
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
-
-  const formatPrice = (price) => {
-    if (price === undefined || price === null) return "-";
-    return price.toLocaleString() + '원';
-  };
-
-  // 상품명과 옵션을 포맷팅하는 함수
-  const formatProductTitle = (order) => {
-    if (!order.products) return "-";
-    
-    // products가 배열인 경우
-    if (Array.isArray(order.products)) {
-      if (order.products.length === 0) return "-";
-      if (order.products.length === 1) return order.products[0].saleTitle || "-";
-      return `${order.products[0].saleTitle} 외 ${order.products.length - 1}건`;
-    }
-    
-    // products가 객체인 경우 (이미 변환된 데이터)
-    return order.products.saleTitle || "-";
-  };
-
+  
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto">
       <table className="w-full text-sm text-left border-b border-gray-300 select-none">
         <thead className="bg-brown text-white">
           <tr>
-            <th className="border px-4 py-2 min-w-[80px] text-center">주문번호</th>
-            <th className="border px-4 py-2 min-w-[280px] text-center">상품명</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">주문일시</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">주문자</th>
-            <th className="border px-4 py-2 min-w-[100px] text-center">주문금액</th>
-            <th className="border px-4 py-2 min-w-[98px] text-center">주문상태</th>
+            <th className="border px-2 py-2 w-[5%] text-center">No.</th>
+            <th className="border px-2 py-2 w-[10%] text-center">작성자</th>
+            <th className="border px-2 py-2 w-[15%] text-center">상품명</th>
+            <th className="border px-2 py-2 w-[35%] text-center">내용</th>
+            <th className="border px-2 py-2 w-[15%] text-center">작성시간</th>
+            <th className="border px-2 py-2 w-[12%] text-center">별점</th>
+            <th className="border px-2 py-2 w-[8%] text-center">답변</th>
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
+          {reviews.map((review) => (
             <tr 
-              key={order.orderId} 
-              className="hover:bg-gray-100 transition-colors cursor-default"
+              key={review.reviewId} 
+              className="hover:bg-gray-100 transition-colors cursor-pointer"
+              onClick={() => onReviewClick(review)}
             >
               <td className="border-b border-gray-300 px-5 py-4 text-center text-sm font-medium">
-                {order.orderId || "-"}
+                {review.reviewId}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm">
-                {formatProductTitle(order)}
+                {review.writer}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm">
-                {formatDate(order.createdDate)}
+              {review.saleTitle}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm">
-                {order.buyerName || "-"}
+              {review.reviewContent}
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm font-medium">
-                {formatPrice(order.totalPrice)}
+              {formatDate(review.createdDate)}
               </td>
               <td className={"border-b border-gray-300 px-4 py-4 text-center text-sm font-medium"}>
-                {order.orderStatus || "-"}
+                <Rating
+                  value={review.score}
+                  readOnly
+                  size="small"
+                  precision={1}
+                  sx={{
+                    color: '#1CA673', // 채워진 별 색상
+                    '& .MuiRating-iconEmpty': {
+                      color: '#E5E7EB', // 빈 별 색상
+                      stroke: '#1CA673', // 빈 별 테두리 색상
+                      strokeWidth: 0.5 // 테두리 두께
+                    }
+                  }}
+                />
+              </td>
+              <td className="border-b border-gray-300 px-4 py-4 text-center text-sm font-medium">
+              {review.reply}
               </td>
             </tr>
           ))}
@@ -100,6 +98,6 @@ const ListForm = ({ orders = [], loading = false, error = null }) => {
       </table>
     </div>
   );
-};
+}
 
-export default ListForm;
+export default ReviewList;
