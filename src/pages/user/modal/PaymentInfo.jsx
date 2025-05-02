@@ -18,7 +18,7 @@ function PaymentInfo({ isOpen, onClose, orderId, orderData }) {
     const fetchPaymentInfo = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:8080/api/my/user/order/pay?orderId=${orderId}`);
+        const response = await axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/pay?orderId=${orderId}`);
         
         if (response.data.status === 200) {
           setPaymentData(response.data.data);

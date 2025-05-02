@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {getCookie} from "../../../common/utils/Cookies.jsx";
 
-const BASE_URL = 'http://localhost:8080/api/mypage/user/depot';
+const BASE_URL = `${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/user/depot`;
 const token = getCookie('jwt_token');
 
 export const fetchAddresses = async () => {

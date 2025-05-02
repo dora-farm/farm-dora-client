@@ -117,7 +117,7 @@ const JoinForm = () => {
         };
 
         try {
-            const response = await fetch("http://localhost:8080/api/auth/register/user", {
+            const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

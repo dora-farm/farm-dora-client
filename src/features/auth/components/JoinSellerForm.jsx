@@ -48,21 +48,21 @@ const JoinSellerForm = () => {
         const token = getCookie("jwt_token");
 
         try {
-           const result = await axios.post("http://localhost:8080/api/auth/register/seller", formData, {
+            const result = await axios.post(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/seller`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${token}`,
                 },
             });
-           if(result.data) {
-               setNavigateOn(true);
-               setModalMessage("입점 신청이 완료되었습니다.");
-               setShowModal(true);
-           }else {
-               setModalMessage("입점 신청이 실패되었습니다.");
-               setShowModal(true);  
-           }
-           
+            if(result.data) {
+                setNavigateOn(true);
+                setModalMessage("입점 신청이 완료되었습니다.");
+                setShowModal(true);
+            }else {
+                setModalMessage("입점 신청이 실패되었습니다.");
+                setShowModal(true);  
+            }
+            
         } catch (e) {
             setModalMessage("입점 신청이 실패했습니다.");
             setShowModal(true);

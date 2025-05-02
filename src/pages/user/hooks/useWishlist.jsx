@@ -113,7 +113,7 @@ export function useWishlist(userId, previewMode) {
       formData.append("quantity", 1);
       
       const response = await axios.post(
-        `http:///localhost:8020/api/basket`, formData);
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, formData);
 
       if (response.status === 200) {
         return true;
