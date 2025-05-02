@@ -65,6 +65,19 @@ function MyInquiries() {
     setDateRange(newRange);
     setSelectedRange(newSelected);
   };
+  // 날짜 형식 변경
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
 
   // 페이지네이션 설정
   const totalPages = Math.ceil(questions.length / itemPerPage);
@@ -94,7 +107,7 @@ function MyInquiries() {
       <div className="flex justify-between">
         <div className="w-1/6 text-center text-gray-700">{item.id}</div>
         <div className="w-2/6 pl-14 text-left font-medium">{item.title}</div>
-        <div className="w-2/6 text-center text-gray-600">{item.createDate}</div>
+        <div className="w-2/6 text-center text-gray-600">{formatDate(item.createDate)}</div>
         <div className="w-1/6 text-center">
           <span 
             className={`rounded-full px-2 py-1 text-sm justify-center 
