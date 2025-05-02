@@ -1,5 +1,5 @@
 # 빌드 단계
-FROM node:lts-alpine as build
+FROM node:20.19 as build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
