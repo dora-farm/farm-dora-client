@@ -254,7 +254,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                       <div className="flex-1">
                         <h4 className="font-medium text-gray-900 mb-1">{review?.saleTitle || "-"}</h4>
                         <div className="text-sm text-gray-500">
-                          주문 번호: {detail?.orderId || "-"}
+                          주문 번호: {Array.isArray(detail) && detail.length > 0 ? detail[0].orderId : "-"}
                         </div>
                       </div>
                     </div>
