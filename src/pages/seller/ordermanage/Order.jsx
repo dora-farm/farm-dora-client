@@ -5,7 +5,6 @@ import SearchForm from './components/SearchForm';
 import OrderList from './components/OrderList';
 import Pagination from '../../../common/components/Pagination';
 import OrderDetailModal from './components/OrderDetailModal';
-import { getCookie } from '../../../common/utils/Cookies';
 
 function Order() {
   const itemsPerPage = 10;
@@ -28,8 +27,6 @@ function Order() {
   const [detailLoading, setDetailLoading] = useState(false);
 
   const handleSearch = async (params) => {
-    const jwtToken = getCookie("jwt_token");
-    console.log(jwtToken);
     try {
       setLoading(true);
       
@@ -42,16 +39,11 @@ function Order() {
       
       setSearchParams(searchParams);
       setCurrentPage(0);    // 검색 시 첫 페이지로 초기화
-      
 
-      const jwtToken = getCookie("jwt_token");
-      console.log(jwtToken);
       const response = await axios.get(
         `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
-        { params: searchParams,
-          headers: {
-            Authorization: jwtToken ? `Bearer ${jwtToken}` : undefined
-          }
+        { 
+          params: searchParams
         }
       );
   
@@ -104,16 +96,11 @@ function Order() {
 
   const loadOrderDetail = async (orderId) => {
     if (!orderId) return;
-    const jwtToken = getCookie("jwt_token");
-    console.log(jwtToken);
     try {
       setDetailLoading(true);
       const response = await axios.get(
         `${import.meta.env.VITE_SEARCH_REST_API_URL}/api/my/seller/order/detail`, 
-        { params: { orderId },
-          headers: {
-          Authorization: jwtToken ? `Bearer ${jwtToken}` : undefined
-        } }
+        { params: { orderId } }
       );
 
       if (response.status === 200) {
@@ -153,10 +140,8 @@ function Order() {
         
         const response = await axios.get(
           `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
-          { params: pageParams,
-            headers: {
-              Authorization: jwtToken ? `Bearer ${jwtToken}` : undefined
-            }
+          { 
+            params: pageParams,
           }
         );
         
