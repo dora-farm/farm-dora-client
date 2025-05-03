@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Pagination from "../../common/components/Pagination";
+import { getCookie } from "../../common/utils/Cookies";
 
 const ProductQnA = ({ saleId }) => {
   const [qnaList, setQnaList] = useState([]);
@@ -15,9 +16,19 @@ const ProductQnA = ({ saleId }) => {
 
   const fetchQnAList = async (page) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/question/${saleId}?page=${page}`);
+      const token = getCookie('jwt_token'); // ✅ 토큰 꺼내기
+  
+      const response = await fetch(
+        `${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/question/${saleId}?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ 헤더에 토큰 추가
+          },
+        }
+      );
+  
       const result = await response.json();
-
+  
       if (result.status === 200) {
         setQnaList(result.data.contents);
         setCurrentPage(result.data.currentPage);

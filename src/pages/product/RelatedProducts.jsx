@@ -3,22 +3,38 @@ import { useNavigate } from 'react-router-dom';
 import StarIcon from '@mui/icons-material/Star';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { getCookie } from '../../common/utils/Cookies';
 import axios from 'axios';
 
 const RelatedProducts = ({ saleId }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [token, setToken] = useState(null); // ✅ 토큰 상태
   const pageSize = 5;
   const navigate = useNavigate();
 
+  // ✅ 토큰 한 번만 가져오기
   useEffect(() => {
+    const jwtToken = getCookie('jwt_token');
+    setToken(jwtToken);
+  }, []);
+
+  useEffect(() => {
+    if (!token) return;
+
     const fetchRelatedProducts = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/related/${saleId}`);
+        const response = await fetch(
+          `${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/related/${saleId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // ✅ 토큰 포함
+            },
+          }
+        );
+
         const result = await response.json();
-
         console.log(result);
-
         setRelatedProducts(result.data);
       } catch (error) {
         console.error('관련상품 조회 실패:', error);
@@ -26,11 +42,19 @@ const RelatedProducts = ({ saleId }) => {
     };
 
     fetchRelatedProducts();
-  }, [saleId]);
+  }, [saleId, token]);
 
   const handleLike = async (saleId) => {
     try {
-      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`);
+      const response = await axios.put(
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ 토큰 포함
+          },
+        }
+      );
 
       if (response.status === 200) {
         setRelatedProducts(prev =>
