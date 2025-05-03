@@ -1,0 +1,16 @@
+# CKEditor 번역 파일 제외 (영어, 한국어만 유지)
+node_modules/@ckeditor/**/translations/*.js
+!node_modules/@ckeditor/**/translations/en.js
+!node_modules/@ckeditor/**/translations/ko.js
+
+# CKEditor 기타 불필요한 파일 제외
+node_modules/@ckeditor/**/docs
+node_modules/@ckeditor/**/samples
+node_modules/@ckeditor/**/tests
+node_modules/@ckeditor/**/release
+
+*.log
+
+node_modules
+Dockerfile
+.git

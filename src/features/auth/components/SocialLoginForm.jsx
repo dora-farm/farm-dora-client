@@ -1,8 +1,8 @@
 import React from 'react';
-import naver from '../../../assets/images/naver.png';
-import kakaoN from '../../../assets/images/kakaoN.png';
-import kakaoI from '../../../assets/images/kakaoI.png';
-import google from '../../../assets/images/google.png';
+import naver from '@/assets/images/naver.png';
+import kakaoN from '@/assets/images/kakaoN.png';
+// import kakaoI from '@/assets/images/kakaoI.png';
+import google from '@/assets/images/google.png';
 
 
 const SocialLoginButton = ({ onLogin, onRegister, title, className }) => {
@@ -24,8 +24,8 @@ const SocialLoginButton = ({ onLogin, onRegister, title, className }) => {
                 <span>간편 로그인</span>
             </div>
             <div className="flex items-center justify-center py-2 border cursor-pointer" onClick={() => handleCheck("kakao")}>
-                <img src={kakaoN} className="w-15 h-4 mr-1"/>
-                <img className="h-4 mr-2" src={kakaoI}/>
+                <img src={kakaoN} className="w-15 h-4 mr-4 ml-4"/>
+                {/* <img className="h-4 mr-2" src={kakaoI}/> */}
                 <span>간편 로그인</span>
             </div>
             <div className="flex items-center justify-center py-2 border cursor-pointer" onClick={() => handleCheck("google")}>
