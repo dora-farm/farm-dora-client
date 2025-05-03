@@ -32,7 +32,7 @@ function EditProfile() {
     useEffect(() => {
         openVerifyModal({
             modalTitle: "비밀번호 입력",
-            modalContent: "로그인된 아이디의 비밀번호를 입력해주세요",
+            modalContent: "비밀번호를 입력해주세요",
             modalInputs: [
                 { label: "비밀번호", type: "password", name: "pwd", onChange: (e) => checkPwd.current = e.target.value },
             ],
@@ -41,8 +41,6 @@ function EditProfile() {
                     const result = await userPasswordCheck(checkPwd.current);
                     console.log(result.data);
                     if(result.data.data){
-                        setModalMessage(result.data.message);
-                        setShowModal(true);
                         setGoEdit(true);
                         closeVerifyModal();
                     }else {
