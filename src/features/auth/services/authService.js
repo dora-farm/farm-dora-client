@@ -1,11 +1,11 @@
 import {getCookie} from "../../../common/utils/Cookies.jsx";
-const token = getCookie("jwt_token");
 
 export const registerSocial = async (provider) => {
-    await fetch("http://localhost:8080/oauth/id/save", {
+    const token = getCookie("jwt_token");
+    await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/oauth/id/save`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+            headers: {
+                "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ provider }),
@@ -22,7 +22,7 @@ export const registerSocial = async (provider) => {
 };
 
 export const loginSocial = async (provider) => {
-    window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`;
+    window.location.href = `${import.meta.env.VITE_AUTH_REST_API_URL}/oauth2/authorization/${provider}`;
 };
 
 export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal, navigate) => {
@@ -30,7 +30,7 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
     loginFormData.append('id', id);
     loginFormData.append('pwd', document.getElementById('pwd').value);
 
-    const response = await fetch('http://localhost:8080/login', {
+    const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/login`, {
         method: 'POST',
         body: loginFormData,
     });
@@ -54,11 +54,15 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
     navigate("/");
 };
 
-export const logoutUser = async (setModalMessage, setShowModal, navigate) => {
+export const logoutUser = async (navigate) => {
+    const token = getCookie("jwt_token");
+    alert(token);
     try {
-        const response = await fetch('http://localhost:8080/login/logout', {
+        const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/login/logout`, {
             method: 'POST',
-            Authorization: `Bearer ${token}`,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
         });
 
         const result = await response.json();
@@ -67,14 +71,10 @@ export const logoutUser = async (setModalMessage, setShowModal, navigate) => {
             console.log(result.message);
 
             document.cookie = "jwt_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-
-            navigate("/");
-        } else {
-            setModalMessage("로그아웃 실패");
-            setShowModal(true);
         }
     } catch (error) {
         console.error("로그아웃 중 오류 발생", error);
         alert("서버 오류로 로그아웃에 실패했습니다.");
     }
+    navigate("/");
 };

@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {formatPhoneNumber} from "../services/validationService.js";
 
 export default function useAddressForm() {
     const [isOpen, setIsOpen] = useState(false);
@@ -48,13 +49,6 @@ export default function useAddressForm() {
             ...prev,
             [name]: type === 'checkbox' ? checked : newVal,
         }));
-    };
-
-    const formatPhoneNumber = (phone) => {
-        const onlyNums = phone.replace(/[^\d]/g, ''); // 숫자만 남기기
-        if (onlyNums.length <= 3) return onlyNums;
-        if (onlyNums.length <= 7) return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3)}`;
-        return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 7)}-${onlyNums.slice(7, 11)}`;
     };
 
     const setAddressForm = (data) => {
