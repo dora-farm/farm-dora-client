@@ -22,11 +22,8 @@ export const useBasket = (initialPage = 0) => {
   const fetchBasket = async () => {
     setIsLoading(true);
     try {
-      if (isLoggedIn) {
+      if (!isLoggedIn) {
         const local = JSON.parse(localStorage.getItem("basket") || "[]");
-
-        console.log(local);
-
         const pageSize = 5;
         const total = local.length;
         const start = currentPage * pageSize;
@@ -38,6 +35,14 @@ export const useBasket = (initialPage = 0) => {
         setTotalPages(Math.ceil(total / pageSize));
         setHasNext(end < total);
         setHasPrev(currentPage > 0);
+
+        // ✅ 선택 초기화
+        const initSelected = {};
+        paginated.forEach((item) => {
+          initSelected[item.basketId] = false;
+        });
+        setSelectedItems(initSelected);
+        setSelectedItemsToDelete([]);
       } else {
         const response = await fetch(
           `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket?page=${currentPage}`,
@@ -55,18 +60,15 @@ export const useBasket = (initialPage = 0) => {
         setCurrentPage(data.currentPage ?? 0);
         setHasNext(data.hasNext ?? false);
         setHasPrev(data.hasPrev ?? false);
+
+        // ✅ 선택 초기화
+        const initSelected = {};
+        contents.forEach((item) => {
+          initSelected[item.basketId] = false;
+        });
+        setSelectedItems(initSelected);
+        setSelectedItemsToDelete([]);
       }
-
-      const source = !isLoggedIn
-        ? JSON.parse(localStorage.getItem("basket") || "[]")
-        : basketItems;
-
-      const initSelected = {};
-      source.forEach((item) => {
-        initSelected[item.basketId] = false;
-      });
-      setSelectedItems(initSelected);
-      setSelectedItemsToDelete([]);
     } catch (error) {
       console.error("장바구니 조회 실패:", error);
     } finally {
@@ -88,7 +90,10 @@ export const useBasket = (initialPage = 0) => {
   };
 
   const toggleSelectAll = () => {
-    const isAllSelected = Object.values(selectedItems).every((v) => v);
+    const isAllSelected =
+      Object.keys(selectedItems).length > 0 &&
+      Object.values(selectedItems).every((v) => v);
+
     const updated = {};
     basketItems.forEach((item) => {
       updated[item.basketId] = !isAllSelected;
@@ -101,7 +106,7 @@ export const useBasket = (initialPage = 0) => {
 
   const deleteSingleItem = async (basketId) => {
     try {
-      if (isLoggedIn) {
+      if (!isLoggedIn) {
         const local = JSON.parse(localStorage.getItem("basket") || "[]");
         const updated = local.filter((item) => item.basketId !== basketId);
         localStorage.setItem("basket", JSON.stringify(updated));
@@ -119,16 +124,15 @@ export const useBasket = (initialPage = 0) => {
           prev.filter((item) => item.basketId !== basketId)
         );
       }
-      showAlert("장바구니 항목이 삭제되었습니다.");
     } catch (error) {
-      showAlert("삭제 중 오류가 발생했습니다.");
+      window.alert("삭제 중 오류가 발생했습니다.");
       console.error("삭제 실패:", error);
     }
   };
 
   const deleteSelectedItems = async () => {
     try {
-      if (isLoggedIn) {
+      if (!isLoggedIn) {
         const local = JSON.parse(localStorage.getItem("basket") || "[]");
         const updated = local.filter(
           (item) => !selectedItemsToDelete.includes(item.basketId)
@@ -156,7 +160,7 @@ export const useBasket = (initialPage = 0) => {
 
   const updateQuantity = async (basketId, newQuantity) => {
     try {
-      if (isLoggedIn) {
+      if (!isLoggedIn) {
         const local = JSON.parse(localStorage.getItem("basket") || "[]");
         const updated = local.map((item) =>
           item.basketId === basketId ? { ...item, quantity: newQuantity } : item
@@ -167,7 +171,7 @@ export const useBasket = (initialPage = 0) => {
         await fetch(
           `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket/${basketId}?quantity=${newQuantity}`,
           {
-            method: "PATCH",
+            method: "PUT",
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -196,6 +200,8 @@ export const useBasket = (initialPage = 0) => {
     deleteSingleItem,
     deleteSelectedItems,
     updateQuantity,
-    isAllSelected: Object.values(selectedItems).every((v) => v),
+    isAllSelected:
+      Object.keys(selectedItems).length > 0 &&
+      Object.values(selectedItems).every((v) => v),
   };
 };

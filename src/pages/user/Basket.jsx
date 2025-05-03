@@ -136,7 +136,10 @@ function Basket() {
             item={item}
             checked={selectedItems?.[item.basketId] || false}
             onToggleSelect={() => toggleItemSelection(item.basketId)}
-            onDelete={deleteSingleItem}
+            onDelete={() => {
+              deleteSingleItem(item.basketId);
+              showAlert("장바구니 항목이 삭제되었습니다!");
+            }}
             onUpdateQuantity={updateQuantity}
           />
         ))}
