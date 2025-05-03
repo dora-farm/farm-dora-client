@@ -9,8 +9,6 @@ import StatusRatioChart from "./components/StatusRatioChart";
 import useDashboardData from "./hooks/useDashboardData";
 
 function SellerHome() {
-  
-  const sellerId = 1;
 
   // 날짜 필터 상태
   const [startDate, setStartDate] = useState(() => {
@@ -32,7 +30,7 @@ function SellerHome() {
     productRatio, 
     statusRatio, 
     loadSellerAllData
-  } = useDashboardData(sellerId, startDate, endDate, period);
+  } = useDashboardData(startDate, endDate, period);
 
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {

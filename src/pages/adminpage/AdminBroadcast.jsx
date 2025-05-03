@@ -11,6 +11,7 @@ import Loading from '../../common/components/Loading';
 import VideoTable from '../../common/components/product/VideoTable';
 //hooks
 import { useCheckboxes } from '../../common/hooks/useCheckboxes';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 function AdminBroadcast() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -56,7 +57,7 @@ function AdminBroadcast() {
     try {
  
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/updateStatus/${videoId}`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/updateStatus/${videoId}`, {
         method: 'PUT',
       });
       
@@ -104,7 +105,7 @@ useEffect(() => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/admin/list/${pagination.pageSize}`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/admin/list/${pagination.pageSize}`);
       console.log(response.ok);
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -126,10 +127,10 @@ useEffect(() => {
     } finally {
       setIsLoading(false);
           // 초기 로드 후 포커스
-     setTimeout(() => {
-       if (searchInputRef.current) {
+      setTimeout(() => {
+        if (searchInputRef.current) {
           searchInputRef.current.focus();
-       }
+        }
       }, 0);
     }
   }
@@ -152,7 +153,7 @@ useEffect(() => {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/admin/search`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/admin/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -162,7 +163,7 @@ useEffect(() => {
 
     // 응답 텍스트 확인
     const httpResponse = await response.json();
-     console.log('서버 응답:', httpResponse.data);
+      console.log('서버 응답:', httpResponse.data);
       setProducts(httpResponse.data.contents);
       setPagination({
         currentPage: httpResponse.data.currentPage,
@@ -183,7 +184,7 @@ useEffect(() => {
       setTimeout(() => {
         if (searchInputRef.current) {
           searchInputRef.current.focus();
-       }
+        }
       }, 0);
     }
   };
@@ -205,7 +206,7 @@ useEffect(() => {
       };
       
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/delete`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -247,16 +248,16 @@ useEffect(() => {
       <div className="bg-white rounded-lg shadow-sm mb-6 p-4">
         <form onSubmit={(e) => {
           e.preventDefault();
-           handleSearch();
-         }}>
+            handleSearch();
+          }}>
           {/* 검색창 구현(컴포넌트) */}
           <Keyword 
-           searchTerm={searchTerm} 
-           setSearchTerm={setSearchTerm} 
-           sortFilter={sortFilter} 
-           setSortFilter={setSortFilter}
-           inputRef={searchInputRef}
-         />
+            searchTerm={searchTerm} 
+            setSearchTerm={setSearchTerm} 
+            sortFilter={sortFilter} 
+            setSortFilter={setSortFilter}
+            inputRef={searchInputRef}
+          />
     
           <BasicBtn 
             handleSearch={handleSearch} 
@@ -291,14 +292,14 @@ useEffect(() => {
 
         {/* 페이지네이션 */}
         <Pagination
-           currentPage={pagination.currentPage}
-           totalPages={pagination.totalPages}
-           hasNext={pagination.hasNext}
-           hasPrev={pagination.hasPrev}
-           onPageChange={handlePageChange}
-           activeColor="bg-green"
-           hoverColor="hover:bg-gray"
-         />
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          hasNext={pagination.hasNext}
+          hasPrev={pagination.hasPrev}
+          onPageChange={handlePageChange}
+          activeColor="bg-green"
+          hoverColor="hover:bg-gray"
+        />
 
       {showModal && (
           <AlertModal

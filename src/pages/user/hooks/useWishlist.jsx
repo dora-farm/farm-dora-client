@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import axios from "../../../common/utils/axiosInstance";
 
-export function useWishlist(userId, previewMode) {
+export function useWishlist(previewMode) {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [imageErrors, setImageErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +16,7 @@ export function useWishlist(userId, previewMode) {
       const endpoint = previewMode
         ? `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/likepreview`
         : `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/like`;
-      const response = await axios.get(endpoint, { params: { userId } });
+      const response = await axios.get(endpoint);
 
       let items = response.data.data;
 
@@ -45,7 +45,7 @@ export function useWishlist(userId, previewMode) {
     } finally {
       setIsLoading(false);
     }
-  }, [userId, previewMode]);
+  }, [previewMode]);
 
   // 찜 리스트 삭제하기
   const getselectedItemsToDelete = useCallback(() => 

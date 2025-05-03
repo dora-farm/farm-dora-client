@@ -1,7 +1,7 @@
 // MyPage.jsx
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../../common/utils/axiosInstance";
 import WishPreview from "./components/WishPreview";
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -12,8 +12,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 
 function MyPage() {
-  const userId = 1;
-
   const [dashboardData, setDashboardData] = useState({
     userInfoDTO: {
       name: " ",
@@ -37,13 +35,11 @@ function MyPage() {
   const loadDashboardInfo = async () => {
     try {
       const userResponse = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/info`, 
-        { params: { userId } }
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/info`
       );
 
       const orderStatusResponse = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/order-status`,
-        { params: { userId } }
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/order-status`
       );
 
       const orderStatusObj = {};
@@ -156,7 +152,7 @@ function MyPage() {
           </div>
         </div>
       </div>
-      <WishPreview userId={userId} />
+      <WishPreview />
     </div>
   );
 }

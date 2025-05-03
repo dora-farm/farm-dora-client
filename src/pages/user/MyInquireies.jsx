@@ -3,10 +3,9 @@ import DateFilter from "./components/DateFilter";
 import Pagination from "../../common/components/Pagination";
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import ChatIcon from '@mui/icons-material/Chat';
-import axios from "axios";
+import axios from "../../common//utils/axiosInstance";
 
 function MyInquiries() {
-  const userId = 1;
   const itemPerPage = 10;
   
   // 상태 관리
@@ -39,7 +38,6 @@ function MyInquiries() {
         `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/question`, 
         {
           params: {
-            userId,
             startDate: dateRange.startDate,
             endDate: dateRange.endDate,
           },

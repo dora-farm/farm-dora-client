@@ -6,7 +6,6 @@ import Pagination from "../../common/components/Pagination";
 import AlertModal from "../../common/components/modal/AlertModal";
 
 function Wishlist() {
-  const userId = 1;
   const [deleteLoading, setDeleteLoading] = useState(false);
   
   // 모달 상태 관리
@@ -37,7 +36,7 @@ function Wishlist() {
     deleteSingleItem,
     addBasket,
     selectedItemsToDelete
-  } = useWishlist(userId, false);
+  } = useWishlist(false);
 
   // 알림 모달 열기 - useCallback으로 메모이제이션하여 안정성 높임
   const showAlert = useCallback((message, callback = null) => {
