@@ -2,7 +2,7 @@ import {getCookie} from "../../../common/utils/Cookies.jsx";
 const token = getCookie("jwt_token");
 
 export const registerSocial = async (provider) => {
-    await fetch("http://localhost:8080/oauth/id/save", {
+    await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/oauth/id/save`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export const registerSocial = async (provider) => {
 };
 
 export const loginSocial = async (provider) => {
-    window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`;
+    window.location.href = `${import.meta.env.VITE_AUTH_REST_API_URL}/oauth2/authorization/${provider}`;
 };
 
 export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal, navigate) => {
@@ -30,7 +30,7 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
     loginFormData.append('id', id);
     loginFormData.append('pwd', document.getElementById('pwd').value);
 
-    const response = await fetch('http://localhost:8080/login', {
+    const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/login`, {
         method: 'POST',
         body: loginFormData,
     });
@@ -56,7 +56,7 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
 
 export const logoutUser = async (setModalMessage, setShowModal, navigate) => {
     try {
-        const response = await fetch('http://localhost:8080/login/logout', {
+        const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/login/logout`, {
             method: 'POST',
             Authorization: `Bearer ${token}`,
         });
