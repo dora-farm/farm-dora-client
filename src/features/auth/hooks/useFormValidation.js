@@ -6,7 +6,7 @@ const useFormValidation = () => {
         id: false,
         pwd: false,
         password_confirmation: false,
-        email: false,
+        email: true,
         email_verified: false,
     });
 

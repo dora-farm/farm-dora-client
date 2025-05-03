@@ -10,6 +10,7 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import CancelIcon from '@mui/icons-material/Cancel';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { getCookie } from '../../../common/utils/Cookies';
 
 import Order from './Order';
 import New from './New';
@@ -33,7 +34,11 @@ function OrdermanageHome() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
+
   const loadOrderCounts = async () => {
+      const jwtToken = getCookie("jwt_token");
+      console.log(jwtToken);
     try {
       setLoading(true);
       
