@@ -73,6 +73,7 @@ export function useWishlist(previewMode) {
 
       if (response.status === 200) {
         // 삭제 성공 시 리스트 다시 로드
+        setSelectedItems({});
         await loadWishlistItems();
         return true;
       }
@@ -107,13 +108,14 @@ export function useWishlist(previewMode) {
   const addBasket = async (optionId) => {
     try {
       setIsLoading(true);
-
-      const formData = new FormData();
-      formData.append("optionId", optionId);
-      formData.append("quantity", 1);
       
       const response = await axios.post(
-        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, formData);
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, 
+        {
+          optionId: optionId,
+          quantity: 1
+        }
+      );
 
       if (response.status === 200) {
         return true;
@@ -124,8 +126,8 @@ export function useWishlist(previewMode) {
         console.error("이미 장바구니에 존재하는 상품입니다.");
         return { success: false, message: "이미 장바구니에 존재하는 상품입니다." };
       }
-      console.error("장바구니에 추가할 수 없습니다:", error.message);
-      return { success: false, message: "장바구니에 추가할 수 없습니다." };
+      console.error("장바구니에 추가중 에러가 발생했습니다.:", error.message);
+      return { success: false, message: "장바구니에 추가중 에러발생!" };
     } finally {
       setIsLoading(false);
     }

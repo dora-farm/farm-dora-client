@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import axios from 'axios';
+import axios from '../../../common/utils/axiosInstance';
 import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
 import OrderList from './components/OrderList';

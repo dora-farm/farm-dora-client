@@ -75,9 +75,7 @@ function Wishlist() {
       showAlert("삭제할 상품을 선택해주세요.");
       return;
     }
-  
     setDeleteLoading(true);
-  
     try {
       // 현재 페이지 정보 및 선택된 항목 수 미리 계산
       const currentPageItems = wishlistItems.slice(

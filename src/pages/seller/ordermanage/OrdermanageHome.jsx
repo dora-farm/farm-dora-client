@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useToken } from '../../../common/utils/TokenContxet';
-import axios from 'axios';
+import axios from '../../../common/utils/axiosInstance';
 import { Link, useLocation } from 'react-router-dom';
 import DashboardLayout from '../dashboard/components/DashboardLayout';
 import DashboardHeader from '../dashboard/components/DashboardHeader';
@@ -21,7 +20,6 @@ import Review from './Review';
 import Question from './Inquiry';
 
 function OrdermanageHome() {
-  const { token } = useToken();
   const location = useLocation();
   const [statistics, setStatistics] = useState({
     totalOrders: 0,
@@ -42,12 +40,7 @@ function OrdermanageHome() {
       setLoading(true);
       
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order`
       );
 
       if (response.status === 200) {
