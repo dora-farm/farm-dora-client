@@ -14,23 +14,6 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     }
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-        if (id.includes('node_modules/@ckeditor')) {
-          return 'vendor-ckeditor';
-        }
-        if (id.includes('node_modules/react') || 
-            id.includes('node_modules/react-dom')) {
-          return 'vendor-react';
-        }
-        if (id.includes('node_modules')) {
-          return 'vendor';
-        }
-      }
-    }
-  }},
   server: {
     port: 3000,
     allowedHosts: [
