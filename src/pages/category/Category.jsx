@@ -4,6 +4,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Pagination from "../../common/components/Pagination";
 import { useCategory } from '../../layouts/CategoryContext';
 import ProductCard from '../../common/components/ProductCard';
+import { useLikeToggle } from '../user/hooks/useLikeToggle';
 import { getCookie } from '../../common/utils/Cookies';
 
 function Category() {
@@ -18,6 +19,7 @@ function Category() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [token, setToken] = useState(null);
+  const { toggleLike: toggleLikeFn } = useLikeToggle(token);
 
   // 카테고리 Context
   const { loading: categoryLoading, getMainCategoryById, getSubCategoryById, getSubCategoriesByMainId } = useCategory();
@@ -69,26 +71,14 @@ function Category() {
     fetchData();
   }, [type_big_id, type_id, sort, page, searchParams, token]);
 
-  // 찜 토글 요청
-  const toggleLike = async (saleId) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const result = await response.json();
-      console.log(result);
-
+  const toggleLike = (saleId, isLiked) => {
+    toggleLikeFn(saleId, isLiked, () => {
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
           product.saleId === saleId ? { ...product, liked: !product.liked } : product
         )
       );
-    } catch (error) {
-      console.error('찜 추가/삭제 오류:', error);
-    }
+    });
   };
 
   const handlePageChange = (newPage) => {
@@ -125,7 +115,7 @@ function Category() {
             mainImage={product.mainImage}
             minPrice={product.minPrice}
             liked={product.liked}
-            onToggleLike={toggleLike}
+            onToggleLike={() => toggleLike(product.saleId, product.liked)}
           />
         ))
       ) : (
