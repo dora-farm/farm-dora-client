@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { getCookie } from '../../common/utils/Cookies';
 
 const ProductSummary = ({ saleId, setContent }) => {
   const [quantity, setQuantity] = useState(1);
@@ -14,6 +15,7 @@ const ProductSummary = ({ saleId, setContent }) => {
   const [origin, setOrigin] = useState('');
   const [title, setTitle] = useState('');
   const [like, setLike] = useState(false);
+  const [token, setToken] = useState(null); // ✅ JWT 토큰 상태
 
   const selectedOptionData = options.find(option => option.optionId === Number(selectedOption));
   const selectedOptionPrice = selectedOptionData ? selectedOptionData.price : 0;
@@ -21,10 +23,23 @@ const ProductSummary = ({ saleId, setContent }) => {
   const minPrice = options.length > 0 ? Math.min(...options.map(option => option.price)) : 0;
   const displayPrice = selectedOptionData ? selectedOptionPrice : minPrice;
 
+  const navigate = useNavigate();
+
+  // ✅ 토큰 한 번만 가져오기
   useEffect(() => {
+    const jwtToken = getCookie('jwt_token');
+    setToken(jwtToken);
+  }, []);
+
+  useEffect(() => {
+    if (!token) return;
+
     const fetchProductDetail = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/${saleId}`);
+        const response = await axios.get(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/${saleId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
         const { files, options, origin, title, content, like } = response.data.data;
         setImages(files);
         setMainImage(files[0] || '');
@@ -43,7 +58,7 @@ const ProductSummary = ({ saleId, setContent }) => {
     };
 
     fetchProductDetail();
-  }, []);
+  }, [token]);
 
   const handleQuantityChange = (e) => {
     setQuantity(Number(e.target.value));
@@ -60,17 +75,18 @@ const ProductSummary = ({ saleId, setContent }) => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, 
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          optionId: selectedOption,
-          quantity: quantity,
-        }),
-      });
+      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // ✅ 토큰 사용
+          },
+          body: JSON.stringify({
+            optionId: selectedOption,
+            quantity: quantity,
+          }),
+        });
 
       if (response.status === 409) {
         alert('이미 장바구니에 존재합니다.');
@@ -80,7 +96,6 @@ const ProductSummary = ({ saleId, setContent }) => {
       if (!response.ok) {
         const result = await response.json();
         alert(result.message);
-
         throw new Error('장바구니 추가 실패');
       }
 
@@ -89,14 +104,13 @@ const ProductSummary = ({ saleId, setContent }) => {
       console.error('장바구니 추가 실패:', error);
     }
   };
-  
-  const navigate = useNavigate();
 
   const handleBuyNow = () => {
     if (!selectedOption) {
       alert('옵션을 선택해주세요.');
       return;
     }
+
     navigate('/order', {
       state: {
         optionId: selectedOption,
@@ -107,7 +121,15 @@ const ProductSummary = ({ saleId, setContent }) => {
 
   const handleLike = async () => {
     try {
-      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`);
+      const response = await axios.put(
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ 토큰 사용
+          },
+        }
+      );
 
       if (response.status === 200) {
         const isCurrentlyLiked = like;
@@ -153,22 +175,18 @@ const ProductSummary = ({ saleId, setContent }) => {
 
       {/* 오른쪽 : 상품 정보 */}
       <div className="flex-1 flex flex-col gap-6">
-        {/* 상품명 */}
         <h2 className="text-2xl font-bold border-b pb-2 mt-4">{title || '제목이 존재하지 않습니다'}</h2>
 
-        {/* 판매가격 */}
         <div className="flex justify-between items-center text-lg">
           <span className="font-semibold">판매가격</span>
           <span className="text-2xl font-bold text-gray-800">{displayPrice}원</span>
         </div>
 
-        {/* 원산지 */}
         <div className="flex justify-between items-center text-lg">
           <span className="font-semibold">원산지</span>
           <span className="text-gray-600">{origin}</span>
         </div>
 
-        {/* 옵션 선택 */}
         <div className="flex flex-col gap-2">
           <label htmlFor="option" className="font-medium">옵션</label>
           <div className="relative">
@@ -189,7 +207,6 @@ const ProductSummary = ({ saleId, setContent }) => {
           </div>
         </div>
 
-        {/* 수량 조절 */}
         <div className="flex items-center gap-4">
           <button
             onClick={() => {
@@ -218,13 +235,11 @@ const ProductSummary = ({ saleId, setContent }) => {
           </button>
         </div>
 
-        {/* 총 상품 금액 */}
         <div className="flex justify-between items-center text-2xl font-bold mt-6 border-t pt-4">
           <span>총 상품 금액</span>
           <span>{totalPrice}원</span>
         </div>
 
-        {/* 버튼 영역 */}
         <div className="flex gap-4 mt-6">
           <button
             onClick={handleLike}
