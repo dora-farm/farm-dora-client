@@ -1,8 +1,22 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 import { KeyboardArrowDown, Search, FavoriteBorder, PersonOutlineOutlined, ShoppingBagOutlined } from '@mui/icons-material';
 import {logoutUser} from "../features/auth/services/authService.js";
+import { useToken } from "../common/utils/TokenContxet.jsx";
+import AlertModal from "../common/components/modal/AlertModal.jsx";
+
+// 토큰 디코딩 (권한 추출)
+const decodeToken = (token) => {
+  try {
+    const payload = token.split('.')[1];
+    const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(decodedPayload);
+  } catch (error) {
+    console.error('토큰 디코딩 오류:', error);
+    return null;
+  }
+};
 
 function Header({ maincategories, subCategories, loading }) {
   const navigate = useNavigate();
@@ -12,6 +26,44 @@ function Header({ maincategories, subCategories, loading }) {
   const dropdownRef = useRef(null);
   const [modalMessage ,setModalMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const { token } = useToken();
+  const [userRole, setUserRole] = useState(null);
+
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalInfo, setAuthModalInfo] = useState({ title: "", message: "" });
+
+  // 토큰이 변경될 때마다 사용자 역할 추출
+  useEffect(() => {
+    if (token) {
+      const decodedToken = decodeToken(token);
+      if (decodedToken && decodedToken.role) {
+        setUserRole(decodedToken.role);
+      }
+    } else {
+      setUserRole(null);
+    }
+  }, [token]);
+
+  // 접근 권한 없는 경우 처리
+  const handleUnauthorizedAccess = (requiredRole) => {
+    if (!token) {
+      // 로그인되지 않은 경우
+      setAuthModalInfo({
+        title: "로그인 필요",
+        message: "로그인이 필요합니다."
+      });
+    } else {
+      // 로그인되었지만 역할이 다른 경우
+      setAuthModalInfo({
+        title: "접근 권한 없음",
+        message: `${requiredRole === 'ROLE_USER' ? '구매자' : 
+                  requiredRole === 'ROLE_SELLER' ? '판매자' : 
+                  '관리자'}만 접근할 수 있습니다!`
+      });
+    }
+    setShowAuthModal(true);
+  };
+
 
   // 카테고리 토글(열기/닫기)
   const toggleCategory = () => {
@@ -69,28 +121,62 @@ function Header({ maincategories, subCategories, loading }) {
           </div>
           
           <div className="flex items-center space-x-6">
-            <button onClick={()=>{logoutUser(setModalMessage, setShowModal,navigate)}}>로그아웃</button>
-            <Link to="/login" className="text-sm">로그인</Link>
-            <Link to="/join" className="text-sm">회원가입</Link>
-            {/* 구매자 마이페이지 */}
-            <Link to="/my/user">
-              <PersonOutlineOutlined/>
-            </Link>
-            {/* 판매자 마이페이지 */}
-            <Link to="/my/seller">
-              <PersonOutlineOutlined/>
-            </Link>
-            {/* 관리자 페이지 */}
-            <Link to="/admin">
-              <PersonOutlineOutlined/>
-            </Link>
-            <Link to="/my/user/wishlist">
-              <FavoriteBorder/>
-            </Link> 
-            <Link to="/my/user/cart" className="relative">
-              <ShoppingBagOutlined/>
-              <span className="absolute -top-2 -right-2 bg-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-            </Link>
+            {token ? (
+              <button className="text-sm" onClick={() => {logoutUser(setModalMessage, setShowModal,navigate)}}>로그아웃</button>
+            ) : (
+              <>
+                <Link to="/login" className="text-sm">로그인</Link>
+                <Link to="/join" className="text-sm">회원가입</Link>
+              </>
+            )}
+            {userRole && (
+              <>
+                {userRole === 'ROLE_USER' && (
+                  <Link to="/my/user">
+                    <PersonOutlineOutlined />
+                  </Link>
+                )}
+                
+                {userRole === 'ROLE_SELLER' && (
+                  <Link to="/my/seller">
+                    <PersonOutlineOutlined />
+                  </Link>
+                )}
+                
+                {userRole === 'ROLE_ADMIN' && (
+                  <Link to="/admin">
+                    <PersonOutlineOutlined />
+                  </Link>
+                )}
+              </>
+            )}
+            {(userRole === 'ROLE_USER') ? (
+              <>
+                <Link to="/my/user/wishlist">
+                  <FavoriteBorder/>
+                </Link> 
+                <Link to="/my/user/basket" className="relative">
+                  <ShoppingBagOutlined/>
+                  <span className="absolute -top-2 -right-2 bg-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <button 
+                  onClick={() => handleUnauthorizedAccess('ROLE_USER')}
+                  className="opacity-50"
+                >
+                  <FavoriteBorder />
+                </button>
+                <button 
+                  onClick={() => handleUnauthorizedAccess('ROLE_USER')}
+                  className="opacity-50 relative"
+                >
+                  <ShoppingBagOutlined />
+                  <span className="absolute -top-2 -right-2 bg-gray-400 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -177,6 +263,21 @@ function Header({ maincategories, subCategories, loading }) {
           </ul>
         </nav>
       </div>
+      <div className="border-t">
+        <nav className="mx-auto max-w-[1300px] px-4">
+          <ul className="flex items-center py-3 space-x-8">
+          </ul>
+        </nav>
+      </div>
+      
+      {/* 권한 관련 알림 모달 */}
+      {showAuthModal && (
+        <AlertModal
+          title={authModalInfo.title}
+          message={authModalInfo.message}
+          onClose={() => setShowAuthModal(false)}
+        />
+      )}
     </header>
   );
 }
