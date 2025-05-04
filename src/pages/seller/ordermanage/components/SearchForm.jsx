@@ -192,7 +192,7 @@ function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = f
     setStartDate(startDateValue);
     setEndDate(today.toLocaleDateString('en-CA'));
   };
-
+  
   // 엔터키 검색 처리
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -201,36 +201,40 @@ function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = f
   };
 
   return (
-    <div className="w-full mx-auto px-4 select-none ml-6">
-      <form onSubmit={handleSubmit}>
+    <div className="w-full mx-auto p-6 select-none rounded-md shadow-sm">
+      <form onSubmit={handleSubmit} className="w-full max-w-5xl mx-auto">
         {/* 첫 번째 행: 검색어 입력 */}
-        <div className="flex items-center mb-3 gap-2">
-          <div className="w-full flex items-center">
-            <div className="relative w-24 mr-2">
+        <div className="flex flex-wrap items-center mb-2">
+          <div className="w-full md:w-4/5 flex flex-wrap items-center gap-2 mb-2 md:mb-0">
+            <div className="w-32 bg-gray-50 rounded-md border border-gray-300">
               <select
                 value={searchType}
                 onChange={(e) => setSearchType(e.target.value)}
-                className="w-full text-sm font-medium text-gray-700 border-0 focus:outline-none focus:ring-0 bg-transparent"
+                className="w-full py-2 px-3 text-sm text-gray-700 border-0 focus:ring-1 focus:ring-brown rounded-md"
               >
                 <option value="PRODUCT">상품명</option>
                 <option value="BUYER">구매자</option>
               </select>
             </div>
             
-            <input
-              type="text"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="min-w-[400px] px-2 py-1 border border-gray-300 rounded-md text-sm mr-2"
-              placeholder={`${searchType === 'PRODUCT' ? '상품명' : '구매자명'} 검색`}
-            />
-            
-            <div className="flex items-center space-x-2">
+            <div className="flex-1 min-w-[300px]">
+              <input
+                type="text"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-brown focus:border-transparent"
+                placeholder={`${searchType === 'PRODUCT' ? '상품명' : '구매자명'} 검색`}
+              />
+            </div>
+          </div>
+          
+          <div className="w-full md:w-1/5 flex justify-end">
+            <div className="w-full md:w-auto">
               <select
                 value={sorted}
                 onChange={(e) => setSorted(e.target.value)}
-                className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-brown focus:border-transparent"
               >
                 <option value="LATEST">최신순</option>
                 <option value="OLDEST">오래된순</option>
@@ -246,64 +250,69 @@ function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = f
         </div>
 
         {/* 두 번째 행: 조회 기간 및 날짜 선택 */}
-        <div className="flex flex-wrap items-center mb-3 gap-2">
-          <div className="flex items-center">
-            <label className="w-[75px] text-sm font-medium text-gray-700">
-              조회 기간
-            </label>
-            <div className="flex items-center space-x-2">
-              {[
-                { id: "TODAY", label: "오늘" },
-                { id: "WEEK", label: "1주일" },
-                { id: "ONE_MONTH", label: "1개월" },
-                { id: "THREE_MONTHS", label: "3개월" },
-              ].map((period) => (
-                <button
-                  key={period.id}
-                  type="button"
-                  className={`px-3 py-1 text-xs border border-gray-300 rounded-md ${
-                    searchPeriod === period.id 
-                      ? "bg-brown text-white" 
-                      : "bg-white text-gray-700 hover:bg-gray-100"
-                  } transition-colors`}
-                  onClick={() => handleSearchPeriodClick(period.id)}
-                >
-                  {period.label}
-                </button>
-              ))}
-            </div>
+        <div className="flex flex-wrap items-center mb-5 border-t border-b py-4 border-gray-100">
+          <label className="w-full md:w-auto md:min-w-[100px] text-sm font-medium text-gray-700 mb-2 md:mb-0">
+            조회 기간
+          </label>
+          
+          <div className="flex flex-wrap gap-2 md:mb-0 md:mr-4">
+            {[
+              { id: "TODAY", label: "오늘" },
+              { id: "WEEK", label: "1주일" },
+              { id: "ONE_MONTH", label: "1개월" },
+              { id: "THREE_MONTHS", label: "3개월" },
+            ].map((period) => (
+              <button
+                key={period.id}
+                type="button"
+                className={`px-4 py-2 text-xs font-medium rounded-md transition-colors ${
+                  searchPeriod === period.id 
+                    ? "bg-brown text-white shadow-sm" 
+                    : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200"
+                }`}
+                onClick={() => handleSearchPeriodClick(period.id)}
+              >
+                {period.label}
+              </button>
+            ))}
           </div>
 
-          <div className="flex items-center space-x-2 ml-2">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => {
-                setStartDate(e.target.value);
-                setSearchPeriod(""); // 커스텀 날짜 선택 시 기간 버튼 선택 해제
-              }}
-              className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-            />
-            <span className="text-gray-500">-</span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => {
-                setEndDate(e.target.value);
-                setSearchPeriod(""); // 커스텀 날짜 선택 시 기간 버튼 선택 해제
-              }}
-              className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-            />
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto md:ml-auto">
+            <div className="relative">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => {
+                  setStartDate(e.target.value);
+                  setSearchPeriod(""); // 커스텀 날짜 선택 시 기간 버튼 선택 해제
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-brown focus:border-transparent"
+              />
+            </div>
+            
+            <span className="text-gray-500">~</span>
+            
+            <div className="relative">
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => {
+                  setEndDate(e.target.value);
+                  setSearchPeriod(""); // 커스텀 날짜 선택 시 기간 버튼 선택 해제
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-brown focus:border-transparent"
+              />
+            </div>
           </div>
         </div>
 
         {/* 세 번째 행: 주문 상태 체크박스 */}
         {showStatusFilter && (
-          <div className="flex flex-wrap items-center mb-4">
-            <label className="w-[75px] text-sm font-medium text-gray-700">
+          <div className="flex flex-wrap items-start">
+            <label className="w-full md:w-auto md:min-w-[100px] text-sm font-medium text-gray-700 mb-2 md:mb-0">
               주문상태
             </label>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3">
               {Object.entries(statusIdsLabels).map(([key, label]) => (
                 <GreenSquareCheckbox
                   key={key}
@@ -318,10 +327,10 @@ function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = f
         )}
         
         {/* 버튼 영역 */}
-        <div className="flex justify-center space-x-3 mt-2">
+        <div className="flex justify-center gap-3">
           <button
             type="submit"
-            className="px-5 py-2 text-sm font-medium text-white bg-brown rounded-md hover:bg-brown-300 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+            className="px-6 py-2.5 text-sm font-medium text-white bg-brown rounded-md shadow-sm hover:bg-brown-600 focus:outline-none focus:ring-1 focus:ring-brown-400 focus:ring-offset-2 transition-all duration-200 transform active:scale-95 active:bg-brown-700"
           >
             검색
           </button>
@@ -329,7 +338,7 @@ function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = f
           <button
             type="button"
             onClick={handleReset}
-            className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+            className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-brown-400 focus:ring-offset-2 transition-all duration-200 transform active:scale-95 active:bg-gray-100"
           >
             초기화
           </button>
