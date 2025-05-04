@@ -3,6 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import AlertModal from '../../../common/components/modal/AlertModal';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { fetch } from '../../../common/utils/fetchWithAuth';
 
 function ProductEdit() {
 

@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import { fetch } from '../common/utils/fetchWithAuth';
 
 const CategoryContext = createContext();
 

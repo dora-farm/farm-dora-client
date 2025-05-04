@@ -5,6 +5,7 @@ import Pagination from '../../common/components/Pagination';
 import ReviewDetailModal from './modal/ReviewDetailModal';
 import Loading from '../../common/components/Loading';
 import AlertModal2 from '../../common/components/modal/AlertModal2.jsx';
+import { fetch } from '../../common/utils/fetchWithAuth.js';
 
 function AdminReview() {
   // 검색 관련 상태

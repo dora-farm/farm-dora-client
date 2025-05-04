@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import AlertModal from '../../../common/components/modal/AlertModal';
+import { fetch } from '../../../common/utils/fetchWithAuth';
 
 import { bigCategories, smallCategories } from '../../../common/js/categories';
 

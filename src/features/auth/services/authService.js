@@ -1,13 +1,8 @@
-import {getCookie} from "../../../common/utils/Cookies.jsx";
+import { fetch } from '../../../common/utils/fetchWithAuth.js';
 
 export const registerSocial = async (provider) => {
-    const token = getCookie("jwt_token");
     await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/oauth/id/save`, {
         method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({ provider }),
     })
         .then((res) => res.json())
@@ -55,14 +50,9 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
 };
 
 export const logoutUser = async (navigate) => {
-    const token = getCookie("jwt_token");
-    alert(token);
     try {
         const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/login/logout`, {
             method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
         });
 
         const result = await response.json();

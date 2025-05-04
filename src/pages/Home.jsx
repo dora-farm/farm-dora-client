@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HomeVideoSlider from "./HomeVideoSlider";
 import Loading from '../common/components/Loading';
-import axios from 'axios';
+import axios from '../common/utils/axiosInstance';
 
 function Home() {
 

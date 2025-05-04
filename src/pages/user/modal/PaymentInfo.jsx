@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../common/utils/axiosInstance';
 import Modal from '../../../common/components/Modal';
 
 function PaymentInfo({ isOpen, onClose, orderId, orderData }) {

@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import StarIcon from '@mui/icons-material/Star';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import axios from 'axios';
+import axios from '../../common/utils/axiosInstance';
+import { fetch } from '../../common/utils/fetchWithAuth';
 
 const RelatedProducts = ({ saleId }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);

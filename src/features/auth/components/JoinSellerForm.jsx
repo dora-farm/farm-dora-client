@@ -3,7 +3,7 @@ import ProfileField from "./ProfileField.jsx";
 import DaumPostcode from "react-daum-postcode";
 import FileUploadBox from "./FileUploadBox.jsx";
 import {formatPhoneNumber} from "../services/validationService.js";
-import axios from "axios";
+import axios from "../../../common/utils/axiosInstance.js";
 import AlertModal from "../../../common/components/modal/AlertModal.jsx";
 import {getCookie} from "../../../common/utils/Cookies.jsx";
 import {useNavigate} from "react-router-dom";

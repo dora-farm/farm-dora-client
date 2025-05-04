@@ -1,5 +1,6 @@
 // src/pages/seller/Manage.jsx
 import { useState, useEffect, useRef } from 'react';
+import { fetch } from '../../../common/utils/fetchWithAuth';
 
 import Keyword from '../../../common/components/search/Keyword';
 import BasicBtn from '../../../common/components/search/BasicBtn';

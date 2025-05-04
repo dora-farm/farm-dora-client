@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../common/utils/axiosInstance';
 import Pagination from '../../common/components/Pagination';
 import Loading from '../../common/components/Loading';
 import BasicBtn from '../../common/components/search/BasicBtn';

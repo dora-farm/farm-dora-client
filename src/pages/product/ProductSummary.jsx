@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../common/utils/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { fetch } from '../../common/utils/fetchWithAuth';
 
 const ProductSummary = ({ saleId, setContent }) => {
   const [quantity, setQuantity] = useState(1);

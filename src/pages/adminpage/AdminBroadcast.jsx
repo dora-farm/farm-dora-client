@@ -11,7 +11,7 @@ import Loading from '../../common/components/Loading';
 import VideoTable from '../../common/components/product/VideoTable';
 //hooks
 import { useCheckboxes } from '../../common/hooks/useCheckboxes';
-import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
+import { fetch } from '../../common/utils/fetchWithAuth';
 
 function AdminBroadcast() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -57,7 +57,7 @@ function AdminBroadcast() {
     try {
  
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/updateStatus/${videoId}`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/updateStatus/${videoId}`, {
         method: 'PUT',
       });
       
@@ -105,7 +105,7 @@ useEffect(() => {
     setIsLoading(true);
 
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/admin/list/${pagination.pageSize}`);
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/admin/list/${pagination.pageSize}`);
       console.log(response.ok);
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -153,7 +153,7 @@ useEffect(() => {
     };
 
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/admin/search`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/admin/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -206,7 +206,7 @@ useEffect(() => {
       };
       
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/delete`, {
+      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

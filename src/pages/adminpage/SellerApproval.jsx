@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../../common/utils/axiosInstance.js";
 import { getCookie } from "../../common/utils/Cookies.jsx";
 import AlertModal from "../../common/components/modal/AlertModal.jsx";
 import Loading from "../../common/components/Loading.jsx";

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Pagination from "../../common/components/Pagination";
+import { fetch } from '../../common/utils/fetchWithAuth';
 
 const ProductQnA = ({ saleId }) => {
   const [qnaList, setQnaList] = useState([]);

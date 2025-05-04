@@ -1,3 +1,5 @@
+import { fetch } from '../../../common/utils/fetchWithAuth.js';
+
 export const findId = async (name, email) => {
     console.log(name, email);
     const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/find/send/code`, {

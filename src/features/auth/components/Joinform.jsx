@@ -17,6 +17,7 @@ import {
 import AlertModal from "../../../common/components/modal/AlertModal.jsx";
 import {useEmailVerifyModal} from "../hooks/useEmailVerifyModal.js";
 import EmailVerifyModalForm from "./modal/EmailVerifyModalForm.jsx";
+import {fetch} from '../../../common/utils/fetchWithAuth';
 
 const JoinForm = () => {
     const [formValid, setFormValid] = useFormValidation();

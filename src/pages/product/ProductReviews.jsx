@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Pagination from '../../common/components/Pagination';
 import StarIcon from '@mui/icons-material/Star';
+import { fetch } from '../../common/utils/fetchWithAuth';
 
 const ProductReviews = ({ saleId }) => {
   const [reviews, setReviews] = useState([]);

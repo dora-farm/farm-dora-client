@@ -4,6 +4,7 @@ import { FavoriteBorder, Favorite } from '@mui/icons-material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Pagination from "../../common/components/Pagination";
 import { useCategory } from '../../layouts/CategoryContext';
+import { fetch } from '../../common/utils/fetchWithAuth';
 
 function Category() {
   const [searchParams, setSearchParams] = useSearchParams();
