@@ -4,6 +4,7 @@ import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
 import Pagination from '../../../common/components/Pagination';
 import InquiryList from './components/InquiryList';
+import InquiryDetailModal from './components/InquiryDetailModal';
 
 function Inquiry() {
   const itemsPerPage = 10;
@@ -17,6 +18,11 @@ function Inquiry() {
   const [totalElements, setTotalElements] = useState(0);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
+  
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [questionDetail, setQuestionDetail] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
 
   const handleSearch = async (params) => {
     try {
@@ -54,7 +60,7 @@ function Inquiry() {
       }
       
     } catch (error) {
-      console.log("리뷰 목록을 호출할 수 없습니다", error.message);
+      console.log("문의 목록을 호출할 수 없습니다", error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -79,6 +85,30 @@ function Inquiry() {
     page: 0,          // 페이지 번호 추가
     size: itemsPerPage, // 페이지 크기 설정
   }), [startDate, endDate, itemsPerPage]);
+
+  const loadQuestionDetail = async (questionId) => {
+    if (!questionId) return;
+
+    try {
+      setDetailLoading(true);
+      const response = await axios.get(
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/question`, 
+        { params: { questionId } }
+      )
+
+      if (response.status === 200) {
+        setQuestionDetail(response.data.data);
+        setModalOpen(true);
+      } else {
+        throw new Error(response.data?.message || '문의 상세 정보를 가져오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.log("문의 상세정보를 불러올 수 없습니다.", error.message);
+      setError(error.message);
+    } finally {
+      setDetailLoading(false);
+    }
+  }
   
   useEffect(() => {
     setSearchParams(initialParams);
@@ -106,7 +136,6 @@ function Inquiry() {
           { 
             params: {
               ...pageParams,
-              sellerId: 1,
             }
           }
         );
@@ -132,6 +161,11 @@ function Inquiry() {
     })();
   }, [searchParams, itemsPerPage]);
 
+  const handleQuestionClick = (question) => {
+    setSelectedQuestion(question);
+    loadQuestionDetail(question.questionId);
+  }
+
   return (
     <div className="space-y-6">
       <Container>
@@ -146,6 +180,7 @@ function Inquiry() {
           questions={questions}
           loading={loading}
           error={error}
+          onQuestionClick={handleQuestionClick}
         />
       </Container>
       {totalPages > 1 && (
@@ -160,6 +195,16 @@ function Inquiry() {
           hoverColor="hover:bg-gray-100"
         />
       )}
+      <InquiryDetailModal
+        detail={questionDetail}
+        inquiry={selectedQuestion}
+        loading={detailLoading}
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setQuestionDetail(null);
+        }}
+      />
     </div>
   )
 }

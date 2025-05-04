@@ -2,7 +2,7 @@ import React from 'react'
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
-const InquiryList = ({loading = false, error = null, questions = [],}) => {
+const InquiryList = ({loading = false, error = null, questions = [], onQuestionClick = () => {}}) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -61,7 +61,8 @@ const InquiryList = ({loading = false, error = null, questions = [],}) => {
           {questions.map((question) => (
             <tr 
               key={question.questionId} 
-              className="hover:bg-gray-100 transition-colors cursor-default"
+              className="hover:bg-gray-100 transition-colors cursor-pointer"
+              onClick={() => onQuestionClick(question)}
             >
               <td className="border-b border-gray-300 px-5 py-4 text-center text-sm font-medium">
                 {question.questionId}
