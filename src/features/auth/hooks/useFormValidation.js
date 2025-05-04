@@ -8,6 +8,10 @@ const useFormValidation = () => {
         password_confirmation: false,
         email: true,
         email_verified: false,
+        phoneNum: false,
+        accountNum: false,
+        birth: false,
+        sex: false,
     });
 
     return [formValid, setFormValid];

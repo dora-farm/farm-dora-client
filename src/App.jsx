@@ -47,6 +47,7 @@ import AdminPopupEdit from './pages/adminpage/AdminPopupEdit';
 import EventDetail from './pages/event/EventDetail';
 import MyReviews from './pages/user/MyReviews';
 import { CategoryProvider } from './layouts/CategoryContext';
+import SellerApproval from "./pages/adminpage/SellerApproval.jsx";
 import { TokenProvider } from './common/utils/TokenContxet';
 
 
@@ -81,17 +82,18 @@ function App() {
                 <Route path="/my/user/wishlist" element={<Wishlist/>} />
               </Route>
 
-              <Route element={<AdminLayout/>}>
-                <Route path="/admin/broadcast" element={<AdminBroadcast/>} />
-                <Route path="/admin" element={<AdminHome/>} />
-                <Route path="/admin/popup" element={<AdminPopup/>} />
-                <Route path="/admin/popup/:id" element={<AdminPopupDetail/>} />
-                <Route path="/admin/popup/edit/:id" element={<AdminPopupEdit/>} />
-                <Route path="/admin/popup/register" element={<AdminPopupRegi/>} />
-                <Route path="/admin/product" element={<AdminProduct/>} />
-                <Route path="/admin/review" element={<AdminReview/>} />
-                <Route path="/admin/user" element={<AdminUser/>} />
-              </Route>
+            <Route element={<AdminLayout/>}>
+              <Route path="/admin/broadcast" element={<AdminBroadcast/>} />
+              <Route path="/admin" element={<AdminHome/>} />
+              <Route path="/admin/popup" element={<AdminPopup/>} />
+              <Route path="/admin/popup/:id" element={<AdminPopupDetail/>} />
+              <Route path="/admin/popup/edit/:id" element={<AdminPopupEdit/>} />
+              <Route path="/admin/popup/register" element={<AdminPopupRegi/>} />
+              <Route path="/admin/product" element={<AdminProduct/>} />
+              <Route path="/admin/review" element={<AdminReview/>} />
+              <Route path="/admin/user" element={<AdminUser/>} />
+              <Route path="/admin/seller/approval" element={<SellerApproval/>} />
+            </Route>
 
               <Route element={<SellerLayout/>}>
                 <Route path="/my/seller" element={<SellerHome/>} />

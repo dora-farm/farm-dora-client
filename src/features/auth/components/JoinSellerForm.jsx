@@ -38,7 +38,7 @@ const JoinSellerForm = () => {
                 detailAddr: form.detailAddr,
             },
             require: form.require,
-            authId: 2,
+            authId: 3,
             isApproved: false,
         };
 
@@ -111,7 +111,7 @@ const JoinSellerForm = () => {
     return (
         <div className="w-full flex flex-col justify-center items-center">
             <h1 className="text-2xl font-extrabold mt-4">입점 신청</h1>
-            <form className="flex flex-col w-full ml-16" encType={"multipart/form-data"}>
+            <form onSubmit={sellerSubmit} className="flex flex-col w-full ml-16" encType={"multipart/form-data"}>
                 <h2 className="ml-4 border-b-2 pb-2 border-b-black">입점정보 입력</h2>
                 <ProfileField
                     label="상호" name="name" id="name" type="text"

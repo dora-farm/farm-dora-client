@@ -20,13 +20,14 @@ export const validateName = (setValid) => {
 
 export const validateId = async (setValid) => {
     const id = document.getElementById("id").value;
-    const valid = /^(?=.*[a-z]{4,})(?=.*[0-9]{1,})[a-z0-9]{5,10}$/.test(id);
+    const valid = /^[a-z0-9]{5,10}$/.test(id);
     if (!valid) {
         document.getElementById("alertId").className = 'text-red-500 text-xs';
         document.getElementById("alertId").innerText = '사용 불가능한 아이디 입니다.';
         setValid((prev) => ({ ...prev, id: false }));
         return;
     }
+
     const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/idcheck?id=${id}`);
     const result = await res.json();
     const isAvailable = result.status !== 409;
@@ -61,6 +62,7 @@ export const validateEmail = async (setValid) => {
         setValid((prev) => ({ ...prev, email: false }));
         return;
     }
+
     const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/emailcheck?email=${email}`);
     const result = await res.json();
     const available = result.status !== 409;

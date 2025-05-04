@@ -17,7 +17,7 @@ const EventDetailPage = () => {
         // 이벤트 상세 정보를 가져오는 API 엔드포인트
         const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/${id}`);
         
-        if (response.data && response.data.data) {
+        if (response.data && response.data.data) {z
           setEvent(response.data.data);
         } else {
           setError('데이터를 불러올 수 없습니다.');

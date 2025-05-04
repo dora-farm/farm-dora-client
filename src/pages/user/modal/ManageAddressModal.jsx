@@ -1,14 +1,16 @@
 import React from 'react';
 import AddressSearchBox from '../../../features/auth/components/AddressSearchBox.jsx';
 
-export default function ManageAddressModal({isOpen, onClose, form, handleChange, onSubmit, title}) {
+export default function ManageAddressModal({isOpen, onClose, form, handleChange, onSubmit, title, handleGetUserAddr}) {
     if (!isOpen) return null;
-    console.log("모달 렌더링 - form 상태:", form);
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
             <div className="flex flex-col bg-white p-6 rounded shadow-lg w-full max-w-md">
-                <h2 className="text-green text-xl font-bold mb-4">{title}</h2>
+                <h2 className="text-green text-xl font-bold">{title}</h2>
+                <div className="flex w-full justify-end">
+                    <button type={`button`} onClick={handleGetUserAddr} className={`text-green p-1 mb-2 border border-gray-300 rounded-md text-end text-xs`} >내 정보</button>
+                </div>
                 <div className="flex justify-between mb-1 items-center">
                     <label htmlFor="deliveryName" className="font-normal text-gray-dark">배송지명</label>
                     <input className="border w-4/5 py-1 px-2 rounded focus:outline-none font-normal mb-1"
@@ -62,10 +64,9 @@ export default function ManageAddressModal({isOpen, onClose, form, handleChange,
                 <label className="flex items-center gap-1 my-2 text-sm font-normal">
                     <input
                         className="w-5 h-5"
-                        type="checkbox" name="defaultAddress" checked={form.defaultAddress} onChange={handleChange} />
+                        type="checkbox" name="defaultAddress" checked={form.defaultAddress} onChange={handleChange}/>
                     기본 배송지로 설정
                 </label>
-
                 <div className="flex justify-end gap-2 mt-4">
                     <button onClick={onClose} className="bg-gray hover:bg-gray-200 px-4 py-1 rounded ">취소</button>
                     <button onClick={onSubmit} className="bg-green hover:bg-[#009977] text-white px-4 py-1 rounded">저장
