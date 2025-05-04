@@ -148,16 +148,16 @@ function ChatSupport() {
           <div className="bg-gray-50 p-6 rounded-lg mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex items-center">
-                <div className="bg-green text-white p-3 rounded-full mr-4">
+                <div className="bg-green text-white p-3 rounded-full mr-4 cursor-pointer">
                   <PhoneIcon />
                 </div>
                 <div>
                   <h3 className="font-medium">전화 문의</h3>
-                  <p>1588-1234</p>
+                  <p>02-6954-7332</p>
                 </div>
               </div>
               <div className="flex items-center">
-                <div className="bg-green text-white p-3 rounded-full mr-4">
+                <div className="bg-green text-white p-3 rounded-full mr-4 cursor-pointer">
                   <EmailIcon />
                 </div>
                 <div>
@@ -179,7 +179,7 @@ function ChatSupport() {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green focus:border-transparent"
+                  className="w-full px-4 py-2 border rounded-lg focus:border-transparent"
                   required
                 />
               </div>
@@ -191,7 +191,7 @@ function ChatSupport() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green focus:border-transparent"
+                  className="w-full px-4 py-2 border rounded-lg focus:border-transparent"
                   required
                 />
               </div>
@@ -204,7 +204,7 @@ function ChatSupport() {
                 name="subject"
                 value={formData.subject}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green focus:border-transparent"
+                className="w-full px-4 py-2 border rounded-lg focus:border-transparent"
                 required
               />
             </div>
@@ -216,7 +216,7 @@ function ChatSupport() {
                 value={formData.message}
                 onChange={handleInputChange}
                 rows="5"
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green focus:border-transparent"
+                className="w-full px-4 py-2 border rounded-lg focus:border-transparent"
                 required
               ></textarea>
             </div>

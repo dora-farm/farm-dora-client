@@ -42,8 +42,7 @@ function Review() {
         `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/review`,
         { 
           params: {
-            ...searchParams,
-            sellerId: 1,
+            ...searchParams
           }
         }
       );
