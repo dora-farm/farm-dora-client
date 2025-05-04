@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 import { KeyboardArrowDown, Search, FavoriteBorder, PersonOutlineOutlined, ShoppingBagOutlined } from '@mui/icons-material';
+import {logoutUser} from "../features/auth/services/authService.js";
 
 function Header({ maincategories, subCategories, loading }) {
   const navigate = useNavigate();
@@ -9,6 +10,8 @@ function Header({ maincategories, subCategories, loading }) {
   const [activeCategory, setActiveCategory] = useState(null);
   const categoryRef = useRef(null);
   const dropdownRef = useRef(null);
+  const [modalMessage ,setModalMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   // 카테고리 토글(열기/닫기)
   const toggleCategory = () => {
@@ -66,6 +69,7 @@ function Header({ maincategories, subCategories, loading }) {
           </div>
           
           <div className="flex items-center space-x-6">
+            <button onClick={()=>{logoutUser(setModalMessage, setShowModal,navigate)}}>로그아웃</button>
             <Link to="/login" className="text-sm">로그인</Link>
             <Link to="/join" className="text-sm">회원가입</Link>
             {/* 구매자 마이페이지 */}

@@ -24,6 +24,7 @@ function AdminSidebar() {
         <Link to="/admin/user" className={activePath === "/admin/user" ? activeBtn : btnHover}>사용자 관리</Link>
         <Link to="/admin/review" className={activePath === "/admin/review" ? activeBtn : btnHover}>리뷰 관리</Link>
         <Link to="/admin/broadcast" className={activePath === "/admin/broadcast" ? activeBtn : btnHover}>방송 관리</Link>
+        <Link to="/admin/seller/approval" className={activePath === "/admin/seller/approval" ? activeBtn : btnHover}>판매자 승인</Link>
       </nav>
 
       <div className="border-t-2 border-gray-light my-4" />

@@ -47,6 +47,7 @@ import AdminPopupEdit from './pages/adminpage/AdminPopupEdit';
 import EventDetail from './pages/event/EventDetail';
 import MyReviews from './pages/user/MyReviews';
 import { CategoryProvider } from './layouts/CategoryContext';
+import SellerApproval from "./pages/adminpage/SellerApproval.jsx";
 
 
 function App() {
@@ -89,6 +90,7 @@ function App() {
               <Route path="/admin/product" element={<AdminProduct/>} />
               <Route path="/admin/review" element={<AdminReview/>} />
               <Route path="/admin/user" element={<AdminUser/>} />
+              <Route path="/admin/seller/approval" element={<SellerApproval/>} />
             </Route>
 
             <Route element={<SellerLayout/>}>

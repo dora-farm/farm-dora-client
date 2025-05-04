@@ -18,22 +18,6 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
 
-    // 🔥 모달 관리 훅
-    // const {
-    //     isOpen,
-    //     title,
-    //     content,
-    //     inputs,
-    //     onSubmitAction,
-    //     openModal,
-    //     closeModal,
-    //     isVerifyModal,
-    //     openVerifyModal,
-    //     closeVerifyModal,
-    //     onSubmitCode,
-    // } = useFindModal();
-
-    // 🔥 일반 찾기 모달
     const {
         isOpen,
         title: findTitle,
@@ -64,7 +48,7 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
             modalTitle: type === "ID" ? "아이디 찾기" : "비밀번호 찾기",
             modalContent: type === "ID"
                 ? "회원가입 시 입력한 이름과 이메일을 입력하세요."
-                : "아이디와 이메일을 입력하시면 비밀번호 재설정 링크를 보내드립니다.",
+                : <>아이디와 이메일을 입력해주세요.<br/>해당 이메일로 임시 비밀번호를 보내드립니다.</>,
             modalInputs: type === "ID"
                 ? [
                     { label: "이름", type: "text", name: "name", onChange: (e) => findNameRef.current = e.target.value },

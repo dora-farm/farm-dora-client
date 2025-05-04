@@ -80,7 +80,7 @@ function DeleteAccount() {
                         setShowModal(false);
                         setConfirmOpen(false);
                         if (shouldLogout) {
-                            await logoutUser(setModalMessage, setShowModal, navigate);
+                            await logoutUser(navigate);
                             setShouldLogout(false); // 다음 호출을 위해 초기화
                         }
                     }}

@@ -4,7 +4,7 @@ import {
     createAddress,
     updateAddress,
     deleteAddress,
-    detailAddress
+    detailAddress, getUserAddress
 } from '../../features/auth/services/addressService';
 import useAddressForm from '../../features/auth/hooks/useAddressForm';
 import ManageAddressModal from './modal/ManageAddressModal';
@@ -26,7 +26,7 @@ const AddressManagePage = () => {
 
     const loadAddresses = async () => {
         const data = await fetchAddresses(userId);
-        setAddresses(data);
+        setAddresses(data ?? []);
     };
 
     const handleSubmit = async () => {
@@ -51,6 +51,7 @@ const AddressManagePage = () => {
             } else {
                 await createAddress(requestData);
             }
+
             await loadAddresses();
             closeModal();
         } catch (err) {
@@ -58,10 +59,25 @@ const AddressManagePage = () => {
         }
     };
 
+    const handleGetUserAddr = async () => {
+        try{
+            const userAddress = await getUserAddress();
+            console.log(userAddress);
+            setAddressForm({
+                receiverName: userAddress.name,
+                phoneNum: userAddress.phoneNum,
+                postNum: userAddress.address.postNum ?? '',
+                addr: userAddress.address.addr ?? '',
+                detailAddr: userAddress.address.detailAddr ?? '',
+            });
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     const handleEditClick = async (depotId) => {
         try {
             const detail = await detailAddress(depotId);
-            console.log("zzz "+detail.defaultAddr);
             setAddressForm({
                 depotId: detail.depotId,
                 deliveryName: detail.deliveryName ?? '',
@@ -83,15 +99,18 @@ const AddressManagePage = () => {
     const handleDeleteClick = async (depotId) => {
         try {
             await deleteAddress(depotId);
-            await loadAddresses();
         } catch (err) {
             console.error('삭제 실패:', err);
+        }
+        finally {
+            await loadAddresses();
         }
     };
 
     useEffect(() => {
         loadAddresses();
     }, []);
+
 
     return (
         <div className="p-6 w-full flex-col items-center justify-center mx-auto">
@@ -139,6 +158,7 @@ const AddressManagePage = () => {
                 handleChange={handleChange}
                 onSubmit={handleSubmit}
                 title={title}
+                handleGetUserAddr = {handleGetUserAddr}
             />
         </div>
     );
