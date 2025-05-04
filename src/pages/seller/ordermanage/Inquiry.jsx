@@ -36,7 +36,6 @@ function Inquiry() {
         { 
           params: {
             ...searchParams,
-            sellerId: 1,
           }
         }
       );
@@ -137,8 +136,8 @@ function Inquiry() {
     <div className="space-y-6">
       <Container>
         <SearchForm
-          // onSearch={}
-          // initialValues={}
+          onSearch={handleSearch}
+          initialValues={searchParams}
         />
       </Container>
       

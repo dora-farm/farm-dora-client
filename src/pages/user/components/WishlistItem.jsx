@@ -62,7 +62,7 @@ function WishlistItem({
         </div>
 
         <div className="flex items-center">
-          <div className="w-[150px] h-[125px] rounded-xl flex items-center justify-center overflow-hidden">
+          <Link to={`/sale/${item.saleId}`} className="w-[150px] h-[125px] rounded-xl flex items-center justify-center overflow-hidden">
             {item.saveFile && !imageError ? (
               <img
                 src={formatImageUrl(item.saveFile)}
@@ -77,7 +77,7 @@ function WishlistItem({
                 />
               </div>
             )}
-          </div>
+          </Link>
         </div>
       </div>
 

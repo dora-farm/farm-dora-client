@@ -20,7 +20,7 @@ export const loginSocial = async (provider) => {
     window.location.href = `${import.meta.env.VITE_AUTH_REST_API_URL}/oauth2/authorization/${provider}`;
 };
 
-export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal, navigate) => {
+export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal) => {
     const loginFormData = new FormData();
     loginFormData.append('id', id);
     loginFormData.append('pwd', document.getElementById('pwd').value);
@@ -46,10 +46,10 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
         document.cookie = `username=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
     }
 
-    navigate("/");
+    window.location.href = "/";
 };
 
-export const logoutUser = async (navigate) => {
+export const logoutUser = async () => {
     try {
         const response = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/login/logout`, {
             method: 'POST',
@@ -66,5 +66,5 @@ export const logoutUser = async (navigate) => {
         console.error("로그아웃 중 오류 발생", error);
         alert("서버 오류로 로그아웃에 실패했습니다.");
     }
-    navigate("/");
+    window.location.href = "/";
 };
