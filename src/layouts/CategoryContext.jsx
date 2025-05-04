@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { fetch } from '../common/utils/fetchWithAuth';
+import { fetchWithAuth } from '../common/utils/fetchWithAuth';
 
 const CategoryContext = createContext();
 
@@ -11,7 +11,7 @@ export function CategoryProvider({ children }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/category`);
+        const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/category`);
         const result = await response.json();
         
         if (result.status === 200 && result.data) {

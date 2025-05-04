@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { fetch } from '../../common/utils/fetchWithAuth';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 const ProductSummary = ({ saleId, setContent }) => {
   const [quantity, setQuantity] = useState(1);
@@ -61,7 +61,7 @@ const ProductSummary = ({ saleId, setContent }) => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, 
+      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, 
       {
         method: 'POST',
         headers: {

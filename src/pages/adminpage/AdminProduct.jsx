@@ -1,6 +1,6 @@
 // src/pages/seller/Manage.jsx
 import { useState, useEffect, useRef } from 'react';
-import { fetch } from '../../common/utils/fetchWithAuth';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 import Keyword from '../../common/components/search/Keyword';
 import ProductStatus from '../../common/components/search/ProductStatus';
@@ -81,7 +81,7 @@ function AdminProduct() {
     try {
 
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/updateStatus/${productId}`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/updateStatus/${productId}`, {
         method: 'PUT',
       });
 
@@ -112,7 +112,7 @@ function AdminProduct() {
 
     try {
       // 백엔드 API 호출
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/detail/${productId}`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/detail/${productId}`);
 
       const httpResponse = await response.json();
       // console.log('조회된 상품 정보:', httpResponse);
@@ -131,7 +131,7 @@ function AdminProduct() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale/search`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale/search`);
 
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -183,11 +183,8 @@ function AdminProduct() {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale/search`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale/search`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(jsonData)
       });
 
@@ -232,11 +229,8 @@ function AdminProduct() {
       };
 
       // fetch API를 사용하여 서버로 요청 보내기
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/delete`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/delete`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(request)
       });
 

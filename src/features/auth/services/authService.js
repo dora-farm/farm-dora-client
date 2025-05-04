@@ -1,7 +1,7 @@
-import { fetch } from '../../../common/utils/fetchWithAuth';
+import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
 
 export const registerSocial = async (provider) => {
-    await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/oauth/id/save`, {
+    await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/oauth/id/save`, {
         method: "POST",
         body: JSON.stringify({ provider }),
     })
@@ -25,7 +25,7 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
     loginFormData.append('id', id);
     loginFormData.append('pwd', document.getElementById('pwd').value);
 
-    const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/login`, {
+    const response = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/login`, {
         method: 'POST',
         body: loginFormData,
     });
@@ -51,7 +51,7 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
 
 export const logoutUser = async (navigate) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/login/logout`, {
+        const response = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/login/logout`, {
             method: 'POST',
         });
 

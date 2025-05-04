@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Rating from '@mui/material/Rating';
-import { fetch } from '../../../common/utils/fetchWithAuth';
+import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
 
 // orderId, orderData와 함께 saleData를 props로 받도록 수정
 const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) => {
@@ -98,7 +98,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) =
         formData.append('images', image);
       });
       
-      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/review`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/review`, {
         method: 'POST',
         body: formData
       });

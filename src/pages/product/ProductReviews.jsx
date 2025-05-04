@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Pagination from '../../common/components/Pagination';
 import StarIcon from '@mui/icons-material/Star';
-import { fetch } from '../../common/utils/fetchWithAuth';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 const ProductReviews = ({ saleId }) => {
   const [reviews, setReviews] = useState([]);
@@ -21,7 +21,7 @@ const ProductReviews = ({ saleId }) => {
 
   const fetchReviews = async (page = 0) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/review/${saleId}?page=${page}`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/review/${saleId}?page=${page}`);
       const result = await response.json();
       setReviews(result.data.contents);
       setTotalElements(result.data.totalElements);

@@ -4,7 +4,7 @@ import { FavoriteBorder, Favorite } from '@mui/icons-material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Pagination from "../../common/components/Pagination";
 import { useCategory } from '../../layouts/CategoryContext';
-import { fetch } from '../../common/utils/fetchWithAuth';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 function Category() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,7 +50,7 @@ function Category() {
 
         console.log('요청: ', apiUrl);
 
-        const productsResponse = await fetch(apiUrl);
+        const productsResponse = await fetchWithAuth(apiUrl);
         const productsData = await productsResponse.json();
 
         console.log(productsData);
@@ -95,7 +95,7 @@ function Category() {
 
   const toggleLike = async (saleId) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`, {
+      const response = await fefetchWithAuthtch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`, {
         method: 'PUT',
       });
       const result = await response.json();

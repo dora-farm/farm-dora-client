@@ -3,7 +3,7 @@ import UserSearchSection from './components/UserSearchSection.jsx';
 import UserListSection from './components/UserListSection.jsx';
 import AlertModal from '../../common/components/modal/AlertModal.jsx';
 import Loading from '../../common/components/Loading.jsx';
-import { fetch } from '../../common/utils/fetchWithAuth.js';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth.js';
 
 const AdminUser = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,7 +44,7 @@ const AdminUser = () => {
     const url = `${import.meta.env.VITE_SEARCH_REST_API_URL}/admin/user?keyword=${searchTerm}&${typeParams}&sort=${sortFilter}&page=${page}`;
     console.log(url);
     try {
-      const res = await fetch(url,{
+      const res = await fetchWithAuth(url,{
         method: 'GET',
       });
       const json = await res.json();
@@ -86,7 +86,7 @@ const AdminUser = () => {
 
   const handleStatusChange = async (userId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/admin/user/blind`, {
+      const res = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/admin/user/blind`, {
         method: 'PATCH',
         body: JSON.stringify({ userId: userId})
       });
