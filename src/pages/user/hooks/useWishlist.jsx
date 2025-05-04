@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import axios from "../../../common/utils/axiosInstance";
 
-export function useWishlist(userId, previewMode) {
+export function useWishlist(previewMode) {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [imageErrors, setImageErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +16,7 @@ export function useWishlist(userId, previewMode) {
       const endpoint = previewMode
         ? `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/likepreview`
         : `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/like`;
-      const response = await axios.get(endpoint, { params: { userId } });
+      const response = await axios.get(endpoint);
 
       let items = response.data.data;
 
@@ -45,7 +45,7 @@ export function useWishlist(userId, previewMode) {
     } finally {
       setIsLoading(false);
     }
-  }, [userId, previewMode]);
+  }, [previewMode]);
 
   // 찜 리스트 삭제하기
   const getselectedItemsToDelete = useCallback(() => 
@@ -73,6 +73,7 @@ export function useWishlist(userId, previewMode) {
 
       if (response.status === 200) {
         // 삭제 성공 시 리스트 다시 로드
+        setSelectedItems({});
         await loadWishlistItems();
         return true;
       }
@@ -89,7 +90,7 @@ export function useWishlist(userId, previewMode) {
   const deleteSingleItem = useCallback(async (likeId) => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}api/my/user/like`, {
+      const response = await axios.delete(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/like`, {
         data: [likeId],
       });
       
@@ -107,13 +108,14 @@ export function useWishlist(userId, previewMode) {
   const addBasket = async (optionId) => {
     try {
       setIsLoading(true);
-
-      const formData = new FormData();
-      formData.append("optionId", optionId);
-      formData.append("quantity", 1);
       
       const response = await axios.post(
-        `http:///localhost:8020/api/basket`, formData);
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, 
+        {
+          optionId: optionId,
+          quantity: 1
+        }
+      );
 
       if (response.status === 200) {
         return true;
@@ -124,8 +126,8 @@ export function useWishlist(userId, previewMode) {
         console.error("이미 장바구니에 존재하는 상품입니다.");
         return { success: false, message: "이미 장바구니에 존재하는 상품입니다." };
       }
-      console.error("장바구니에 추가할 수 없습니다:", error.message);
-      return { success: false, message: "장바구니에 추가할 수 없습니다." };
+      console.error("장바구니에 추가중 에러가 발생했습니다.:", error.message);
+      return { success: false, message: "장바구니에 추가중 에러발생!" };
     } finally {
       setIsLoading(false);
     }
@@ -139,9 +141,8 @@ export function useWishlist(userId, previewMode) {
   const formatImageUrl = useCallback((imagePath) => {
     if (!imagePath) return null;
 
-    const baseUrl =
-      "https://u7ouobpu9909.edge.naverncp.com/cdie6Z8lNS/wishlist/";
-    const params = "?type=f&w=216&h=180";
+    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/wishlist/";
+    const params = "?type=f&w=700&h=700&quality=90&align=4";
 
     return imagePath.startsWith("http")
       ? imagePath

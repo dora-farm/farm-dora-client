@@ -3,10 +3,9 @@ import DateFilter from "./components/DateFilter";
 import Pagination from "../../common/components/Pagination";
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import ChatIcon from '@mui/icons-material/Chat';
-import axios from "axios";
+import axios from "../../common//utils/axiosInstance";
 
 function MyInquiries() {
-  const userId = 1;
   const itemPerPage = 10;
   
   // 상태 관리
@@ -39,7 +38,6 @@ function MyInquiries() {
         `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/question`, 
         {
           params: {
-            userId,
             startDate: dateRange.startDate,
             endDate: dateRange.endDate,
           },
@@ -64,6 +62,19 @@ function MyInquiries() {
   const handleRangeUpdate = (newRange, newSelected) => {
     setDateRange(newRange);
     setSelectedRange(newSelected);
+  };
+  // 날짜 형식 변경
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
   // 페이지네이션 설정
@@ -94,7 +105,7 @@ function MyInquiries() {
       <div className="flex justify-between">
         <div className="w-1/6 text-center text-gray-700">{item.id}</div>
         <div className="w-2/6 pl-14 text-left font-medium">{item.title}</div>
-        <div className="w-2/6 text-center text-gray-600">{item.createDate}</div>
+        <div className="w-2/6 text-center text-gray-600">{formatDate(item.createDate)}</div>
         <div className="w-1/6 text-center">
           <span 
             className={`rounded-full px-2 py-1 text-sm justify-center 

@@ -64,8 +64,8 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
   const formatImageUrl = (imagePath) => {
     if (!imagePath) return null;
 
-    const baseUrl = "https://u7ouobpu9909.edge.naverncp.com/cdie6Z8lNS/wishlist/";
-    const params = "?type=f&w=216&h=180";
+    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/wishlist/";
+    const params = "?type=f&w=700&h=700&quality=90&align=4";
 
     return imagePath.startsWith("http")
       ? imagePath
@@ -186,7 +186,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                 <div className="mb-4">
                   <div className="text-sm text-gray-500 mb-1">리뷰 내용</div>
                   <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
-                    {review?.content || "-"}
+                    {review?.reply || "-"}
                   </div>
                 </div>
                 

@@ -3,7 +3,7 @@ import UserSearchSection from './components/UserSearchSection.jsx';
 import UserListSection from './components/UserListSection.jsx';
 import AlertModal from '../../common/components/modal/AlertModal.jsx';
 import Loading from '../../common/components/Loading.jsx';
-import {getCookie} from "../../common/utils/Cookies.jsx";
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth.js';
 
 const AdminUser = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,7 +14,6 @@ const AdminUser = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  let token = "";
 
   const [pagination, setPagination] = useState({
     currentPage: 0,
@@ -28,7 +27,6 @@ const AdminUser = () => {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    token = getCookie('jwt_token');
     const selectedTypes = Object.entries(filters)
         .filter((pair) => pair[1])
         .map((pair) => pair[0]);
@@ -41,18 +39,13 @@ const AdminUser = () => {
   }, [filters]);
 
   const fetchUsers = async (page = 0) => {
-    token = getCookie('jwt_token');
     setLoading(true);
     const typeParams = processedFilters.map(type => `types=${type}`).join('&');
     const url = `${import.meta.env.VITE_SEARCH_REST_API_URL}/admin/user?keyword=${searchTerm}&${typeParams}&sort=${sortFilter}&page=${page}`;
     console.log(url);
-    console.log(token);
     try {
-      const res = await fetch(url,{
+      const res = await fetchWithAuth(url,{
         method: 'GET',
-        headers:{
-          Authorization: `Bearer ${token}`,
-        }
       });
       const json = await res.json();
       const data = json.data;
@@ -93,12 +86,8 @@ const AdminUser = () => {
 
   const handleStatusChange = async (userId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/admin/user/blind`, {
+      const res = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/admin/user/blind`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
         body: JSON.stringify({ userId: userId})
       });
       const json = await res.json();

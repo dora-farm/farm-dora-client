@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "../../../../common//utils/axiosInstance";
 
-const useDashboardData = (sellerId, startDate, endDate, period) => {
+const useDashboardData = (startDate, endDate, period) => {
   // 상태 관리
   const [salesData, setSalesData] = useState({
     labels: [],
@@ -107,7 +107,6 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
         `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/sales`,
         {
           params: {
-            sellerId,
             startDate,
             endDate,
             period: serverPeriod,
@@ -147,10 +146,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
   const loadProductRatioData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/product`,
-        {
-          params: { sellerId },
-        }
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/product`
       );
 
       const HttpResponse = response.data.data;
@@ -193,10 +189,7 @@ const useDashboardData = (sellerId, startDate, endDate, period) => {
   const loadStatusRatioData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/status`,
-        {
-          params: { sellerId },
-        }
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/status`
       );
 
       const HttpResponse = response.data.data;

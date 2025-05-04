@@ -58,24 +58,24 @@ function EditProfile() {
 
     return (
 
-         <div className="w-full">
-             <EmailVerifyModalForm
-                 title={verifyTitle}
-                 content={verifyContent}
-                 isOpen={isVerifyModal}
-                 onClose={goMyUser}
-                 onSubmit={onSubmitCode}
-                 inputs={verifyInputs}
-             />
-             {/* Alert 모달 */}
-             {showModal && (
-                 <AlertModal
-                     message={modalMessage}
-                     onClose={() => {setShowModal(false)}}
-                 />
-             )}
-             {goEdit && <EditProFileFrom/>}
-         </div>
+        <div className="w-full">
+            <EmailVerifyModalForm
+                title={verifyTitle}
+                content={verifyContent}
+                isOpen={isVerifyModal}
+                onClose={goMyUser}
+                onSubmit={onSubmitCode}
+                inputs={verifyInputs}
+            />
+            {/* Alert 모달 */}
+            {showModal && (
+                <AlertModal
+                    message={modalMessage}
+                    onClose={() => {setShowModal(false)}}
+                />
+            )}
+            {goEdit && <EditProFileFrom/>}
+        </div>
     )
 }
 

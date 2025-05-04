@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../common/utils/axiosInstance';
 import Pagination from '../../common/components/Pagination';
 import ReviewModal from './modal/ReviewModal';
 import PaymentInfo from './modal/PaymentInfo';

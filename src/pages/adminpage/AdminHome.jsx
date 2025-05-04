@@ -21,7 +21,6 @@ function AdminHome() {
   });
 
   const { adminSalesData, usersData, loadAdminAllData } = useDashboardData(
-    null,
     startDate,
     endDate,
     period

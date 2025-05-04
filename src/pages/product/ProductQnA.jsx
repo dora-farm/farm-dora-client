@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Pagination from "../../common/components/Pagination";
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 const ProductQnA = ({ saleId }) => {
   const [qnaList, setQnaList] = useState([]);
@@ -15,9 +16,9 @@ const ProductQnA = ({ saleId }) => {
 
   const fetchQnAList = async (page) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/question/${saleId}?page=${page}`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/question/${saleId}?page=${page}`);
       const result = await response.json();
-
+  
       if (result.status === 200) {
         setQnaList(result.data.contents);
         setCurrentPage(result.data.currentPage);

@@ -6,7 +6,6 @@ import Pagination from "../../common/components/Pagination";
 import AlertModal from "../../common/components/modal/AlertModal";
 
 function Wishlist() {
-  const userId = 1;
   const [deleteLoading, setDeleteLoading] = useState(false);
   
   // 모달 상태 관리
@@ -37,7 +36,7 @@ function Wishlist() {
     deleteSingleItem,
     addBasket,
     selectedItemsToDelete
-  } = useWishlist(userId, false);
+  } = useWishlist(false);
 
   // 알림 모달 열기 - useCallback으로 메모이제이션하여 안정성 높임
   const showAlert = useCallback((message, callback = null) => {
@@ -76,9 +75,7 @@ function Wishlist() {
       showAlert("삭제할 상품을 선택해주세요.");
       return;
     }
-  
     setDeleteLoading(true);
-  
     try {
       // 현재 페이지 정보 및 선택된 항목 수 미리 계산
       const currentPageItems = wishlistItems.slice(
@@ -125,7 +122,7 @@ function Wishlist() {
         <div className="flex flex-col items-center justify-center h-64 border border-gray-300 rounded-lg">
           <p className="text-gray-500 mb-4">찜한 상품이 없습니다.</p>
           <button 
-            onClick={() => window.location.href = '/products'}
+            onClick={() => window.location.href = '/'}
             className="px-4 py-2 bg-brown text-white rounded-md hover:bg-brown-dark transition-colors"
           >
             상품 둘러보기
@@ -139,7 +136,7 @@ function Wishlist() {
     <div className="container mx-auto px-4 py-8 select-none cursor-default">
       <h1 className="text-2xl font-bold text-center mb-8">찜 리스트</h1>
 
-      <div className="border-y-2 border-gray-dark py-4 mb-4">
+      <div className="border-y-2 border-gray py-4 mb-4">
         <div className="flex items-center ml-4 justify-between">
           <div className="flex items-center ml-14">
             <GreenCircleCheckbox checked={isAllSelected} onChange={toggleSelectAll}/>

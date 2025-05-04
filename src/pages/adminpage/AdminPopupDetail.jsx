@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../common/utils/axiosInstance';
 import AlertModal from '../../common/components/modal/AlertModal'; // 경로는 실제 프로젝트 구조에 맞게 조정해주세요
 
 const AdminPopupDetail = () => {

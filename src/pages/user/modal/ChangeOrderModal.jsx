@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import axios from 'axios';
+import axios from '../../../common/utils/axiosInstance';
 import RefundItem from '../components/RefundItem';
 
 const ChangeOrderModal = ({ isOpen, onClose, orderId, onOrderChanged }) => {

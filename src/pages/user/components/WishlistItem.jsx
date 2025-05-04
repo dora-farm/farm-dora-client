@@ -21,7 +21,7 @@ function WishlistItem({
   if (previewMode) {
     return (
       <Link
-        to={`/product/${item.saleId}`}
+        to={`/sale/${item.saleId}`}
         className="bg-white border border-gray-dark rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
       >
         <div className="relative h-48 overflow-hidden">
@@ -109,7 +109,7 @@ function WishlistItem({
               if (result === true || result?.success === true) {
                 showAlert("장바구니에 담겼습니다!");
               } else {
-                showAlert(result?.message || "장바구니에 추가할 수 없습니다.");
+                showAlert(result?.message || "장바구니에 담기 실패!");
               }
             }}
           >

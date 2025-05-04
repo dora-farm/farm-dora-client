@@ -5,6 +5,7 @@ import Pagination from '../../common/components/Pagination';
 import ReviewDetailModal from './modal/ReviewDetailModal';
 import Loading from '../../common/components/Loading';
 import AlertModal2 from '../../common/components/modal/AlertModal2.jsx';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth.js';
 
 function AdminReview() {
   // 검색 관련 상태
@@ -57,7 +58,7 @@ function AdminReview() {
     setModalOpen(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/${reviewId}`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/${reviewId}`);
       const httpResponse = await response.json();
       setReviewDetail(httpResponse.data);
     } catch (error) {
@@ -77,7 +78,7 @@ function AdminReview() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/allreviews?sortType=${sortFilter}&page=0`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/allreviews?sortType=${sortFilter}&page=0`);
       
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -134,7 +135,7 @@ function AdminReview() {
     }
 
     try {
-      const response = await fetch(url);
+      const response = await fetchWithAuth(url);
       
       if (!response.ok) {
         throw new Error('검색 중 오류가 발생했습니다.');
@@ -192,7 +193,7 @@ function AdminReview() {
   // 리뷰 삭제 핸들러
   const handleDeleteReview = async (reviewId) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/${reviewId}`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/${reviewId}`, {
         method: 'DELETE'
       });
       
