@@ -25,7 +25,7 @@ export const loginUser = async (id, saveIdChecked, setModalMessage, setShowModal
     loginFormData.append('id', id);
     loginFormData.append('pwd', document.getElementById('pwd').value);
 
-    const response = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/login`, {
+    const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/login`, {
         method: 'POST',
         body: loginFormData,
     });

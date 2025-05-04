@@ -186,7 +186,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                 <div className="mb-4">
                   <div className="text-sm text-gray-500 mb-1">리뷰 내용</div>
                   <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
-                    {review?.content || "-"}
+                    {review?.reply || "-"}
                   </div>
                 </div>
                 
