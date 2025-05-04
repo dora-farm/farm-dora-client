@@ -1,6 +1,6 @@
 import { getCookie } from './Cookies'; // getCookie 함수 재사용
 
-export const fetchWithAuth = async (url, options = {}) => {
+export const fetch = async (url, options = {}) => {
   const token = getCookie('jwt_token');
 
   const headers = {

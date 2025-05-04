@@ -1,4 +1,4 @@
-import { fetch } from '../../../common/utils/fetchWithAuth.js';
+import { fetch } from '../../../common/utils/fetchWithAuth';
 
 export const registerSocial = async (provider) => {
     await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/oauth/id/save`, {
