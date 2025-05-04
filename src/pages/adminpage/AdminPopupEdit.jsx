@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../common/utils/axiosInstance';
 import AlertModal2 from '../../common/components/modal/AlertModal2';
 
 const AdminPopupEdit = () => {

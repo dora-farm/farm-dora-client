@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../../../common/utils/axiosInstance.js';
 import {getCookie} from "../../../common/utils/Cookies.jsx";
 
 const BASE_URL = `${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/user/depot`;

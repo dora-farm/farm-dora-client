@@ -1,3 +1,4 @@
+import { fetchWithAuth } from '../../../common/utils/fetchWithAuth.js';
 
 export const focusSpan = (id, message) => {
     const span = document.getElementById(id);

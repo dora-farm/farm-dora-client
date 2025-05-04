@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Pagination from "../../common/components/Pagination";
 import { useCategory } from '../../layouts/CategoryContext';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 import ProductCard from '../../common/components/ProductCard';
 import { useLikeToggle } from '../user/hooks/useLikeToggle';
 import { getCookie } from '../../common/utils/Cookies';
@@ -50,12 +51,9 @@ function Category() {
           apiUrl += `&bigTypeId=${type_big_id}`;
         }
 
-        const productsResponse = await fetch(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        console.log('요청: ', apiUrl);
 
+        const productsResponse = await fetchWithAuth(apiUrl);
         const productsData = await productsResponse.json();
 
         setProducts(productsData.data.contents);

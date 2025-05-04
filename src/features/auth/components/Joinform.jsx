@@ -17,6 +17,7 @@ import {
 import AlertModal from "../../../common/components/modal/AlertModal.jsx";
 import {useEmailVerifyModal} from "../hooks/useEmailVerifyModal.js";
 import EmailVerifyModalForm from "./modal/EmailVerifyModalForm.jsx";
+import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
 
 const JoinForm = () => {
     const [formValid, setFormValid] = useFormValidation();
@@ -104,7 +105,7 @@ const JoinForm = () => {
         };
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/user`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/user`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

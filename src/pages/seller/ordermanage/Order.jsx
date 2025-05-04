@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import axios from 'axios';
+import axios from '../../../common/utils/axiosInstance';
 import Container from '../dashboard/components/ChartContainer';
 import SearchForm from './components/SearchForm';
 import OrderList from './components/OrderList';
@@ -39,10 +39,12 @@ function Order() {
       
       setSearchParams(searchParams);
       setCurrentPage(0);    // 검색 시 첫 페이지로 초기화
-  
+
       const response = await axios.get(
         `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
-        { params: searchParams }
+        { 
+          params: searchParams
+        }
       );
   
       if (response.status === 200) {
@@ -89,13 +91,15 @@ function Order() {
     size: itemsPerPage, // 페이지 크기 설정
   }), [startDate, endDate, itemsPerPage]);
 
+
+
+
   const loadOrderDetail = async (orderId) => {
     if (!orderId) return;
-    
     try {
       setDetailLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_SEARCH_REST_API_URL}/api/my/seller/order/detail`, 
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/detail`, 
         { params: { orderId } }
       );
 
@@ -136,7 +140,9 @@ function Order() {
         
         const response = await axios.get(
           `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
-          { params: pageParams }
+          { 
+            params: pageParams,
+          }
         );
         
         if (response.status === 200) {

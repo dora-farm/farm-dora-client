@@ -1,5 +1,7 @@
 import React from "react";
 import Rating from '@mui/material/Rating';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 const ReviewList = ({reviews = [], loading = false, error = null, onReviewClick = () => {} }) => {
   if (loading) {
@@ -36,6 +38,12 @@ const ReviewList = ({reviews = [], loading = false, error = null, onReviewClick 
     
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
+
+  const formatReply = (reply) => {
+    if(reply) {
+      return <CheckIcon sx={{ color: "#1CA673" }} fontSize="small" />;
+    } return <CloseIcon sx={{ color: "#F29B30" }} fontSize="small" />;
+  }
   
   return (
     <div className="w-full overflow-x-auto">
@@ -90,7 +98,7 @@ const ReviewList = ({reviews = [], loading = false, error = null, onReviewClick 
                 />
               </td>
               <td className="border-b border-gray-300 px-4 py-4 text-center text-sm font-medium">
-              {review.reply}
+              {formatReply(review.reply)}
               </td>
             </tr>
           ))}

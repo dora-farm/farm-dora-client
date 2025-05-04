@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../common/utils/axiosInstance';
 import Loading from '../../common/components/Loading';
 
 const EventDetailPage = () => {
@@ -15,7 +15,7 @@ const EventDetailPage = () => {
       try {
         setLoading(true);
         // 이벤트 상세 정보를 가져오는 API 엔드포인트
-        const response = await axios.get(`http://localhost:8080/api/popup/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/${id}`);
         
         if (response.data && response.data.data) {z
           setEvent(response.data.data);

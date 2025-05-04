@@ -1,4 +1,5 @@
 import React, { useState} from 'react';
+import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
 
 const RegistModal = ({ isOpen, onClose, loading, refreshProducts}) => {
   const [title, setTitle] = useState('');

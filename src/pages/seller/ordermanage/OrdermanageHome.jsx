@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../../common/utils/axiosInstance';
 import { Link, useLocation } from 'react-router-dom';
 import DashboardLayout from '../dashboard/components/DashboardLayout';
 import DashboardHeader from '../dashboard/components/DashboardHeader';
@@ -33,11 +33,15 @@ function OrdermanageHome() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
+
   const loadOrderCounts = async () => {
     try {
       setLoading(true);
       
-      const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order`
+      );
 
       if (response.status === 200) {
         setStatistics(response.data.data);

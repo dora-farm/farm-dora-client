@@ -45,7 +45,8 @@ function DeleteAccount() {
                     </ul>
                     <h3 className={`text-green font-bold text-sm mb-2`}>현재 비밀번호</h3>
                     <input type="password" id='pwd' name="pwd" placeholder={`비밀번호를 입력해 주세요`}
-                           className={`text-xs py-2 px-2 w-56 focus:outline-none border rounded-md`} required/>
+                        className={`text-xs py-2 px-2 w-56 focus:outline-none border rounded-md`} required
+                    />
                 </div>
                 <div className="flex flex-row items-center mt-4 mb-4 ">
                     <input type="checkbox" id="confirm-check" className={`w-5 h-5`} required/>

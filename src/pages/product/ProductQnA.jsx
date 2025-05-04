@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Pagination from "../../common/components/Pagination";
-import { getCookie } from "../../common/utils/Cookies";
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 const ProductQnA = ({ saleId }) => {
   const [qnaList, setQnaList] = useState([]);
@@ -16,17 +16,7 @@ const ProductQnA = ({ saleId }) => {
 
   const fetchQnAList = async (page) => {
     try {
-      const token = getCookie('jwt_token'); // ✅ 토큰 꺼내기
-  
-      const response = await fetch(
-        `${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/question/${saleId}?page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // ✅ 헤더에 토큰 추가
-          },
-        }
-      );
-  
+      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/question/${saleId}?page=${page}`);
       const result = await response.json();
   
       if (result.status === 200) {

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../common/utils/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 import { getCookie } from '../../common/utils/Cookies';
 import { useLikeToggle } from '../user/hooks/useLikeToggle';
@@ -108,10 +109,16 @@ const ProductSummary = ({ saleId, setContent }) => {
       return;
     }
 
+    if (!token) {
+      const added = saveGuestBasket();
+      if (added) alert("장바구니에 추가되었습니다!");
+      return;
+    }
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
+      
+      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
         method: 'GET',
-        headers: { Authorization: `Bearer ${token}` },
       });
       const result = await response.json();
       const currentCount = result?.data?.contents?.length ?? 0;
@@ -125,12 +132,8 @@ const ProductSummary = ({ saleId, setContent }) => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           optionId: selectedOption,
           quantity: quantity,

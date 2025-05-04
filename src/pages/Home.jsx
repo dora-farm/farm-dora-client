@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import HomeVideoSlider from './HomeVideoSlider';
 import Loading from '../common/components/Loading';
-import axios from 'axios';
+import axios from '../common/utils/axiosInstance';
 import Pagination from '../common/components/Pagination';
-import { getCookie } from '../common/utils/Cookies';
 import ProductCard from '../common/components/ProductCard';
 import { TrendingUp, VideoLibrary } from '@mui/icons-material';
 
@@ -11,29 +10,20 @@ function Home() {
   const [videos, setVideos] = useState([]);
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(null);
   const [rankingPage, setRankingPage] = useState(0);
   const [rankingTotalPages, setRankingTotalPages] = useState(0);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrevious, setHasPrevious] = useState(false);
 
   useEffect(() => {
-    const jwtToken = getCookie('jwt_token');
-    setToken(jwtToken);
-  }, []);
-
-  useEffect(() => {
-    if (!token) return;
 
     const fetchVideosAndRanking = async () => {
       try {
         setLoading(true);
         const [videoRes, rankingRes] = await Promise.all([
           axios.get(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/main/home`, {
-            headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/rank?page=${rankingPage}`, {
-            headers: { Authorization: `Bearer ${token}` },
           })
         ]);
 
@@ -62,18 +52,17 @@ function Home() {
     };
 
     fetchVideosAndRanking();
-  }, [token, rankingPage]);
+  }, [rankingPage]);
 
   const handleToggleLike = async (saleId) => {
     try {
       const index = ranking.findIndex((item) => item.saleId === saleId);
-      if (index === -1 || !token) return;
+      if (index === -1) return;
 
       const isLiked = ranking[index].liked;
       const url = `${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`;
-      const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      await axios.put(url, null, config);
+      await axios.put(url, null);
 
       const updated = [...ranking];
       updated[index] = { ...updated[index], liked: !isLiked };

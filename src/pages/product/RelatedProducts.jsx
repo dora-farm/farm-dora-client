@@ -5,6 +5,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { getCookie } from '../../common/utils/Cookies';
 import { useLikeToggle } from '../user/hooks/useLikeToggle';
+import axios from '../../common/utils/axiosInstance';
+import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 const RelatedProducts = ({ saleId }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -24,13 +26,8 @@ const RelatedProducts = ({ saleId }) => {
 
     const fetchRelatedProducts = async () => {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/related/${saleId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const response = await fetchWithAuth(
+          `${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/related/${saleId}`
         );
         const result = await response.json();
         setRelatedProducts(result.data);

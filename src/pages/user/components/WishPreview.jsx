@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 import { useWishlist } from "../hooks/useWishlist";
 import WishlistItem from "./WishlistItem";
 
-function WishPreview({ userId }) {
+function WishPreview() {
   const {
     wishlistItems,
     isLoading,
     imageErrors,
     formatImageUrl,
     handleImageError
-  } = useWishlist(userId, true);
+  } = useWishlist(true);
 
 
   if (isLoading) {
