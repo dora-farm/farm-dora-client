@@ -7,7 +7,7 @@ import UserLayout from './layouts/UserLayout';
 import SellerLayout from './layouts/SellerLayout';
 import MyPage from './pages/user/MyPage';
 import Wishlist from './pages/user/Wishlist';
-import Cart from './pages/user/Cart';
+import Basket from './pages/user/Basket.jsx';
 import MyInquireies from './pages/user/MyInquireies';
 import Orders from './pages/user/Orders';
 import ManageAddress from './pages/user/ManageAddress';
@@ -72,7 +72,7 @@ function App() {
               <Route element={<UserLayout/>}>
                 <Route path="/my/user" element={<MyPage/>} />
                 <Route path="/my/user/review" element={<MyReviews/>} />
-                <Route path="/my/user/cart" element={<Cart/>} />
+                <Route path="/basket" element={<Basket />} />
                 <Route path="/my/user/inquiry" element={<MyInquireies/>} />
                 <Route path="/my/user/order" element={<Orders/>} />
                 <Route path="/my/user/address" element={<ManageAddress/>} />

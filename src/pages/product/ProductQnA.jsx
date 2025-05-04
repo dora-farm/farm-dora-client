@@ -18,7 +18,7 @@ const ProductQnA = ({ saleId }) => {
     try {
       const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/question/${saleId}?page=${page}`);
       const result = await response.json();
-
+  
       if (result.status === 200) {
         setQnaList(result.data.contents);
         setCurrentPage(result.data.currentPage);
