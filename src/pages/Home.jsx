@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HomeVideoSlider from './HomeVideoSlider';
+import BannerSlider from './BannerSlider';
 import Loading from '../common/components/Loading';
 import axios from '../common/utils/axiosInstance';
 import Pagination from '../common/components/Pagination';
@@ -7,6 +8,7 @@ import ProductCard from '../common/components/ProductCard';
 import { TrendingUp, VideoLibrary } from '@mui/icons-material';
 
 function Home() {
+  const [banners, setBanners] = useState([]);
   const [videos, setVideos] = useState([]);
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,16 +18,18 @@ function Home() {
   const [hasPrevious, setHasPrevious] = useState(false);
 
   useEffect(() => {
-
     const fetchVideosAndRanking = async () => {
       try {
         setLoading(true);
-        const [videoRes, rankingRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/main/home`, {
-          }),
-          axios.get(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/rank?page=${rankingPage}`, {
-          })
+        const [videoRes, rankingRes, bannerRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/main/home`),
+          axios.get(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/rank?page=${rankingPage}`),
+          axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/popup`)
         ]);
+
+        if (bannerRes.data?.data) {
+          setBanners(bannerRes.data.data);
+        }
 
         if (videoRes.data?.data?.contents) {
           setVideos(videoRes.data.data.contents);
@@ -83,7 +87,10 @@ function Home() {
 
   return (
     <div className="px-4 md:px-10 py-10 bg-gray-50 min-h-screen">
-      {/* 실시간 랭킹 */}
+      {/*  배너 슬라이더 */}
+      <BannerSlider banners={banners} />
+
+      {/*  실시간 랭킹 */}
       <section className="mb-16">
         <div className="flex items-center mb-6">
           <TrendingUp className="text-green-600 mr-2" />
