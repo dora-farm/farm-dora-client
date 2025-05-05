@@ -101,10 +101,10 @@ function Review() {
         setReviewDetail(response.data.data);
         setModalOpen(true);
       } else {
-        throw new Error(response.data?.message || '주문 상세 정보를 가져오는데 실패했습니다.');
+        throw new Error(response.data?.message || '리뷰 상세 정보를 가져오는데 실패했습니다.');
       }
     } catch (error) {
-      console.log("주문 상세정보를 불러올 수 없습니다.", error.message);
+      console.log("리뷰 상세정보를 불러올 수 없습니다.", error.message);
       setError(error.message);
     } finally {
       setDetailLoading(false);
@@ -137,7 +137,6 @@ function Review() {
           { 
             params: {
               ...pageParams,
-              sellerId: 1,
             }
           }
         );
