@@ -41,7 +41,7 @@ const OrderCompletePage = () => {
           홈으로 가기
         </button>
         <button
-          onClick={() => navigate("/mypage/orders")}
+          onClick={() => navigate("/my/user")}
           className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded font-semibold"
         >
           마이페이지
