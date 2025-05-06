@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { fetchWithAuth } from "../../common/utils/fetchWithAuth";
 
 function OrderPage() {
   const location = useLocation();
   const items = location.state?.items || [];
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("주문 페이지에 전달된 장바구니 항목:", items);
@@ -47,16 +48,20 @@ function OrderPage() {
 
       if (location.state?.orderType === 'direct') {
         response = await fetchWithAuth(
-          `${import.meta.env.VITE_BUYER_REST_API_URL}/api/order/direct`,
+          `${import.meta.env.VITE_BUYER_REST_API_URL}/api/order/option`,
           {
             method: "POST",
             body: JSON.stringify({
+              depotId: selectedAddress.depotId,
               optionId: location.state.optionId,
               quantity: location.state.quantity,
-              depotId: selectedAddress.depotId,
             }),
           },
         );
+
+        if (response.ok) {
+          navigate("/order/complete", { state: { totalPrice: totalPrice } });
+        }
       } else {
         const basketIds = items.map((item) => item.basketId);
         response = await fetchWithAuth(
@@ -69,6 +74,10 @@ function OrderPage() {
             }),
           },
         );
+
+        if (response.ok) {
+          navigate("/order/complete", { state: { totalPrice: totalPrice } });
+        }
       }
 
       const result = await response.json();
