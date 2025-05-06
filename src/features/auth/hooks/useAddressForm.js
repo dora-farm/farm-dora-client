@@ -36,13 +36,13 @@ export default function useAddressForm() {
         });
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e,setPhoneValid) => {
         const {name, value, type, checked} = e.target;
 
         let newVal = value;
 
         if (name === 'phoneNum') {
-            newVal = formatPhoneNumber(value);
+            newVal = formatPhoneNumber(value,setPhoneValid);
         }
 
         setForm((prev) => ({

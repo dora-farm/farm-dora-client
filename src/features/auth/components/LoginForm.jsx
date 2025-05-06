@@ -4,8 +4,8 @@ import FindModalForm from "./modal/FindModalForm.jsx";
 import EmailVerifyModalForm from "./modal/EmailVerifyModalForm.jsx";
 import { findId, findPassword, findVerificationCode } from '../services/findService.js';
 import { useFindModal } from "../hooks/useFindModal.js";
-import AlertModal from "../../../common/components/modal/AlertModal.jsx";
 import {useEmailVerifyModal} from "../hooks/useEmailVerifyModal.js";
+import AlertModal2 from "../../../common/components/modal/AlertModal2.jsx";
 
 const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) => {
     // 💬 useState 제거 → useRef로 값 관리
@@ -15,6 +15,7 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
     const findVerifyCodeRef = useRef('');
     const findTypeRef = useRef('');
 
+    const [modalTitle, setModalTitle] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
 
@@ -60,20 +61,23 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
                 ],
             onSubmit: async () => {
                 let message = "";
+                let title = '';
                 try {
                     const result = findTypeRef.current === "ID"
                         ? await findId(findNameRef.current, findEmailRef.current)
                         : await findPassword(findIdInputRef.current, findEmailRef.current);
 
+                    setModalTitle('성공')
                     setModalMessage(result.message);
                     setShowModal(true);
                     closeModal();
                     openFindVerifyModal();
                 } catch (err) {
                     console.error(err);
+                    setModalTitle('실패');
                     setModalMessage("인증 코드 전송 실패");
                     setShowModal(true);
-                    AlertModal({ message: message, onClose: true });
+                    AlertModal2({title:title, message: message, onClose: true });
                 }
             },
         });
@@ -90,11 +94,15 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
             onSubmit: async () => {
                 try {
                     const result = await findVerificationCode(findEmailRef.current, findVerifyCodeRef.current, findTypeRef.current);
-                    setModalMessage(result.message);
-                    setShowModal(true);
-                    closeVerifyModal();
+                    console.log(result);
+                        setModalTitle('성공');
+                        setModalMessage(result.message);
+                        setShowModal(true);
+                        closeVerifyModal();
+
                 } catch (err) {
                     console.error(err);
+                    setModalTitle('실패');
                     setModalMessage("인증에 실패하였습니다.");
                     setShowModal(true);
                 }
@@ -174,7 +182,8 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
                 inputs={verifyInputs}
             />
             {showModal && (
-                <AlertModal
+                <AlertModal2
+                    title={modalTitle}
                     message={modalMessage}
                     onClose={() => setShowModal(false)}
                 />

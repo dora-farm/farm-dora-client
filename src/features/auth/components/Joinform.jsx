@@ -4,8 +4,7 @@ import useFormValidation from "../hooks/useFormValidation";
 import DaumPostcode from 'react-daum-postcode';
 import {
     blurSpan,
-    confirmPwd,
-    focusSpan,
+    focusSpan, handleAccountNumberChange,
     phoneNumContainDash,
     sendVerificationEmail,
     validateEmail,
@@ -14,17 +13,17 @@ import {
     validatePwd,
     verifyEmailCode
 } from "../services/validationService";
-import AlertModal from "../../../common/components/modal/AlertModal.jsx";
 import {useEmailVerifyModal} from "../hooks/useEmailVerifyModal.js";
 import EmailVerifyModalForm from "./modal/EmailVerifyModalForm.jsx";
 import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
+import AlertModal2 from "@/common/components/modal/AlertModal2.jsx";
 
 const JoinForm = () => {
     const [formValid, setFormValid] = useFormValidation();
     const [isPostOpen, setIsPostOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
-    const [accountNum, setAccountNum] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
     const navigate = useNavigate();
     const findVerifyCodeRef = useRef('');
 
@@ -46,9 +45,11 @@ const JoinForm = () => {
                 try {
                     const result = await verifyEmailCode(document.getElementById('email').value, findVerifyCodeRef.current, setFormValid);
                     setModalMessage(result.data ? result.message : "인증에 실패하였습니다.");
+                    setModalTitle(result.data ? '성공' : "실패");
                     setShowModal(true);
                     if (result.data) closeVerifyModal();
                 } catch {
+                    setModalTitle("실패");
                     setModalMessage("인증에 실패하였습니다.");
                     setShowModal(true);
                 }
@@ -61,18 +62,22 @@ const JoinForm = () => {
         const form = e.target;
         const sex = form.querySelector('input[name="sex"]:checked');
 
+        console.log(formValid);
+
         const checks = [
-            { key: 'sex', condition: !!sex, message: '성별을 선택하세요.' },
-            { key: 'password_confirmation', condition: formValid.password_confirmation, message: '비밀번호가 다릅니다.' },
-            { key: 'email_verified', condition: formValid.email_verified, message: '이메일 인증해 주세요.' },
-            { key: 'pwd', condition: formValid.pwd, message: '비밀번호를 입력해 주세요.' },
-            { key: 'id', condition: formValid.id, message: '아이디를 확인해 주세요.' },
             { key: 'name', condition: formValid.name, message: '이름을 확인해 주세요.' },
-            { key: 'phoneNum', condition: formValid.phoneNum, message: '휴대폰 번호를 입력하세요.' },
-            { key: 'accountNum', condition: accountNum.trim() !== '', message: '계좌번호를 입력하세요.' },
-            { key: 'birth', condition: form.birth.value.trim() !== '', message: '생일을 입력하세요.' },
-            { key: 'postNum', condition: form.postNum.value.trim() !== '', message: '우편번호를 입력하세요.' },
-            { key: 'addr', condition: form.addr.value.trim() !== '', message: '주소를 입력하세요.' },
+            { key: 'id', condition: formValid.id, message: '아이디를 확인해 주세요.' },
+            { key: 'pwd', condition: formValid.pwd, message: '비밀번호를 확인해 주세요.' },
+            { key: 'password_confirmation', condition: formValid.password_confirmation, message: '비밀번호가 다릅니다.' },
+            { key: 'phoneNum', condition: formValid.phoneNum, message: '휴대폰 번호를 확인해 주세요.' },
+            { key: 'email', condition: formValid.email, message: '이메일 형식을 확인해 주세요' },
+            { key: 'email_verified', condition: formValid.email_verified, message: '이메일 인증해 주세요.' },
+            { key: 'postNum', condition: form.postNum.value !== '', message: '우편번호를 확인해 주세요.' },
+            { key: 'addr', condition: form.addr.value !== '', message: '주소를 확인해 주세요.' },
+            { key: 'detailAddr', condition: form.detailAddr.value !== '', message: '상세 주소를 입력하세요.' },
+            { key: 'accountNum', condition: formValid.accountNum, message: '계좌번호를 확인해 주세요.' },
+            { key: 'birth', condition: form.birth.value, message: '생일을 입력하세요.' },
+            { key: 'sex', condition: !!sex, message: '성별을 선택하세요.' },
         ];
 
         for (let check of checks) {
@@ -93,7 +98,7 @@ const JoinForm = () => {
             pwd: form.pwd.value,
             phoneNum: form.phoneNum.value,
             authId: 3,
-            accountNum,
+            accountNum: form.accountNum.value,
             birth: form.birth.value,
             sex: sex.value,
             bankId: form.bankId.value,
@@ -111,15 +116,15 @@ const JoinForm = () => {
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
-
-            setModalMessage(response.ok ? "회원가입이 완료되었습니다!" : data.message || "회원가입에 실패했습니다.");
+            setModalTitle(response.ok ? "성공" : "실패");
+            setModalMessage(response.ok ? data.message || "회원가입이 완료되었습니다!" : data.message || "회원가입에 실패했습니다.");
             setShowModal(true);
 
             if (response.ok) {
                 setTimeout(() => {
                     setShowModal(false);
                     navigate("/login");
-                }, 1500);
+                }, 2500);
             }
         } catch {
             setModalMessage("서버 오류로 인해 실패했습니다.");
@@ -171,7 +176,7 @@ const JoinForm = () => {
                     />
                     <span className="border-t p-1 text-xs font-normal text-[#8A8A8A]">비밀번호 확인</span>
                     <input id="confirm-password" type="password" className="p-1 w-full focus:outline-none"
-                           onChange={() => confirmPwd(setFormValid)}
+                           onChange={() => validatePwd(setFormValid)}
                     />
                 </div>
                 <span id="alertPwd" className="text-xs text-red-500"/>
@@ -180,8 +185,7 @@ const JoinForm = () => {
                 <div className="flex flex-col px-2 py-1 mt-4 border rounded-md border-gray-300">
                     <span className="p-1 text-xs font-normal text-[#8A8A8A]">휴대폰번호</span>
                     <input onChange={(e) => {
-                        phoneNumContainDash(e);
-                        setFormValid(prev => ({ ...prev, phoneNum: e.target.value.trim() !== '' }));
+                        phoneNumContainDash(e,setFormValid);
                     }}
                            id="phoneNum" name="phoneNum" type="text"
                            className="p-1 w-full focus:outline-none"/>
@@ -192,7 +196,7 @@ const JoinForm = () => {
                     <span className="p-1 text-xs font-normal text-[#8A8A8A]">이메일</span>
                     <input id="email" name="email" type="email" className={`p-1 border-b-2 w-full focus:outline-none
                     ${formValid.email_verified ? 'text-gray-dark ' : ''}`}
-                        // readOnly={formValid.email_verified}
+                        readOnly={formValid.email_verified}
                            onKeyUp={() => validateEmail(setFormValid)}
                     />
 
@@ -252,9 +256,8 @@ const JoinForm = () => {
                     </select>
                     <span id="accountSpan" className="p-1 text-xs font-normal text-[#8A8A8A]">계좌번호</span>
                     <input onChange={(e) => {
-                        const onlyNums = e.target.value.replace(/[^\d]/g, '');
-                        setAccountNum(onlyNums);
-                    }} value={accountNum}
+                        handleAccountNumberChange(e,setFormValid);
+                    }}
                            onFocus={() => focusSpan("accountSpan", '계좌번호 (숫자만 입력)')}
                            onBlur={() => blurSpan("accountSpan", '계좌번호')}
                            id="accountNum" name="accountNum" type="text" className="p-1 w-full focus:outline-none"/>
@@ -300,7 +303,8 @@ const JoinForm = () => {
 
             {/* Alert 모달 */}
             {showModal && (
-                <AlertModal
+                <AlertModal2
+                    title={modalTitle}
                     message={modalMessage}
                     onClose={() => setShowModal(false)}
                 />

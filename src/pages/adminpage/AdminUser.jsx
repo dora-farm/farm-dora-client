@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import UserSearchSection from './components/UserSearchSection.jsx';
 import UserListSection from './components/UserListSection.jsx';
-import AlertModal from '../../common/components/modal/AlertModal.jsx';
 import Loading from '../../common/components/Loading.jsx';
 import { fetchWithAuth } from '../../common/utils/fetchWithAuth.js';
+import AlertModal2 from "@/common/components/modal/AlertModal2.jsx";
 
 const AdminUser = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,6 +14,8 @@ const AdminUser = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [modalTitle, setModalTitle] = useState('');
+
 
   const [pagination, setPagination] = useState({
     currentPage: 0,
@@ -59,6 +61,7 @@ const AdminUser = () => {
       });
     } catch (e) {
       console.error(e);
+      setModalTitle("실패")
       setModalMessage("사용자 불러오기 오류");
       setShowModal(true);
     } finally {
@@ -94,11 +97,13 @@ const AdminUser = () => {
       if (res.ok) {
         fetchUsers(pagination.currentPage);
       }
+      setModalTitle("성공")
       setModalMessage(json.message);
       setShowModal(true);
 
     } catch (e) {
       console.error("상태 변경 실패", e);
+      setModalTitle("실패")
       setModalMessage("상태 변경 중 오류 발생");
       setShowModal(true);
     }
@@ -139,7 +144,7 @@ const AdminUser = () => {
         )}
 
         {showModal && (
-            <AlertModal message={modalMessage} onClose={() => setShowModal(false)} />
+            <AlertModal2 title={modalTitle} message={modalMessage} onClose={() => setShowModal(false)} />
         )}
       </div>
   );

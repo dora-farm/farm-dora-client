@@ -2,18 +2,20 @@ import EditProFileFrom from "../../features/auth/components/EditProFileFrom.jsx"
 import React, {useEffect, useRef, useState} from "react";
 import {useEmailVerifyModal} from "../../features/auth/hooks/useEmailVerifyModal.js";
 import EmailVerifyModalForm from "../../features/auth/components/modal/EmailVerifyModalForm.jsx";
-import AlertModal from "../../common/components/modal/AlertModal.jsx";
 import {userPasswordCheck} from "../../features/auth/services/userUpdateService.js";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import AlertModal2 from "@/common/components/modal/AlertModal2.jsx";
 
 
 function EditProfile() {
     const checkPwd = useRef("");
     const navigate = useNavigate();
 
+    const [modalTitle, setModalTitle] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [goEdit, setGoEdit] = useState(false);
+    const location = useLocation();
 
     const goMyUser = () => {
         navigate("/my/user");
@@ -44,6 +46,7 @@ function EditProfile() {
                         setGoEdit(true);
                         closeVerifyModal();
                     }else {
+                        setModalTitle("비밀번호 검증")
                         setModalMessage(result.data.message);
                         setShowModal(true);
                     }
@@ -55,6 +58,16 @@ function EditProfile() {
             },
         });
     }, []);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const errorMessage = params.get("error");
+        if (errorMessage === "oauthregister") {
+            setModalTitle("실패");
+            setModalMessage("로그인 후 마이페이지에서 연동해주세요");
+            setShowModal(true);
+        }
+    }, [location]);
 
     return (
 
@@ -69,7 +82,8 @@ function EditProfile() {
             />
             {/* Alert 모달 */}
             {showModal && (
-                <AlertModal
+                <AlertModal2
+                    title={modalTitle}
                     message={modalMessage}
                     onClose={() => {setShowModal(false)}}
                 />

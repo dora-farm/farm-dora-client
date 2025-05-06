@@ -80,6 +80,7 @@ export const sendVerificationEmail = async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
     });
+    if(!res.ok) {throw new Error("서버와 연결 실패");}
     return await res.json();
 };
 

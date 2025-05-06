@@ -5,18 +5,8 @@ import { KeyboardArrowDown, Search, FavoriteBorder, PersonOutlineOutlined, Shopp
 import {logoutUser} from "../features/auth/services/authService.js";
 import { useToken } from "../common/utils/TokenContxet.jsx";
 import AlertModal from "../common/components/modal/AlertModal.jsx";
+import axios from '../common/utils/axiosInstance.js';
 
-// 토큰 디코딩 (권한 추출)
-const decodeToken = (token) => {
-  try {
-    const payload = token.split('.')[1];
-    const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-    return JSON.parse(decodedPayload);
-  } catch (error) {
-    console.error('토큰 디코딩 오류:', error);
-    return null;
-  }
-};
 
 function Header({ maincategories, subCategories, loading }) {
   const navigate = useNavigate();
@@ -32,7 +22,20 @@ function Header({ maincategories, subCategories, loading }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalInfo, setAuthModalInfo] = useState({ title: "", message: "" });
 
-  // 토큰이 변경될 때마다 사용자 역할 추출
+  // 토큰 디코딩 (권한 추출)
+  const decodeToken = (token) => {
+    try {
+      const payload = token.split('.')[1];
+      const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decodedPayload);
+    } catch (error) {
+      console.error('토큰 디코딩 오류:', error);
+      return null;
+    }
+  };
+
+
+  //토큰이 변경될 때마다 사용자 역할 추출
   useEffect(() => {
     if (token) {
       const decodedToken = decodeToken(token);
@@ -43,6 +46,7 @@ function Header({ maincategories, subCategories, loading }) {
       setUserRole(null);
     }
   }, [token]);
+
 
   // 접근 권한 없는 경우 처리
   const handleUnauthorizedAccess = (requiredRole) => {
