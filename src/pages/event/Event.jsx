@@ -12,7 +12,7 @@ const EventListPage = () => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup?sortType=EVENT`);
+        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/popup?sortType=EVENT`);
         
         if (response.data && response.data.data) {
           setEvents(response.data.data.contents || []);
