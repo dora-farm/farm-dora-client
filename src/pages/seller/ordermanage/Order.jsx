@@ -41,7 +41,7 @@ function Order() {
       setCurrentPage(0);    // 검색 시 첫 페이지로 초기화
 
       const response = await axios.get(
-        `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
+        `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order`,
         { 
           params: searchParams
         }
@@ -139,7 +139,7 @@ function Order() {
         setLoading(true);
         
         const response = await axios.get(
-          `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
+          `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order`,
           { 
             params: pageParams,
           }

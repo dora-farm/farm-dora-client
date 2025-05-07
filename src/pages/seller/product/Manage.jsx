@@ -142,7 +142,7 @@ function Manage() {
     setIsLoading(true);
 
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale/search`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale`);
 
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -194,7 +194,7 @@ function Manage() {
     };
 
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale/search`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/sale`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
