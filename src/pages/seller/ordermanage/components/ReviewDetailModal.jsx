@@ -65,7 +65,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
     if (!imagePath) return null;
 
     const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/review/";
-    const params = "?type=m&w=64&h=64";
+    const params = "?type=m&w=220&h=180";
 
     return imagePath.startsWith("http")
       ? imagePath
