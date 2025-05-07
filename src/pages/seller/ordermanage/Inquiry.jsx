@@ -166,6 +166,18 @@ function Inquiry() {
     loadQuestionDetail(question.questionId);
   }
 
+  const handleUpdateQuestion = (updatedQuestion) => {
+    const updateQuestions = questions.map(question => 
+      question.questionId === updatedQuestion.questionId ? updatedQuestion : question
+    );
+    setQuestions(updateQuestions);
+    
+    setSelectedQuestion(updatedQuestion);
+  };
+  const handleUpdateDetail = (updatedDetail) => {
+    setQuestionDetail(updatedDetail);
+  };
+
   return (
     <div className="space-y-6">
       <Container>
@@ -204,6 +216,8 @@ function Inquiry() {
           setModalOpen(false);
           setQuestionDetail(null);
         }}
+        onUpdateQuestion={handleUpdateQuestion}
+        onUpdateDetail={handleUpdateDetail}
       />
     </div>
   )

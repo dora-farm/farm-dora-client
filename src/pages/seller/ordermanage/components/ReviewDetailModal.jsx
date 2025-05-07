@@ -1,15 +1,107 @@
 import React, { useState, useEffect } from "react";
+import axios from "../../../../common/utils/axiosInstance";
 import ClearIcon from "@mui/icons-material/Clear";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import CommentIcon from "@mui/icons-material/Comment";
 import PersonIcon from "@mui/icons-material/Person";
 import Rating from "@mui/material/Rating";
+import CircularProgress from '@mui/material/CircularProgress';
 
-const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
+const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateReview }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("review");
   const [imageErrors, setImageErrors] = useState({});
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [newReplyText, setNewReplyText] = useState("");
+
+  // 답변 수정 모드 활성화
+  const handleEditMode = () => {
+    setReplyText(review?.reply || "");
+    setIsEditMode(true);
+  };
+  // 답변 수정 취소
+  const handleCancelEdit = () => {
+    setIsEditMode(false);
+  };
+
+  const handleSaveReply = async (review) => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/update`, {
+          reviewId: review.reviewId,
+          reply: replyText
+        }
+      );
+
+      if (response.status === 200) {
+        const updateReply = { ...review, reply: replyText };
+
+        onUpdateReview(updateReply);
+      }
+      setIsEditMode(false);
+
+    } catch (error) {
+      console.log("답변 저장 중 오류 발생", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInsertReply = async (review) => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/insert`, {
+          reviewId: review.reviewId,
+          reply: newReplyText
+        }
+      );
+
+      if (response.status === 200) {
+        const updateReply = { ...review, reply: newReplyText };
+      
+        if (typeof onUpdateReview === 'function') {
+          onUpdateReview(updateReply);
+        }
+        setNewReplyText("");
+      }
+
+
+    } catch (error) {
+      console.log("답변 등록 중 오류 발생", error)
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleDeleteReply = async (review) => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.delete(
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/delete?reviewId=${review.reviewId}`);
+
+      if (response.status === 200) {
+        const updateReply = { ...review, reply: null };
+
+        if (typeof onUpdateReview === 'function') {
+          onUpdateReview(updateReply);
+        }
+      }
+
+    } catch (error) {
+      console.log("답변 삭제 중 오류 발생", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   
   useEffect(() => {
     if (isOpen) {
@@ -64,8 +156,8 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
   const formatImageUrl = (imagePath) => {
     if (!imagePath) return null;
 
-    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/wishlist/";
-    const params = "?type=f&w=700&h=700&quality=90&align=4";
+    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/review/";
+    const params = "?type=m&w=220&h=180";
 
     return imagePath.startsWith("http")
       ? imagePath
@@ -186,7 +278,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                 <div className="mb-4">
                   <div className="text-sm text-gray-500 mb-1">리뷰 내용</div>
                   <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
-                    {review?.reply || "-"}
+                    {review?.reviewContent || "-"}
                   </div>
                 </div>
                 
@@ -275,17 +367,63 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                     <div className="mb-3 flex justify-between">
                       <div className="text-sm text-gray-500">등록된 답변</div>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
-                      {review.reply}
-                    </div>
+                    {isEditMode ? (
+                      <textarea 
+                        className="w-full min-h-[150px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                      />
+                    ) : (
+                      // 일반 모드일 때 div 표시
+                      <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
+                        {review.reply}
+                      </div>
+                    )}
                     
                     <div className="mt-4 flex justify-end space-x-2">
-                      <button className="px-3 py-1.5 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors">
-                        답변 수정
-                      </button>
-                      <button className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300 transition-colors">
-                        답변 삭제
-                      </button>
+                      {isEditMode ? (
+                        // 편집 모드일 때 표시할 버튼들
+                        <>
+                          <button 
+                            onClick={() => handleSaveReply(review)}
+                            disabled={isLoading}
+                            className="px-3 py-1.5 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors flex items-center justify-center"
+                          >
+                            {isLoading ? (
+                              <>
+                                <CircularProgress 
+                                  size={16}
+                                  thickness={4}
+                                  sx={{ color: 'white', marginRight: '8px' }}
+                                />
+                                저장 중...
+                              </>
+                            ) : '저장'}
+                          </button>
+                          <button 
+                            onClick={handleCancelEdit}
+                            className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300 transition-colors"
+                          >
+                            취소
+                          </button>
+                        </>
+                      ) : (
+                        // 일반 모드일 때 표시할 버튼들
+                        <>
+                          <button 
+                            onClick={handleEditMode}
+                            className="px-3 py-1.5 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors"
+                          >
+                            답변 수정
+                          </button>
+                          <button 
+                            className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300 transition-colors"
+                            onClick={() => handleDeleteReply(review)}
+                          >
+                            답변 삭제
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -294,12 +432,18 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                       <div className="text-sm text-gray-500">답변 작성</div>
                     </div>
                     <textarea 
+                      autoFocus 
                       className="w-full min-h-[150px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                       placeholder="답변을 작성해주세요..."
+                      value={newReplyText}
+                      onChange={(e) => setNewReplyText(e.target.value)}
                     />
                     
                     <div className="mt-4 flex justify-end">
-                      <button className="px-4 py-2 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors">
+                      <button 
+                        className="px-4 py-2 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors"
+                        onClick={() => handleInsertReply(review)}
+                      >
                         답변 등록
                       </button>
                     </div>

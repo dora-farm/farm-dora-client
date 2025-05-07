@@ -141,8 +141,8 @@ export function useWishlist(previewMode) {
   const formatImageUrl = useCallback((imagePath) => {
     if (!imagePath) return null;
 
-    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/wishlist/";
-    const params = "?type=f&w=700&h=700&quality=90&align=4";
+    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/product/";
+    const params = "?type=m&w=220&h=180";
 
     return imagePath.startsWith("http")
       ? imagePath
