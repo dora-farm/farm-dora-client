@@ -5,7 +5,7 @@ function AlertModal2({
   message, 
   onClose, 
   onConfirm = null,
-  type = "alert"
+  type = "alert",
 }) {
   const [isVisible, setIsVisible] = useState(false);
   
@@ -63,7 +63,7 @@ function AlertModal2({
               취소
             </button>
             <button
-              onClick={handleConfirm}
+                onClick={handleConfirm}
               className={`px-4 py-2 text-white rounded ${buttonColor}`}
             >
               확인
@@ -72,6 +72,7 @@ function AlertModal2({
         ) : (
           // 단일 확인 버튼 (alert 타입)
           <button
+              type="button"
             onClick={handleClose}
             className={`px-4 py-2 text-white rounded ${buttonColor}`}
           >

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {expireUser} from "../../features/auth/services/userUpdateService.js";
-import AlertModal from "../../common/components/modal/AlertModal.jsx";
+import AlertModal2 from "../../common/components/modal/AlertModal2.jsx";
 import ConfirmModal from "./modal/ConfimModal.jsx";
 import {logoutUser} from "../../features/auth/services/authService.js";
 import {useNavigate} from "react-router-dom";
@@ -11,6 +11,7 @@ function DeleteAccount() {
     const [modalMessage, setModalMessage] = useState("");
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [shouldLogout, setShouldLogout] = useState(false);
+    const [modalTitle, setModalTitle] = useState("");
     const navigate = useNavigate();
 
     const handleExpireOpenModal = async (e) => {
@@ -21,13 +22,15 @@ function DeleteAccount() {
 
     const handleSubmit = async () => {
         const pwd = document.getElementById("pwd").value;
+        try{
         const result = await expireUser(pwd);
-        if (result.data.data) {
+            setModalTitle('성공');
             setModalMessage(result.data.message);
             setShouldLogout(true);
             setShowModal(true);
-        } else {
-            setModalMessage(result.data.message);
+        }catch (e){
+            setModalTitle('실패');
+            setModalMessage(e.response.data.message);
             setShowModal(true);
         }
     }
@@ -75,11 +78,12 @@ function DeleteAccount() {
             />
 
             {showModal && (
-                <AlertModal
+                <AlertModal2
+                    title={modalTitle}
                     message={modalMessage}
                     onClose={async () => {
-                        setShowModal(false);
                         setConfirmOpen(false);
+                        setShowModal(false);
                         if (shouldLogout) {
                             await logoutUser(navigate);
                             setShouldLogout(false); // 다음 호출을 위해 초기화
