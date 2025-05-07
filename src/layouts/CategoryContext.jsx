@@ -11,7 +11,7 @@ export function CategoryProvider({ children }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/category`);
+        const response = await fetchWithAuth(`${import.meta.env.VITE_SEARCH_REST_API_URL}/api/search/category`);
         const result = await response.json();
         
         if (result.status === 200 && result.data) {
