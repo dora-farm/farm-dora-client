@@ -66,10 +66,10 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
       );
 
       if (response.status === 200) {
-        const updatedReview = { ...review, reply: newReplyText };
+        const updateReview = { ...review, reply: newReplyText };
       
         if (typeof onUpdateReview === 'function') {
-          onUpdateReview(updatedReview);
+          onUpdateReview(updateReview);
         }
         setNewReplyText("");
       }
@@ -90,7 +90,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
         `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/delete?reviewId=${review.reviewId}`);
 
       if (response.status === 200) {
-        const updateReview = { ...review, reply: replyText };
+        const updateReview = { ...review, reply: null };
 
         if (typeof onUpdateReview === 'function') {
           onUpdateReview(updateReview);

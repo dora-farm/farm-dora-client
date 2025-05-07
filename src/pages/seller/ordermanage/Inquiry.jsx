@@ -166,6 +166,17 @@ function Inquiry() {
     loadQuestionDetail(question.questionId);
   }
 
+  const handleUpdateQuestion = (updatedQuestion) => {
+    const updatedQuestions = questions.map(question => 
+      question.questionId === updatedQuestion.questionId ? updatedQuestion : question
+    );
+    
+    setQuestions(updatedQuestions);
+    
+    // selectedReview도 업데이트 (모달에 표시되는 리뷰)
+    setSelectedQuestion(updatedQuestion);
+  };
+
   return (
     <div className="space-y-6">
       <Container>
@@ -204,6 +215,7 @@ function Inquiry() {
           setModalOpen(false);
           setQuestionDetail(null);
         }}
+        onUpdateQuestion={handleUpdateQuestion}
       />
     </div>
   )
