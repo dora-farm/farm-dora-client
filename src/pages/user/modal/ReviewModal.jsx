@@ -98,7 +98,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) =
         formData.append('images', image);
       });
       
-      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/review`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/my/user/order/review`, {
         method: 'POST',
         body: formData
       });

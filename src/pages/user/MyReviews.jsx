@@ -87,7 +87,7 @@ function MyReviews() {
         try {
             setLoading(true);
             const { startDate, endDate, page } = getQueryParams();
-            const response = await axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/myreviews`, {
+            const response = await axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/my/user/order/myreviews`, {
                 params: { startDate, endDate, page }
             });      
             if (response.data.status === 200) {
@@ -177,7 +177,7 @@ function MyReviews() {
     const handleReviewUpdate = async (reviewId, updatedData) => {
         try {
             // API 호출로 리뷰 업데이트
-            const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/myreviews/${reviewId}`, updatedData);
+            const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/my/user/order/myreviews/${reviewId}`, updatedData);
 
             if (response.data.status === 200) {
                 getReviewsWithAxios();
@@ -206,7 +206,7 @@ function MyReviews() {
     // 리뷰 삭제 처리
     const handleReviewDelete = async (reviewId) => {
         try {
-            const response = await axios.delete(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/myreviews/${reviewId}/delete`);
+            const response = await axios.delete(`${import.meta.env.VITE_BUYER_REST_API_URL}/my/user/order/myreviews/${reviewId}/delete`);
 
             if (response.data.status === 200) {
                 // 성공적으로 삭제되면 목록에서도 제거

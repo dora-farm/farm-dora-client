@@ -32,7 +32,7 @@ const AdminPopupRegi = () => {
     const fetchPopupTypes = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/types`);
+        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup/types`);
         
         if (response.data && response.data.data) {
           setPopupTypes(response.data.data);
@@ -106,7 +106,7 @@ const AdminPopupRegi = () => {
       submitData.append('file', file);
       
       // API 호출
-      await axios.post(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup`, submitData, {
+      await axios.post(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup`, submitData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

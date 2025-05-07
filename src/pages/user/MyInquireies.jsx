@@ -35,7 +35,7 @@ function MyInquiries() {
     try {
 
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/question`, 
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/user/question`, 
         {
           params: {
             startDate: dateRange.startDate,

@@ -41,7 +41,7 @@ function Home() {
         const [videoRes, rankingRes, bannerRes] = await Promise.all([
           axios.get(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/main/home`),
           axios.get(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/rank?page=${rankingPage}`),
-          axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/popup`)
+          axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/popup`)
         ]);
 
         if (bannerRes.data?.data) {
@@ -81,7 +81,7 @@ function Home() {
       if (index === -1) return;
 
       const isLiked = ranking[index].liked;
-      const url = `${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`;
+      const url = `${import.meta.env.VITE_BUYER_REST_API_URL}/like/${saleId}`;
 
       await axios.put(url, null);
 

@@ -35,13 +35,13 @@ const AdminPopupEdit = () => {
         setLoading(true);
         
         // 팝업 타입 목록 가져오기
-        const typesResponse = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/types`);
+        const typesResponse = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup/types`);
         if (typesResponse.data && typesResponse.data.data) {
           setPopupTypes(typesResponse.data.data);
         }
         
         // 팝업 상세 정보 가져오기
-        const popupResponse = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/${id}`);
+        const popupResponse = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup/${id}`);
         if (popupResponse.data && popupResponse.data.data) {
           const popupData = popupResponse.data.data;
           
@@ -151,7 +151,7 @@ const AdminPopupEdit = () => {
       }
       
       // API 호출
-      await axios.put(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/edit/${id}`, submitData, {
+      await axios.put(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup/edit/${id}`, submitData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

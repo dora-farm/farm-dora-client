@@ -58,7 +58,7 @@ function AdminReview() {
     setModalOpen(true);
     
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/${reviewId}`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/review/${reviewId}`);
       const httpResponse = await response.json();
       setReviewDetail(httpResponse.data);
     } catch (error) {
@@ -78,7 +78,7 @@ function AdminReview() {
     setIsLoading(true);
 
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/allreviews?sortType=${sortFilter}&page=0`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/review/allreviews?sortType=${sortFilter}&page=0`);
       
       if (!response.ok) {
         throw new Error('초기 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -127,7 +127,7 @@ function AdminReview() {
     setIsLoading(true);
 
     // 검색 쿼리 파라미터 구성
-    let url = `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/allreviews?sortType=${sortFilter}&page=${pagination.currentPage}`;
+    let url = `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/review/allreviews?sortType=${sortFilter}&page=${pagination.currentPage}`;
     
     // 검색어가 있는 경우에만 검색 파라미터 추가
     if (searchTerm.trim()) {
@@ -193,7 +193,7 @@ function AdminReview() {
   // 리뷰 삭제 핸들러
   const handleDeleteReview = async (reviewId) => {
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/review/${reviewId}`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/review/${reviewId}`, {
         method: 'DELETE'
       });
       

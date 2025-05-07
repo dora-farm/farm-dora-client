@@ -92,7 +92,7 @@ function Inquiry() {
     try {
       setDetailLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/question`, 
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/question`, 
         { params: { questionId } }
       )
 

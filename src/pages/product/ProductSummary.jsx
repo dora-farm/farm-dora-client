@@ -80,7 +80,7 @@ const ProductSummary = ({ saleId, setContent }) => {
     }
   
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/basket`, {
         method: 'GET',
       });
       const result = await response.json();
@@ -95,7 +95,7 @@ const ProductSummary = ({ saleId, setContent }) => {
     }
   
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/basket`, {
         method: 'POST',
         body: JSON.stringify({
           optionId: selectedOption,

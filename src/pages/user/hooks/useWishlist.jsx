@@ -14,8 +14,8 @@ export function useWishlist(previewMode) {
     setIsLoading(true);
     try {
       const endpoint = previewMode
-        ? `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/likepreview`
-        : `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/like`;
+        ? `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/user/dashboard/likepreview`
+        : `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/user/like`;
       const response = await axios.get(endpoint);
 
       let items = response.data.data;
@@ -65,7 +65,7 @@ export function useWishlist(previewMode) {
 
       // 삭제 API 호출
       const response = await axios.delete(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/like`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/user/like`,
         {
           data: selectedItemsToDelete,
         }
@@ -90,7 +90,7 @@ export function useWishlist(previewMode) {
   const deleteSingleItem = useCallback(async (likeId) => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/like`, {
+      const response = await axios.delete(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/user/like`, {
         data: [likeId],
       });
       
@@ -110,7 +110,7 @@ export function useWishlist(previewMode) {
       setIsLoading(true);
       
       const response = await axios.post(
-        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, 
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/basket`, 
         {
           optionId: optionId,
           quantity: 1

@@ -40,7 +40,7 @@ function OrdermanageHome() {
       setLoading(true);
       
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order`
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order`
       );
 
       if (response.status === 200) {

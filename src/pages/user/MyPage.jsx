@@ -35,11 +35,11 @@ function MyPage() {
   const loadDashboardInfo = async () => {
     try {
       const userResponse = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/info`
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/user/dashboard/info`
       );
 
       const orderStatusResponse = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/user/dashboard/order-status`
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/user/dashboard/order-status`
       );
 
       const orderStatusObj = {};
