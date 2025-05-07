@@ -167,6 +167,18 @@ function Review() {
     loadReviewDetail(review.reviewId);
   }
 
+  const handleUpdateReview = (updatedReview) => {
+    // reviews 배열에서 업데이트된 리뷰 찾아 교체
+    const updatedReviews = reviews.map(review => 
+      review.reviewId === updatedReview.reviewId ? updatedReview : review
+    );
+    
+    setReviews(updatedReviews);
+    
+    // selectedReview도 업데이트 (모달에 표시되는 리뷰)
+    setSelectedReview(updatedReview);
+  };
+
   return (
     <div className="space-y-6">
       <Container>
@@ -205,6 +217,7 @@ function Review() {
           setModalOpen(false);
           setReviewDetail(null);
         }}
+        onUpdateReview={handleUpdateReview}
       />
     </div>
   )

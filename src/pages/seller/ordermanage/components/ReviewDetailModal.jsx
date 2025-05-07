@@ -1,15 +1,64 @@
 import React, { useState, useEffect } from "react";
+import axios from "../../../../common/utils/axiosInstance";
 import ClearIcon from "@mui/icons-material/Clear";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import CommentIcon from "@mui/icons-material/Comment";
 import PersonIcon from "@mui/icons-material/Person";
 import Rating from "@mui/material/Rating";
+import CircularProgress from '@mui/material/CircularProgress';
 
-const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
+const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateReview }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("review");
   const [imageErrors, setImageErrors] = useState({});
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [replyText, setReplyText] = useState("");
+
+  // 답변 수정 모드 활성화
+  const handleEditMode = () => {
+    setReplyText(review?.reply || "");
+    setIsEditMode(true);
+  };
+  // 답변 수정 취소
+  const handleCancelEdit = () => {
+    setIsEditMode(false);
+  };
+
+  const handleSaveReply = async (review) => {
+    try {
+      setIsLoading(true);
+      
+      console.log({
+        reviewId: review.reviewId,
+        reply: replyText
+      });
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/update`, {
+          reviewId: review.reviewId,
+          reply: replyText
+        }
+      );
+
+      if (response.status === 200) {
+        const updateReview = { ...review, reply: replyText };
+
+        if (typeof onUpdateReview === 'function') {
+          onUpdateReview(updateReview);
+        }
+      }
+      setIsEditMode(false);
+
+    } catch (error) {
+      console.log("답변 저장 중 오류 발생", error);
+
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   
   useEffect(() => {
     if (isOpen) {
@@ -275,17 +324,60 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                     <div className="mb-3 flex justify-between">
                       <div className="text-sm text-gray-500">등록된 답변</div>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
-                      {review.reply}
-                    </div>
+                    {isEditMode ? (
+                      <textarea 
+                        className="w-full min-h-[150px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                      />
+                    ) : (
+                      // 일반 모드일 때 div 표시
+                      <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
+                        {review.reply}
+                      </div>
+                    )}
                     
                     <div className="mt-4 flex justify-end space-x-2">
-                      <button className="px-3 py-1.5 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors">
-                        답변 수정
-                      </button>
-                      <button className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300 transition-colors">
-                        답변 삭제
-                      </button>
+                      {isEditMode ? (
+                        // 편집 모드일 때 표시할 버튼들
+                        <>
+                          <button 
+                            onClick={() => handleSaveReply(review)}
+                            disabled={isLoading}
+                            className="px-3 py-1.5 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors flex items-center justify-center"
+                          >
+                            {isLoading ? (
+                              <>
+                                <CircularProgress 
+                                  size={16}
+                                  thickness={4}
+                                  sx={{ color: 'white', marginRight: '8px' }}
+                                />
+                                저장 중...
+                              </>
+                            ) : '저장'}
+                          </button>
+                          <button 
+                            onClick={handleCancelEdit}
+                            className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300 transition-colors"
+                          >
+                            취소
+                          </button>
+                        </>
+                      ) : (
+                        // 일반 모드일 때 표시할 버튼들
+                        <>
+                          <button 
+                            onClick={handleEditMode}
+                            className="px-3 py-1.5 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors"
+                          >
+                            답변 수정
+                          </button>
+                          <button className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300 transition-colors">
+                            답변 삭제
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -294,6 +386,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose }) => {
                       <div className="text-sm text-gray-500">답변 작성</div>
                     </div>
                     <textarea 
+                      autoFocus 
                       className="w-full min-h-[150px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                       placeholder="답변을 작성해주세요..."
                     />
