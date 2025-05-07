@@ -167,14 +167,15 @@ function Inquiry() {
   }
 
   const handleUpdateQuestion = (updatedQuestion) => {
-    const updatedQuestions = questions.map(question => 
+    const updateQuestions = questions.map(question => 
       question.questionId === updatedQuestion.questionId ? updatedQuestion : question
     );
+    setQuestions(updateQuestions);
     
-    setQuestions(updatedQuestions);
-    
-    // selectedReview도 업데이트 (모달에 표시되는 리뷰)
     setSelectedQuestion(updatedQuestion);
+  };
+  const handleUpdateDetail = (updatedDetail) => {
+    setQuestionDetail(updatedDetail);
   };
 
   return (
@@ -216,6 +217,7 @@ function Inquiry() {
           setQuestionDetail(null);
         }}
         onUpdateQuestion={handleUpdateQuestion}
+        onUpdateDetail={handleUpdateDetail}
       />
     </div>
   )

@@ -39,11 +39,9 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
       );
 
       if (response.status === 200) {
-        const updateReview = { ...review, reply: replyText };
+        const updateReply = { ...review, reply: replyText };
 
-        if (typeof onUpdateReview === 'function') {
-          onUpdateReview(updateReview);
-        }
+        onUpdateReview(updateReply);
       }
       setIsEditMode(false);
 
@@ -66,10 +64,10 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
       );
 
       if (response.status === 200) {
-        const updateReview = { ...review, reply: newReplyText };
+        const updateReply = { ...review, reply: newReplyText };
       
         if (typeof onUpdateReview === 'function') {
-          onUpdateReview(updateReview);
+          onUpdateReview(updateReply);
         }
         setNewReplyText("");
       }
@@ -90,10 +88,10 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
         `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/delete?reviewId=${review.reviewId}`);
 
       if (response.status === 200) {
-        const updateReview = { ...review, reply: null };
+        const updateReply = { ...review, reply: null };
 
         if (typeof onUpdateReview === 'function') {
-          onUpdateReview(updateReview);
+          onUpdateReview(updateReply);
         }
       }
 

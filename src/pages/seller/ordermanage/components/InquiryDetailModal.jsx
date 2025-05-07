@@ -14,6 +14,7 @@ const InquiryDetailModal = ({
   isOpen,
   onClose,
   onUpdateQuestion,
+  onUpdateDetail,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -44,14 +45,23 @@ const InquiryDetailModal = ({
       );
 
       if (response.status === 200) {
-        const updateQuestion = { ...inquiry, reply: replyText };
-
-        if (typeof onUpdateQuestion === 'function') {
-          onUpdateQuestion(updateQuestion);
+        console.log("응답 데이터:", response.data.data);
+        let updatedDetail;
+        if (Array.isArray(detail) && detail.length > 0) {
+          updatedDetail = [
+            { ...detail[0], answer: replyText },
+            ...detail.slice(1)
+          ];
+        } else {
+          updatedDetail = [{ answer: replyText }];
         }
+        
+        // 부모 컴포넌트 상태 업데이트
+        onUpdateDetail(updatedDetail);
+        onUpdateQuestion({ ...inquiry, process: true });
       }
       setIsEditMode(false);
-
+      
     } catch (error) {
       console.log("답변 저장 중 오류 발생", error);
     } finally {
@@ -62,52 +72,75 @@ const InquiryDetailModal = ({
   const handleInsertReply = async (inquiry) => {
     try {
       setIsLoading(true);
-
+  
       const response = await axios.post(
         `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/question/insert`, {
           questionId: inquiry.questionId,
           reply: newReplyText
         }
       );
-
+  
       if (response.status === 200) {
-        const updateQuestion = { ...inquiry, reply: newReplyText };
-      
-        if (typeof onUpdateQuestion === 'function') {
-          onUpdateQuestion(updateQuestion);
+        
+        let updatedDetail;
+        
+        if (Array.isArray(detail) && detail.length > 0) {
+          updatedDetail = [
+            { ...detail[0], answer: newReplyText },
+            ...detail.slice(1)
+          ];
+        } else {
+          updatedDetail = [{ answer: newReplyText }];
         }
+        
+        onUpdateDetail(updatedDetail);
+        onUpdateQuestion({
+          ...inquiry,
+          process: true
+        });
+        
         setNewReplyText("");
       }
-
-
     } catch (error) {
-      console.log("답변 등록 중 오류 발생", error)
+      console.log("답변 등록 중 오류 발생", error);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const handleDeleteReply = async (inquiry) => {
-    try {
-      setIsLoading(true);
+  try {
+    setIsLoading(true);
 
-      const response = await axios.delete(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/question/delete?questionId=${inquiry.questionId}`);
+    const response = await axios.delete(
+      `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/question/delete?questionId=${inquiry.questionId}`
+    );
 
-      if (response.status === 200) {
-        const updateQuestion = { ...inquiry, reply: null };
-
-        if (typeof onUpdateQuestion === 'function') {
-          onUpdateQuestion(updateQuestion);
-        }
+    if (response.status === 200) {
+      let updatedDetail;
+      
+      if (Array.isArray(detail) && detail.length > 0) {
+        updatedDetail = [
+          { ...detail[0], answer: null },
+          ...detail.slice(1)
+        ];
+      } else {
+        updatedDetail = [{ answer: null }];
       }
-
-    } catch (error) {
-      console.log("답변 삭제 중 오류 발생", error);
-    } finally {
-      setIsLoading(false);
+      
+      onUpdateDetail(updatedDetail);
+      
+      const updateQuestion = { ...inquiry, process: false };
+      if (typeof onUpdateQuestion === 'function') {
+        onUpdateQuestion(updateQuestion);
+      }
     }
+  } catch (error) {
+    console.log("답변 삭제 중 오류 발생", error);
+  } finally {
+    setIsLoading(false);
   }
+};
 
   useEffect(() => {
     if (isOpen) {
@@ -282,16 +315,14 @@ const InquiryDetailModal = ({
                   <div className="mb-4">
                     <div className="text-sm text-gray-500 mb-1">문의 제목</div>
                     <div className="bg-gray-50 p-3 rounded-md text-gray-800 font-medium">
-                      {inquiry?.questionTitle || questionAnswer?.answer || "-"}
+                      {inquiry?.questionTitle || "-"}
                     </div>
                   </div>
 
                   <div className="mb-4">
                     <div className="text-sm text-gray-500 mb-1">문의 내용</div>
                     <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
-                      {inquiry?.questionContent ||
-                        questionAnswer?.content ||
-                        "-"}
+                      {questionAnswer?.content || "-"}
                     </div>
                   </div>
                 </div>
