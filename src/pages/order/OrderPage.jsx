@@ -48,7 +48,7 @@ function OrderPage() {
 
       if (location.state?.orderType === 'direct') {
         response = await fetchWithAuth(
-          `${import.meta.env.VITE_BUYER_REST_API_URL}/api/order/option`,
+          `${import.meta.env.VITE_BUYER_REST_API_URL}/order/option`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -65,7 +65,7 @@ function OrderPage() {
       } else {
         const basketIds = items.map((item) => item.basketId);
         response = await fetchWithAuth(
-          `${import.meta.env.VITE_BUYER_REST_API_URL}/api/order/basket`,
+          `${import.meta.env.VITE_BUYER_REST_API_URL}/order/basket`,
           {
             method: "POST",
             body: JSON.stringify({

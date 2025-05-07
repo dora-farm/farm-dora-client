@@ -11,7 +11,7 @@ export const BasketProvider = ({ children }) => {
   const updateBasketCount = async () => {
     if (token) {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket?size=16`, {
+        const res = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/basket?size=16`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const result = await res.json();

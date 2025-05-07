@@ -9,7 +9,7 @@ export const useLikeToggle = (token) => {
 
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`,
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/like/${saleId}`,
         null,
         {
           headers: {

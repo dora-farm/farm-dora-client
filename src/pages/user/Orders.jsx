@@ -151,7 +151,7 @@ function Orders() {
       setLoading(true);
       const { startDate, endDate, page } = getQueryParams();
       
-      const response = await axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order`, {
+      const response = await axios.get(`${import.meta.env.VITE_BUYER_REST_API_URL}/my/user/order`, {
         params: { startDate, endDate, page }
       });
       
@@ -233,7 +233,7 @@ function Orders() {
   // 실제 주문 취소 처리 함수 추가
   const processCancelOrder = async (orderId) => {
     try {
-      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/my/user/order/${orderId}/cancel`);
+      const response = await axios.put(`${import.meta.env.VITE_BUYER_REST_API_URL}/my/user/order/${orderId}/cancel`);
       
       if(response.status === 200) {
         setModal({

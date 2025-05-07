@@ -22,7 +22,7 @@ export const useBasket = (initialPage = 0) => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket?page=${currentPage}`,
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/basket?page=${currentPage}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -81,7 +81,7 @@ export const useBasket = (initialPage = 0) => {
 
   const deleteSingleItem = async (basketId) => {
     try {
-      await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
+      await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/basket`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export const useBasket = (initialPage = 0) => {
 
   const deleteSelectedItems = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
+      await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/basket`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export const useBasket = (initialPage = 0) => {
   const updateQuantity = async (basketId, newQuantity) => {
     try {
       await fetch(
-        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket/${basketId}?quantity=${newQuantity}`,
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/basket/${basketId}?quantity=${newQuantity}`,
         {
           method: "PUT",
           headers: {

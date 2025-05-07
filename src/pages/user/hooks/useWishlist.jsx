@@ -110,7 +110,7 @@ export function useWishlist(previewMode) {
       setIsLoading(true);
       
       const response = await axios.post(
-        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, 
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/basket`, 
         {
           optionId: optionId,
           quantity: 1
