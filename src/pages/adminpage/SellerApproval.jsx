@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../common/utils/axiosInstance.js";
 import { getCookie } from "../../common/utils/Cookies.jsx";
-import AlertModal from "../../common/components/modal/AlertModal.jsx";
 import Loading from "../../common/components/Loading.jsx";
 import SellerShowFileModal from "./modal/SellerShowFileModal.jsx";
+import AlertModal2 from "@/common/components/modal/AlertModal2.jsx";
 
 const SellerApproval = () => {
     const [sellers, setSellers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
+    const [modalTitle, setModalTitle] = useState("");
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
@@ -29,6 +30,7 @@ const SellerApproval = () => {
             setSellers(response.data.data);
         } catch (error) {
             console.error(error);
+            setModalTitle("실패");
             setModalMessage("판매자 목록 불러오기 실패");
             setShowModal(true);
         } finally {
@@ -50,6 +52,7 @@ const SellerApproval = () => {
                 }
             );
             if (response.status === 200) {
+                setModalTitle("성공");
                 setModalMessage("승인 되었습니다.");
                 setShowModal(true);
                 fetchSellers();
@@ -129,7 +132,8 @@ const SellerApproval = () => {
                     )}
 
             {showModal && (
-                <AlertModal
+                <AlertModal2
+                    title={modalTitle}
                     message={modalMessage}
                     onClose={() => setShowModal(false)}
                 />

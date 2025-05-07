@@ -308,7 +308,7 @@ function SearchForm({ onSearch, onReset, initialValues= {}, showStatusFilter = f
 
         {/* 세 번째 행: 주문 상태 체크박스 */}
         {showStatusFilter && (
-          <div className="flex flex-wrap items-start">
+          <div className="flex flex-wrap items-start mb-6">
             <label className="w-full md:w-auto md:min-w-[100px] text-sm font-medium text-gray-700 mb-2 md:mb-0">
               주문상태
             </label>

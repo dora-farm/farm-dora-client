@@ -4,8 +4,7 @@ import DaumPostcode from "react-daum-postcode";
 import FileUploadBox from "./FileUploadBox.jsx";
 import {formatPhoneNumber} from "../services/validationService.js";
 import axios from "../../../common/utils/axiosInstance.js";
-import AlertModal from "../../../common/components/modal/AlertModal.jsx";
-import {getCookie} from "../../../common/utils/Cookies.jsx";
+import AlertModal2 from "../../../common/components/modal/AlertModal2.jsx";
 import {useNavigate} from "react-router-dom";
 
 const JoinSellerForm = () => {
@@ -22,11 +21,43 @@ const JoinSellerForm = () => {
     });
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
+    const [modalTitle,setModalTitle] = useState("");
     const [navigateOn, setNavigateOn] = useState(false);
     const navigate = useNavigate();
+    const [formValid, setFormValid] = useState({
+        name: false,
+        companyNum: false,
+        phoneNum: false,
+        postNum: false,
+        addr: false,
+        detailAddr: false,
+        file: false,
+    });
 
     const sellerSubmit = async (e) => {
         e.preventDefault(); // 새로고침 방지
+
+        const checks = [
+            { key: 'name', condition: form.name !== '', message: '상호를 확인해 주세요.' },
+            { key: 'companyNum', condition: form.companyNum !== '', message: '사업자 번호를 확인해 주세요.' },
+            { key: 'file', condition: form.file.name !== '', message: '사업자 번호를 확인해 주세요.' },
+            { key: 'phoneNum', condition: formValid.phoneNum, message: '사업자 전화번호를 확인해 주세요.' },
+            { key: 'postNum', condition: form.postNum !== '', message: '우편번호를 확인해 주세요.' },
+            { key: 'addr', condition: form.addr !== '', message: '주소를 확인해 주세요.' },
+            { key: 'detailAddr', condition: form.detailAddr !== '', message: '상세 주소를 입력하세요.' },
+        ];
+
+        for (let check of checks) {
+            if (!check.condition) {
+                setModalMessage(check.message);
+                setShowModal(true);
+                setFormValid(prev => ({ ...prev, [check.key]: false }));
+                return;
+            } else {
+                setFormValid(prev => ({ ...prev, [check.key]: true }));
+            }
+        }
+
 
         const data = {
             name: form.name,
@@ -45,25 +76,22 @@ const JoinSellerForm = () => {
         const formData = new FormData();
         formData.append("file", form.file); // ✅ 파일 추가
         formData.append("seller", new Blob([JSON.stringify(data)], { type: "application/json" }));
-        const token = getCookie("jwt_token");
-
         try {
-            const result = await axios.post(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/seller`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`,
-                },
+            const result = await axios.post(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/user/register/seller`, formData, {
             });
             if(result.data) {
                 setNavigateOn(true);
+                setModalTitle('성공');
                 setModalMessage("입점 신청이 완료되었습니다.");
                 setShowModal(true);
             }else {
+                setModalTitle('실패');
                 setModalMessage("입점 신청이 실패되었습니다.");
-                setShowModal(true);  
+                setShowModal(true);
             }
-            
+
         } catch (e) {
+            setModalTitle('실패');
             setModalMessage("입점 신청이 실패했습니다.");
             setShowModal(true);
             console.log(e);
@@ -86,7 +114,7 @@ const JoinSellerForm = () => {
 
         // 이름이 phoneNum이면 하이픈 붙여서 저장
         if (name === 'phoneNum') {
-            newValue = formatPhoneNumber(value);
+            newValue = formatPhoneNumber(value ,setFormValid);
         }
 
         setForm((prev) => ({
@@ -120,7 +148,7 @@ const JoinSellerForm = () => {
                     onChange={handleChange}
                     labelClassName="text-gray-700 p-3 w-36 bg-gray text-sm"
                     inputClassName="border p-1 text-sm rounded focus:outline-none"
-                    required={true}
+                    // required={true}
                 />
                 <ProfileField
                     label="사업자 번호" name="companyNum" id="companyNum" type="text"
@@ -129,7 +157,7 @@ const JoinSellerForm = () => {
                     onChange={handleChange}
                     labelClassName="text-gray-700 p-3 w-36 bg-gray text-sm"
                     inputClassName="border p-1 text-sm rounded focus:outline-none"
-                    required={true}
+                    // required={true}
 
                 />
                 <FileUploadBox setForm={setForm} file={form.file}/>
@@ -140,7 +168,7 @@ const JoinSellerForm = () => {
                     onChange={handleChange}
                     labelClassName="text-gray-700 p-3 w-36 bg-gray text-sm"
                     inputClassName="border p-1 text-sm rounded focus:outline-none"
-                    required={true}
+                    // required={true}
                 />
                 <ProfileField label="주소" labelClassName="text-gray-700 p-3 py-12 w-36 bg-gray text-sm">
                     <div className="flex flex-col w-80">
@@ -165,7 +193,7 @@ const JoinSellerForm = () => {
                                 value={form.postNum}
                                 readOnly
                                 className="border p-1 w-1/2 ml-1 mb-1 focus:outline-none text-sm"
-                                required={true}
+                                // required={true}
                             />
                         </div>
                         <input
@@ -175,7 +203,7 @@ const JoinSellerForm = () => {
                             value={form.addr}
                             readOnly
                             className="border w-full p-1 mb-1 focus:outline-none text-sm"
-                            required={true}
+                            // required={true}
 
                         />
                         <input
@@ -185,7 +213,7 @@ const JoinSellerForm = () => {
                             value={form.detailAddr}
                             onChange={handleChange}
                             className="text-sm p-1 border focus:outline-none"
-                            required={true}
+                            // required={true}
                         />
                     </div>
                 </ProfileField>
@@ -201,7 +229,8 @@ const JoinSellerForm = () => {
                 </div>
             </form>
             {showModal && (
-                <AlertModal
+                <AlertModal2
+                    title={modalTitle}
                     message={modalMessage}
                     onClose={() => {
                         setShowModal(false);

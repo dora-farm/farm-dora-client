@@ -8,11 +8,13 @@ import {
 } from '../../features/auth/services/addressService';
 import useAddressForm from '../../features/auth/hooks/useAddressForm';
 import ManageAddressModal from './modal/ManageAddressModal';
+import AlertModal2 from "@/common/components/modal/AlertModal2.jsx";
 
 const AddressManagePage = () => {
     const userId = 0;
     const [addresses, setAddresses] = useState([]);
     const [title, setTitle] = useState('');
+
 
     const {
         isOpen,
@@ -25,11 +27,16 @@ const AddressManagePage = () => {
     } = useAddressForm();
 
     const loadAddresses = async () => {
-        const data = await fetchAddresses(userId);
-        setAddresses(data ?? []);
+        try{
+            const data= await fetchAddresses(userId);
+            setAddresses(data);
+        }catch(e) {
+            setAddresses([]);
+        }
     };
 
     const handleSubmit = async () => {
+
         const requestData = {
             userId,
             deliveryName: form.deliveryName,
