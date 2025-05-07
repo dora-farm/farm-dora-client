@@ -41,17 +41,18 @@ export const validateId = async (setValid) => {
 
 export const validatePwd = (setValid) => {
     const pwd = document.getElementById("pwd").value;
+    const confirm = document.getElementById("confirm-password").value;
     const valid = /^(?=.*[a-zA-Z]{4,})(?=.*[0-9]{1,})[a-zA-Z0-9]{8,16}$/.test(pwd);
     document.getElementById("alertPwd").innerText = valid ? '' : '사용 불가능한 비밀번호 입니다.';
     setValid((prev) => ({ ...prev, pwd: valid }));
-};
 
-export const confirmPwd = (setValid) => {
-    const pwd = document.getElementById("pwd").value;
-    const confirm = document.getElementById("confirm-password").value;
     const match = pwd === confirm;
     document.getElementById("alertPwd").innerText = match ? '' : '비밀번호가 다릅니다';
     setValid((prev) => ({ ...prev, password_confirmation: match }));
+
+    if(!valid){
+        document.getElementById("alertPwd").innerText = '사용 불가능한 비밀번호 입니다.';
+    }
 };
 
 export const validateEmail = async (setValid) => {
@@ -100,24 +101,53 @@ export const verifyEmailCode = async (email, code, setValid) => {
     }
 };
 
-export const formatPhoneNumber = (value) => {
+export const formatPhoneNumber = (value, setValid) => {
     const onlyNums = value.replace(/[^\d]/g, '');
+    let formatted = '';
 
-    // 서울 번호 (02)
     if (onlyNums.startsWith('02')) {
-        if (onlyNums.length <= 2) return onlyNums;
-        if (onlyNums.length <= 5) return onlyNums.slice(0, 2) + '-' + onlyNums.slice(2);
-        if (onlyNums.length <= 9) return onlyNums.slice(0, 2) + '-' + onlyNums.slice(2, 5) + '-' + onlyNums.slice(5);
-        return onlyNums.slice(0, 2) + '-' + onlyNums.slice(2, 6) + '-' + onlyNums.slice(6, 10);
+        if (onlyNums.length <= 2) formatted = onlyNums;
+        else if (onlyNums.length <= 5) formatted = onlyNums.slice(0, 2) + '-' + onlyNums.slice(2);
+        else if (onlyNums.length <= 9) formatted = onlyNums.slice(0, 2) + '-' + onlyNums.slice(2, 5) + '-' + onlyNums.slice(5);
+        else formatted = onlyNums.slice(0, 2) + '-' + onlyNums.slice(2, 6) + '-' + onlyNums.slice(6, 10);
+
+        if (onlyNums.length === 9 || onlyNums.length === 10) {
+            setValid((prev) => ({ ...prev, phoneNum: true }));
+        } else {
+            setValid((prev) => ({ ...prev, phoneNum: false }));
+        }
+    } else {
+        if (onlyNums.length <= 3) formatted = onlyNums;
+        else if (onlyNums.length <= 6) formatted = onlyNums.slice(0, 3) + '-' + onlyNums.slice(3);
+        else if (onlyNums.length <= 10) formatted = onlyNums.slice(0, 3) + '-' + onlyNums.slice(3, 6) + '-' + onlyNums.slice(6);
+        else formatted = onlyNums.slice(0, 3) + '-' + onlyNums.slice(3, 7) + '-' + onlyNums.slice(7, 11);
+
+        if (onlyNums.length === 10 || onlyNums.length === 11) {
+            setValid((prev) => ({ ...prev, phoneNum: true }));
+        } else {
+            setValid((prev) => ({ ...prev, phoneNum: false }));
+        }
     }
 
-    // 휴대폰 또는 일반 지역번호 (031, 010 등 3자리 지역번호)
-    if (onlyNums.length <= 3) return onlyNums;
-    if (onlyNums.length <= 6) return onlyNums.slice(0, 3) + '-' + onlyNums.slice(3);
-    if (onlyNums.length <= 10) return onlyNums.slice(0, 3) + '-' + onlyNums.slice(3, 6) + '-' + onlyNums.slice(6);
-    return onlyNums.slice(0, 3) + '-' + onlyNums.slice(3, 7) + '-' + onlyNums.slice(7, 11);
+    return formatted;
 };
 
-export const phoneNumContainDash = (e) => {
-    e.target.value = formatPhoneNumber(e.target.value);
+export const validateAccountNumber = (value, setFormValid) => {
+    const onlyNums = value.replace(/[^\d]/g, '');
+    const isValid = onlyNums.length >= 10 && onlyNums.length <= 14;
+
+    if(isValid){
+    setFormValid(prev => ({ ...prev, accountNum: isValid }));
+    }else {
+        setFormValid(prev => ({ ...prev, accountNum: false }));
+    }
+    return onlyNums; // 숫자만 반환 (폼 입력에 사용할 경우)
+};
+
+export const phoneNumContainDash = (e, setValid) => {
+    e.target.value = formatPhoneNumber(e.target.value, setValid);
+}
+
+export const handleAccountNumberChange = (e, setValid) => {
+    e.target.value = validateAccountNumber(e.target.value, setValid);
 }

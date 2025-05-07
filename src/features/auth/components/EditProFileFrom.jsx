@@ -6,12 +6,10 @@ import {registerSocial} from "../services/authService.js";
 import {getUserInfo, updateProfile} from "../services/userUpdateService.js";
 // import AlertModal from "../../../common/components/modal/AlertModal.jsx";
 import {
-    confirmPwd,
-    formatPhoneNumber, sendVerificationEmail,
+    formatPhoneNumber, sendVerificationEmail, validateAccountNumber,
     validateEmail,
     validatePwd, verifyEmailCode
 } from "../services/validationService.js";
-import useFormValidation from "../hooks/useFormValidation.js";
 import {useEmailVerifyModal} from "../hooks/useEmailVerifyModal.js";
 import EmailVerifyModalForm from "./modal/EmailVerifyModalForm.jsx";
 import {useNavigate} from "react-router-dom";
@@ -19,7 +17,14 @@ import AlertModal2 from "@/common/components/modal/AlertModal2.jsx";
 
 const EditProFileFrom = () => {
     const findVerifyCodeRef = useRef('');
-    const [formValid, setFormValid] = useFormValidation();
+    const [formValid, setFormValid] = useState({
+        pwd: true,
+        password_confirmation: true,
+        email: true,
+        email_verified: true,
+        phoneNum: true,
+        accountNum: true,
+    });
 
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
@@ -133,7 +138,11 @@ const EditProFileFrom = () => {
 
         // 이름이 phoneNum이면 하이픈 붙여서 저장
         if (name === 'phoneNum') {
-            newValue = formatPhoneNumber(value);
+            newValue = formatPhoneNumber(value,setFormValid);
+        }
+
+        if (name === 'accountNum') {
+            newValue = validateAccountNumber(value,setFormValid);
         }
 
         setForm((prev) => ({
@@ -153,9 +162,30 @@ const EditProFileFrom = () => {
     };
 
     const updateUserProfile = async (e) => {
-        console.log("실행");
         e.preventDefault();
-        console.log(form)
+
+        const checks = [
+            { key: 'password_confirmation', condition: formValid.password_confirmation, message: '비밀번호가 다릅니다.' },
+            { key: 'email_verified', condition: formValid.email_verified, message: '이메일 인증해 주세요.' },
+            { key: 'pwd', condition: formValid.pwd, message: '비밀번호를 확인해 주세요.' },
+            { key: 'phoneNum', condition: formValid.phoneNum, message: '휴대폰 번호를 확인해주세요.' },
+            { key: 'accountNum', condition: formValid.accountNum, message: '계좌번호를 확인해주세요.' },
+            { key: 'postNum', condition: form.postNum.value !== '', message: '우편번호를 입력하세요.' },
+            { key: 'addr', condition: form.addr.value !== '', message: '주소를 입력하세요.' },
+            { key: 'detailAddr', condition: form.detailAddr.value !== '', message: '상세 주소를 입력하세요.' },
+        ];
+
+        for (let check of checks) {
+            if (!check.condition) {
+                setModalMessage(check.message);
+                setShowModal(true);
+                setFormValid(prev => ({ ...prev, [check.key]: false }));
+                return;
+            } else {
+                setFormValid(prev => ({ ...prev, [check.key]: true }));
+            }
+        }
+
         const requestDto = {
             phoneNum: form.phoneNum || '',
             email: formValid['email'] && formValid['email_verified'] ? form.email : null,
@@ -168,6 +198,7 @@ const EditProFileFrom = () => {
                 detailAddr: form.detailAddr || '',
             },
         }
+
         try {
             const result = await updateProfile(requestDto);
             console.log(result.data);
@@ -234,7 +265,7 @@ const EditProFileFrom = () => {
                     label="비밀번호 확인" name="confirmPassword" id="confirm-password" type="password"
                     value={form.confirmPassword}
                     readOnly={false}
-                    onChange={(e)=>{handleChange(e); confirmPwd(setFormValid)}}
+                    onChange={(e)=>{handleChange(e); validatePwd(setFormValid)}}
                     labelClassName="text-gray-700 p-3 w-36 bg-gray text-sm"
                     inputClassName="border p-1 text-sm w-1/3 rounded focus:outline-none"
                 >
