@@ -35,7 +35,7 @@ function WishlistItem({
               />
             ) : (
               <ImageNotSupportedIcon
-                style={{ width: 64, height: 64, color: "#6B7280" }}
+                className="w-16 h-16 text-gray-500"
               />
             )}
           </div>
