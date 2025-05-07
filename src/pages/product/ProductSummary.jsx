@@ -8,6 +8,7 @@ import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 import { getCookie } from '../../common/utils/Cookies';
 import { useLikeToggle } from '../user/hooks/useLikeToggle';
+import { useBasketContext } from "../../common/contexts/BasketContext";
 
 const ProductSummary = ({ saleId, setContent }) => {
   const [quantity, setQuantity] = useState(1);
@@ -20,6 +21,7 @@ const ProductSummary = ({ saleId, setContent }) => {
   const [like, setLike] = useState(false);
   const [token, setToken] = useState(null);
   const { toggleLike } = useLikeToggle(token);
+  const { updateBasketCount } = useBasketContext();
 
   const navigate = useNavigate();
 
@@ -35,8 +37,6 @@ const ProductSummary = ({ saleId, setContent }) => {
   }, []);
 
   useEffect(() => {
-    if (!token) return;
-
     const fetchProductDetail = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_SEARCH_REST_API_URL}/sale/${saleId}`, {
@@ -50,6 +50,7 @@ const ProductSummary = ({ saleId, setContent }) => {
           optionId: opt.optionId,
           optionName: opt.optionName,
           price: opt.price,
+          stock: opt.stock,
         })));
         setOrigin(origin);
         setTitle(title);
@@ -67,62 +68,24 @@ const ProductSummary = ({ saleId, setContent }) => {
     setSelectedOption(Number(e.target.value));
   };
 
-  const saveGuestBasket = () => {
-    const existing = JSON.parse(localStorage.getItem("basket") || "[]");
-
-    if (existing.length >= 16) {
-      alert("장바구니에는 최대 16개까지 담을 수 있습니다.");
-      return false;
-    }
-
-    const alreadyExists = existing.some(item => item.optionId === selectedOptionData.optionId);
-    if (alreadyExists) {
-      alert("이미 장바구니에 존재합니다.");
-      return false;
-    }
-
-    const newItem = {
-      basketId: Date.now(),
-      saleId,
-      title,
-      option: selectedOptionData.optionName,
-      quantity,
-      price: selectedOptionData.price,
-      imageUrl: mainImage || null,
-      optionId: selectedOptionData.optionId,
-    };
-
-    existing.push(newItem);
-    localStorage.setItem("basket", JSON.stringify(existing));
-    return true;
-  };
-
   const handleAddToCart = async () => {
     if (!selectedOptionData) {
       alert('옵션을 선택해주세요.');
       return;
     }
-
+  
     if (!token) {
-      const added = saveGuestBasket();
-      if (added) alert("장바구니에 추가되었습니다!");
+      alert('로그인이 필요한 기능입니다.');
       return;
     }
-
-    if (!token) {
-      const added = saveGuestBasket();
-      if (added) alert("장바구니에 추가되었습니다!");
-      return;
-    }
-
+  
     try {
-      
       const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
         method: 'GET',
       });
       const result = await response.json();
       const currentCount = result?.data?.contents?.length ?? 0;
-
+  
       if (currentCount >= 16) {
         alert("장바구니에는 최대 16개까지 담을 수 있습니다.");
         return;
@@ -130,7 +93,7 @@ const ProductSummary = ({ saleId, setContent }) => {
     } catch (e) {
       console.warn("장바구니 개수 확인 실패:", e);
     }
-
+  
     try {
       const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
         method: 'POST',
@@ -139,18 +102,19 @@ const ProductSummary = ({ saleId, setContent }) => {
           quantity: quantity,
         }),
       });
-
+  
       if (response.status === 409) {
         alert('이미 장바구니에 존재합니다.');
         return;
       }
-
+  
       if (!response.ok) {
         const result = await response.json();
         alert(result.message);
         throw new Error('장바구니 추가 실패');
       }
-
+  
+      updateBasketCount();
       alert('장바구니에 상품이 추가되었습니다.');
     } catch (error) {
       console.error('장바구니 추가 실패:', error);
@@ -158,48 +122,37 @@ const ProductSummary = ({ saleId, setContent }) => {
   };
 
   const handleBuyNow = () => {
-    if (!selectedOption) {
+    if (!selectedOptionData) {
       alert('옵션을 선택해주세요.');
       return;
     }
-
+  
+    if (!token) {
+      alert('로그인이 필요한 기능입니다.');
+      navigate('/login');
+      return;
+    }
+  
     navigate('/order', {
       state: {
-        optionId: selectedOption,
+        orderType: 'direct',
+        items: [
+          {
+            basketId: Date.now(),
+            saleId,
+            title,
+            option: selectedOptionData.optionName,
+            quantity,
+            price: selectedOptionData.price,
+            imageUrl: mainImage || null,
+            optionId: selectedOptionData.optionId,
+          },
+        ],
+        optionId: selectedOptionData.optionId,
         quantity: quantity,
       },
     });
   };
-
-  // const handleLike = async () => {
-  //   if (!token) {
-  //     alert('로그인이 필요한 기능입니다.');
-  //     return;
-  //   }
-
-  //   if (!selectedOption) {
-  //     alert('옵션을 선택해주세요.');
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.put(
-  //       `${import.meta.env.VITE_BUYER_REST_API_URL}/api/like/${saleId}`,
-  //       null,
-  //       { headers: { Authorization: `Bearer ${token}` } }
-  //     );
-
-  //     if (response.status === 200) {
-  //       setLike(!like);
-  //       alert(like ? '찜 취소에 성공했습니다.' : '찜 등록에 성공했습니다.');
-  //     } else {
-  //       alert('찜 등록에 실패했습니다.');
-  //     }
-  //   } catch (error) {
-  //     console.error('찜 등록 실패:', error);
-  //     alert('찜 등록에 실패했습니다.');
-  //   }
-  // };
 
   const handleLike = () => {
     toggleLike(saleId, like, () => setLike(!like));
@@ -246,14 +199,14 @@ const ProductSummary = ({ saleId, setContent }) => {
         <div className="flex flex-col gap-2">
           <label className="font-medium">옵션</label>
           <div className="relative">
-            <select value={selectedOption} onChange={handleOptionChange} className="appearance-none border p-2 pr-10 rounded w-full">
-              <option value="">옵션 선택</option>
-              {options.map((opt) => (
-                <option key={opt.optionId} value={opt.optionId}>
-                  {opt.optionName} ({opt.price}원)
-                </option>
-              ))}
-            </select>
+          <select value={selectedOption} onChange={handleOptionChange} className="appearance-none border p-2 pr-10 rounded w-full">
+            <option value="">옵션 선택</option>
+            {options.map((opt) => (
+              <option key={opt.optionId} value={opt.optionId} disabled={opt.stock === 0}>
+                {opt.optionName} ({opt.price}원){opt.stock === 0 ? ' - 품절' : ''}
+              </option>
+            ))}
+          </select>
             <ArrowDropDownIcon className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none" />
           </div>
         </div>

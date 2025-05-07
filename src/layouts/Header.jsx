@@ -5,7 +5,7 @@ import { KeyboardArrowDown, Search, FavoriteBorder, PersonOutlineOutlined, Shopp
 import {logoutUser} from "../features/auth/services/authService.js";
 import { useToken } from "../common/utils/TokenContxet.jsx";
 import AlertModal from "../common/components/modal/AlertModal.jsx";
-import axios from '../common/utils/axiosInstance.js';
+import { useBasketContext } from "../common/contexts/BasketContext.jsx";
 
 
 function Header({ maincategories, subCategories, loading }) {
@@ -22,6 +22,7 @@ function Header({ maincategories, subCategories, loading }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalInfo, setAuthModalInfo] = useState({ title: "", message: "" });
 
+
   // 토큰 디코딩 (권한 추출)
   const decodeToken = (token) => {
     try {
@@ -34,8 +35,17 @@ function Header({ maincategories, subCategories, loading }) {
     }
   };
 
-
   //토큰이 변경될 때마다 사용자 역할 추출
+  const [keyword, setKeyword] = useState("");
+
+  const { basketCount, updateBasketCount } = useBasketContext();
+
+  const handleSearch = () => {
+    if (keyword.trim() !== "") {
+      navigate(`/category?keyword=${encodeURIComponent(keyword)}&page=1`);
+    }
+  };
+  
   useEffect(() => {
     if (token) {
       const decodedToken = decodeToken(token);
@@ -118,8 +128,16 @@ function Header({ maincategories, subCategories, loading }) {
               type="text" 
               className="w-full py-2 pl-4 pr-10 border rounded-full border-green focus:outline-none"
               placeholder="검색어를 입력해주세요"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
             />
-            <button className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <button
+              className="absolute right-3 top-1/2 transform -translate-y-1/2"
+              onClick={handleSearch}
+            >
               <Search/>
             </button>
           </div>
@@ -161,7 +179,7 @@ function Header({ maincategories, subCategories, loading }) {
                 </Link> 
                 <Link to="/my/user/basket" className="relative">
                   <ShoppingBagOutlined/>
-                  <span className="absolute -top-2 -right-2 bg-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                  <span className="absolute -top-2 -right-2 bg-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{basketCount}</span>
                 </Link>
               </>
             ) : (

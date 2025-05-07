@@ -13,7 +13,6 @@ export const useBasket = (initialPage = 0) => {
   const [hasPrev, setHasPrev] = useState(false);
 
   const token = getCookie("jwt_token");
-  const isLoggedIn = !!token;
 
   useEffect(() => {
     fetchBasket();
@@ -22,53 +21,29 @@ export const useBasket = (initialPage = 0) => {
   const fetchBasket = async () => {
     setIsLoading(true);
     try {
-      if (!isLoggedIn) {
-        const local = JSON.parse(localStorage.getItem("basket") || "[]");
-        const pageSize = 5;
-        const total = local.length;
-        const start = currentPage * pageSize;
-        const end = start + pageSize;
-        const paginated = local.slice(start, end);
+      const response = await fetch(
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket?page=${currentPage}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const result = await response.json();
+      const data = result.data || {};
+      const contents = data.contents || [];
 
-        setBasketItems(paginated);
-        setTotalElements(total);
-        setTotalPages(Math.ceil(total / pageSize));
-        setHasNext(end < total);
-        setHasPrev(currentPage > 0);
+      setBasketItems(contents);
+      setTotalPages(data.totalPages ?? 0);
+      setTotalElements(data.totalElements ?? 0);
+      setCurrentPage(data.currentPage ?? 0);
+      setHasNext(data.hasNext ?? false);
+      setHasPrev(data.hasPrev ?? false);
 
-        // ✅ 선택 초기화
-        const initSelected = {};
-        paginated.forEach((item) => {
-          initSelected[item.basketId] = false;
-        });
-        setSelectedItems(initSelected);
-        setSelectedItemsToDelete([]);
-      } else {
-        const response = await fetch(
-          `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket?page=${currentPage}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        const result = await response.json();
-        const data = result.data || {};
-        const contents = data.contents || [];
-
-        setBasketItems(contents);
-        setTotalPages(data.totalPages ?? 0);
-        setTotalElements(data.totalElements ?? 0);
-        setCurrentPage(data.currentPage ?? 0);
-        setHasNext(data.hasNext ?? false);
-        setHasPrev(data.hasPrev ?? false);
-
-        // ✅ 선택 초기화
-        const initSelected = {};
-        contents.forEach((item) => {
-          initSelected[item.basketId] = false;
-        });
-        setSelectedItems(initSelected);
-        setSelectedItemsToDelete([]);
-      }
+      const initSelected = {};
+      contents.forEach((item) => {
+        initSelected[item.basketId] = false;
+      });
+      setSelectedItems(initSelected);
+      setSelectedItemsToDelete([]);
     } catch (error) {
       console.error("장바구니 조회 실패:", error);
     } finally {
@@ -106,24 +81,17 @@ export const useBasket = (initialPage = 0) => {
 
   const deleteSingleItem = async (basketId) => {
     try {
-      if (!isLoggedIn) {
-        const local = JSON.parse(localStorage.getItem("basket") || "[]");
-        const updated = local.filter((item) => item.basketId !== basketId);
-        localStorage.setItem("basket", JSON.stringify(updated));
-        fetchBasket();
-      } else {
-        await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify([basketId]),
-        });
-        setBasketItems((prev) =>
-          prev.filter((item) => item.basketId !== basketId)
-        );
-      }
+      await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify([basketId]),
+      });
+      setBasketItems((prev) =>
+        prev.filter((item) => item.basketId !== basketId)
+      );
     } catch (error) {
       window.alert("삭제 중 오류가 발생했습니다.");
       console.error("삭제 실패:", error);
@@ -132,26 +100,16 @@ export const useBasket = (initialPage = 0) => {
 
   const deleteSelectedItems = async () => {
     try {
-      if (!isLoggedIn) {
-        const local = JSON.parse(localStorage.getItem("basket") || "[]");
-        const updated = local.filter(
-          (item) => !selectedItemsToDelete.includes(item.basketId)
-        );
-        localStorage.setItem("basket", JSON.stringify(updated));
-        await fetchBasket();
-        return true;
-      } else {
-        await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(selectedItemsToDelete),
-        });
-        await fetchBasket();
-        return true;
-      }
+      await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(selectedItemsToDelete),
+      });
+      await fetchBasket();
+      return true;
     } catch (error) {
       console.error("선택 삭제 실패:", error);
       return false;
@@ -160,25 +118,16 @@ export const useBasket = (initialPage = 0) => {
 
   const updateQuantity = async (basketId, newQuantity) => {
     try {
-      if (!isLoggedIn) {
-        const local = JSON.parse(localStorage.getItem("basket") || "[]");
-        const updated = local.map((item) =>
-          item.basketId === basketId ? { ...item, quantity: newQuantity } : item
-        );
-        localStorage.setItem("basket", JSON.stringify(updated));
-        fetchBasket();
-      } else {
-        await fetch(
-          `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket/${basketId}?quantity=${newQuantity}`,
-          {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        fetchBasket();
-      }
+      await fetch(
+        `${import.meta.env.VITE_BUYER_REST_API_URL}/api/basket/${basketId}?quantity=${newQuantity}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchBasket();
     } catch (error) {
       console.error("수량 변경 실패:", error);
     }

@@ -5,6 +5,7 @@ import BasketItem from "./BasketItem";
 import GreenCircleCheckbox from "../../common/components/GreenCircleCheckbox";
 import Pagination from "../../common/components/Pagination";
 import AlertModal from "../../common/components/modal/AlertModal";
+import { getCookie } from "../../common/utils/Cookies";
 
 function Basket() {
   const navigate = useNavigate();
@@ -69,12 +70,27 @@ function Basket() {
   };
 
   const handleOrderClick = () => {
+    const token = getCookie("jwt_token");
+    if (!token) {
+      showAlert("로그인이 필요합니다.", () => navigate("/login"));
+      return;
+    }
+  
     if (selectedItemsToDelete.length === 0) {
       showAlert("주문할 상품을 선택해주세요.");
       return;
     }
-
-    const selectedBaskets = basketItems.filter(item => selectedItems?.[item.basketId]);
+  
+    const selectedBaskets = basketItems.filter(
+      (item) => selectedItems?.[item.basketId]
+    );
+  
+    const hasSoldOut = selectedBaskets.some((item) => item.stock === 0);
+    if (hasSoldOut) {
+      showAlert("품절된 상품은 주문할 수 없습니다.");
+      return;
+    }
+  
     navigate("/order", { state: { items: selectedBaskets } });
   };
 
