@@ -23,7 +23,7 @@ const AdminPopupDetail = () => {
     const fetchPopupDetail = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/popup/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup/${id}`);
         
         if (response.data && response.data.data) {
           setPopup(response.data.data);

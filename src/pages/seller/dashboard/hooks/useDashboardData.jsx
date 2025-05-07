@@ -104,7 +104,7 @@ const useDashboardData = (startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/sales`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/dashboard/sales`,
         {
           params: {
             startDate,
@@ -146,7 +146,7 @@ const useDashboardData = (startDate, endDate, period) => {
   const loadProductRatioData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/product`
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/dashboard/product`
       );
 
       const HttpResponse = response.data.data;
@@ -189,7 +189,7 @@ const useDashboardData = (startDate, endDate, period) => {
   const loadStatusRatioData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/dashboard/status`
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/dashboard/status`
       );
 
       const HttpResponse = response.data.data;
@@ -240,7 +240,7 @@ const useDashboardData = (startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/dashboard/sales`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/dashboard/sales`,
         {
           params: {
             startDate,
@@ -292,7 +292,7 @@ const useDashboardData = (startDate, endDate, period) => {
       const serverPeriod = periodMapping[period];
 
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/admin/dashboard/joins`,
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/dashboard/joins`,
         {
           params: {
             startDate,

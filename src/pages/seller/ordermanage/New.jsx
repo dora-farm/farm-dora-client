@@ -88,7 +88,7 @@ function New() {
       try {
         setDetailLoading(true);
         const response = await axios.get(
-          `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/detail`, 
+          `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/detail`, 
           { params: { orderId } }
         );
   

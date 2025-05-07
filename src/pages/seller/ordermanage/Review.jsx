@@ -93,7 +93,7 @@ function Review() {
     try {
       setDetailLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review`, 
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/review`, 
         { params: { reviewId } }
       );
 

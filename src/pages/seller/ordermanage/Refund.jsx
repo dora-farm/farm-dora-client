@@ -90,12 +90,12 @@ function Refund() {
       try {
         setDetailLoading(true);
         const orderResponse = await axios.get(
-          `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/detail`, 
+          `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/detail`, 
           { params: { orderId } }
         );
 
         const refundResponse = await axios.get(
-          `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/refund`,
+          `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/refund`,
           { params: { orderId } }
         );
   
