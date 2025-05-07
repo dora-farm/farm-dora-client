@@ -13,14 +13,7 @@ import Orders from './pages/user/Orders';
 import ManageAddress from './pages/user/ManageAddress';
 import EditProfile from './pages/user/EditProfile';
 import DeleteAccount from './pages/user/DeleteAccount';
-import Cancel from './pages/seller/ordermanage/Cancel';
-import Exchange from './pages/seller/ordermanage/Exchange';
-import Inquiry from './pages/seller/ordermanage/Inquiry';
-import New from './pages/seller/ordermanage/New';
 import OrdermanageHome from './pages/seller/ordermanage/OrdermanageHome';
-import Order from './pages/seller/ordermanage/Order'
-import Refund from './pages/seller/ordermanage/Refund';
-import Review from './pages/seller/ordermanage/Review';
 import SellerHome from './pages/seller/dashboard/SellerHome';
 import VideoManage from './pages/seller/video/VideoManage';
 import Manage from './pages/seller/product/Manage';
@@ -49,63 +42,70 @@ import MyReviews from './pages/user/MyReviews';
 import { CategoryProvider } from './layouts/CategoryContext';
 import SellerApproval from "./pages/adminpage/SellerApproval.jsx";
 import { TokenProvider } from './common/utils/TokenContxet';
+import OrderPage from './pages/order/OrderPage';
+import OrderCompletePage from './pages/order/OrderCompletePage';
+import { BasketProvider } from './common/contexts/BasketContext.jsx';
 
 
 function App() {
   return (
     <TokenProvider>
       <CategoryProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout/>}>
-              <Route index element={<Home/>} />
-              <Route path="/login" element={<Login/>} />
-              <Route path="/join" element={<Join/>} />
-              <Route path="/category" element={<Category/>} />
-              <Route path="/event" element={<Event/>} />
-              <Route path="/event/:id" element={<EventDetail/>} />
-              <Route path="/support" element={<ChatSupport/>} />
-              <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
-              <Route path="/live/view/:id" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
-              <Route path="/sale/:saleId" element={<ProductDetail />} />
-                
-              <Route element={<UserLayout/>}>
-                <Route path="/my/user" element={<MyPage/>} />
-                <Route path="/my/user/review" element={<MyReviews/>} />
-                <Route path="my/user/basket" element={<Basket />} />
-                <Route path="/my/user/inquiry" element={<MyInquireies/>} />
-                <Route path="/my/user/order" element={<Orders/>} />
-                <Route path="/my/user/address" element={<ManageAddress/>} />
-                <Route path="/my/user/join/seller" element={<JoinSeller/>} />
-                <Route path="/my/user/profile" element={<EditProfile/>} />
-                <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
-                <Route path="/my/user/wishlist" element={<Wishlist/>} />
+        <BasketProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout/>}>
+                <Route index element={<Home/>} />
+                <Route path="/login" element={<Login/>} />
+                <Route path="/join" element={<Join/>} />
+                <Route path="/category" element={<Category/>} />
+                <Route path="/event" element={<Event/>} />
+                <Route path="/event/:id" element={<EventDetail/>} />
+                <Route path="/support" element={<ChatSupport/>} />
+                <Route path="/live" element={<Live/>} /> {/* 방송리스트화면 */}
+                <Route path="/live/view/:id" element={<StreamView/>} /> {/* 방송 시청하는 화면 ex)/live/view?id=123 */}
+                <Route path="/sale/:saleId" element={<ProductDetail />} />
+                <Route path="/order" element={<OrderPage />} />
+                  
+                <Route element={<UserLayout/>}>
+                  <Route path="/my/user" element={<MyPage/>} />
+                  <Route path="/my/user/review" element={<MyReviews/>} />
+                  <Route path="my/user/basket" element={<Basket />} />
+                  <Route path="/my/user/inquiry" element={<MyInquireies/>} />
+                  <Route path="/my/user/order" element={<Orders/>} />
+                  <Route path="/my/user/address" element={<ManageAddress/>} />
+                  <Route path="/my/user/join/seller" element={<JoinSeller/>} />
+                  <Route path="/my/user/profile" element={<EditProfile/>} />
+                  <Route path="/my/user/withdraw" element={<DeleteAccount/>} />
+                  <Route path="/my/user/wishlist" element={<Wishlist/>} />
+                  <Route path="/order/complete" element={<OrderCompletePage />} />
+                </Route>
+
+              <Route element={<AdminLayout/>}>
+                <Route path="/admin/broadcast" element={<AdminBroadcast/>} />
+                <Route path="/admin" element={<AdminHome/>} />
+                <Route path="/admin/popup" element={<AdminPopup/>} />
+                <Route path="/admin/popup/:id" element={<AdminPopupDetail/>} />
+                <Route path="/admin/popup/edit/:id" element={<AdminPopupEdit/>} />
+                <Route path="/admin/popup/register" element={<AdminPopupRegi/>} />
+                <Route path="/admin/product" element={<AdminProduct/>} />
+                <Route path="/admin/review" element={<AdminReview/>} />
+                <Route path="/admin/user" element={<AdminUser/>} />
+                <Route path="/admin/seller/approval" element={<SellerApproval/>} />
               </Route>
 
-            <Route element={<AdminLayout/>}>
-              <Route path="/admin/broadcast" element={<AdminBroadcast/>} />
-              <Route path="/admin" element={<AdminHome/>} />
-              <Route path="/admin/popup" element={<AdminPopup/>} />
-              <Route path="/admin/popup/:id" element={<AdminPopupDetail/>} />
-              <Route path="/admin/popup/edit/:id" element={<AdminPopupEdit/>} />
-              <Route path="/admin/popup/register" element={<AdminPopupRegi/>} />
-              <Route path="/admin/product" element={<AdminProduct/>} />
-              <Route path="/admin/review" element={<AdminReview/>} />
-              <Route path="/admin/user" element={<AdminUser/>} />
-              <Route path="/admin/seller/approval" element={<SellerApproval/>} />
-            </Route>
-
-              <Route element={<SellerLayout/>}>
-                <Route path="/my/seller" element={<SellerHome/>} />
-                <Route path="/my/seller/order/*" element={<OrdermanageHome/>} />
-                <Route path="/my/seller/item/manage" element={<Manage/>} />
-                <Route path="/my/seller/item/register" element={<Register/>} />
-                <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
-                <Route path="/my/seller/live" element={<VideoManage/>} />
+                <Route element={<SellerLayout/>}>
+                  <Route path="/my/seller" element={<SellerHome/>} />
+                  <Route path="/my/seller/order/*" element={<OrdermanageHome/>} />
+                  <Route path="/my/seller/item/manage" element={<Manage/>} />
+                  <Route path="/my/seller/item/register" element={<Register/>} />
+                  <Route path="/my/seller/item/edit" element={<ProductEdit/>} />
+                  <Route path="/my/seller/live" element={<VideoManage/>} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </BasketProvider>
       </CategoryProvider>
     </TokenProvider>
   );

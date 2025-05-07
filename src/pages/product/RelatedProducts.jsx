@@ -5,7 +5,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { getCookie } from '../../common/utils/Cookies';
 import { useLikeToggle } from '../user/hooks/useLikeToggle';
-import axios from '../../common/utils/axiosInstance';
 import { fetchWithAuth } from '../../common/utils/fetchWithAuth';
 
 const RelatedProducts = ({ saleId }) => {
@@ -22,8 +21,6 @@ const RelatedProducts = ({ saleId }) => {
   }, []);
 
   useEffect(() => {
-    if (!token) return;
-
     const fetchRelatedProducts = async () => {
       try {
         const response = await fetchWithAuth(
