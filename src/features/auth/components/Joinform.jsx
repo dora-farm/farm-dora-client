@@ -82,6 +82,7 @@ const JoinForm = () => {
 
         for (let check of checks) {
             if (!check.condition) {
+                setModalTitle("실패");
                 setModalMessage(check.message);
                 setShowModal(true);
                 setFormValid(prev => ({ ...prev, [check.key]: false }));

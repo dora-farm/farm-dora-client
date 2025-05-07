@@ -6,6 +6,8 @@ import axios from '../common/utils/axiosInstance';
 import Pagination from '../common/components/Pagination';
 import ProductCard from '../common/components/ProductCard';
 import { TrendingUp, VideoLibrary } from '@mui/icons-material';
+import {useLocation} from "react-router-dom";
+import AlertModal2 from "@/common/components/modal/AlertModal2.jsx";
 
 function Home() {
   const [banners, setBanners] = useState([]);
@@ -16,6 +18,21 @@ function Home() {
   const [rankingTotalPages, setRankingTotalPages] = useState(0);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrevious, setHasPrevious] = useState(false);
+
+  const location = useLocation();
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalTitle, setModalTitle] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const successMessage = params.get("success");
+    if (successMessage === "oauthregister") {
+      setModalTitle("성공");
+      setModalMessage("간편 로그인 연동 되었습니다.");
+      setShowModal(true);
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchVideosAndRanking = async () => {
@@ -140,6 +157,13 @@ function Home() {
           <HomeVideoSlider videos={videos} />
         </div>
       </section>
+      {showModal && (
+          <AlertModal2
+              title={modalTitle}
+              message={modalMessage}
+              onClose={() => setShowModal(false)}
+          />
+      )}
     </div>
   );
 }

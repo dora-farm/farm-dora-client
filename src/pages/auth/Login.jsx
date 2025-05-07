@@ -3,7 +3,7 @@ import { useLogin } from '../../features/auth/hooks/useLogin.js';
 import {loginUser as loginUserService, loginSocial} from '../../features/auth/services/authService.js';
 import LoginForm from "../../features/auth/components/LoginForm.jsx";
 import SocialLoginButton from "../../features/auth/components/SocialLoginForm.jsx";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import AlertModal2 from "../../common/components/modal/AlertModal2.jsx";
 
 const Login = () => {

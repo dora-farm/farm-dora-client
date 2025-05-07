@@ -83,13 +83,13 @@ const EditProFileFrom = () => {
                         setShowModal(true);
                         closeVerifyModal();
                     }else {
-                        setModalTitle("인증 성공 실패");
+                        setModalTitle("인증 실패");
                         setModalMessage("인증에 실패하였습니다.");
                         setShowModal(true);
                     }
                 } catch (err) {
                     console.error(err);
-                    setModalTitle("인증 성공 실패");
+                    setModalTitle("인증 실패");
                     setModalMessage("인증에 실패하였습니다.");
                     setShowModal(true);
                 }
@@ -166,17 +166,19 @@ const EditProFileFrom = () => {
 
         const checks = [
             { key: 'password_confirmation', condition: formValid.password_confirmation, message: '비밀번호가 다릅니다.' },
+            { key: 'email' , condition: formValid.email , message: '이메일 확인 해주세요'},
             { key: 'email_verified', condition: formValid.email_verified, message: '이메일 인증해 주세요.' },
             { key: 'pwd', condition: formValid.pwd, message: '비밀번호를 확인해 주세요.' },
             { key: 'phoneNum', condition: formValid.phoneNum, message: '휴대폰 번호를 확인해주세요.' },
             { key: 'accountNum', condition: formValid.accountNum, message: '계좌번호를 확인해주세요.' },
-            { key: 'postNum', condition: form.postNum.value !== '', message: '우편번호를 입력하세요.' },
-            { key: 'addr', condition: form.addr.value !== '', message: '주소를 입력하세요.' },
-            { key: 'detailAddr', condition: form.detailAddr.value !== '', message: '상세 주소를 입력하세요.' },
+            { key: 'postNum', condition: form.postNum !== '', message: '우편번호를 입력하세요.' },
+            { key: 'addr', condition: form.addr !== '', message: '주소를 입력하세요.' },
+            { key: 'detailAddr', condition: form.detailAddr !== '', message: '상세 주소를 입력하세요.' },
         ];
 
         for (let check of checks) {
             if (!check.condition) {
+                setModalTitle("실패");
                 setModalMessage(check.message);
                 setShowModal(true);
                 setFormValid(prev => ({ ...prev, [check.key]: false }));
@@ -285,7 +287,7 @@ const EditProFileFrom = () => {
                     label="이메일" name="email" id="email" type="email"
                     value={form.email}
                     readOnly={false}
-                    onChange={(e)=>{handleChange(e); validateEmail(setFormValid)}}
+                    onChange={(e)=>{handleChange(e); validateEmail(setFormValid);}}
                     labelClassName="text-gray-700 p-3 w-36 bg-gray text-sm"
                     inputClassName="border p-1 w-1/3 text-sm rounded focus:outline-none"
                 >

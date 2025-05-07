@@ -57,6 +57,7 @@ export const validatePwd = (setValid) => {
 
 export const validateEmail = async (setValid) => {
     const email = document.getElementById("email").value;
+    setValid((prev) => ({ ...prev, email_verified: false }));
     const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!valid) {
         document.getElementById("alertEmail").className = 'text-red-500 text-xs';
