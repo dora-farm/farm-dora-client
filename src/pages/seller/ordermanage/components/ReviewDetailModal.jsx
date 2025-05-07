@@ -15,6 +15,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
   const [imageErrors, setImageErrors] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const [newReplyText, setNewReplyText] = useState("");
 
   // 답변 수정 모드 활성화
   const handleEditMode = () => {
@@ -29,11 +30,6 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
   const handleSaveReply = async (review) => {
     try {
       setIsLoading(true);
-      
-      console.log({
-        reviewId: review.reviewId,
-        reply: replyText
-      });
 
       const response = await axios.put(
         `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/update`, {
@@ -53,11 +49,60 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
 
     } catch (error) {
       console.log("답변 저장 중 오류 발생", error);
-
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleInsertReply = async (review) => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/insert`, {
+          reviewId: review.reviewId,
+          reply: newReplyText
+        }
+      );
+
+      if (response.status === 200) {
+        const updatedReview = { ...review, reply: newReplyText };
+      
+        if (typeof onUpdateReview === 'function') {
+          onUpdateReview(updatedReview);
+        }
+        setNewReplyText("");
+      }
+
+
+    } catch (error) {
+      console.log("답변 등록 중 오류 발생", error)
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleDeleteReply = async (review) => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.delete(
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/delete?reviewId=${review.reviewId}`);
+
+      if (response.status === 200) {
+        const updateReview = { ...review, reply: replyText };
+
+        if (typeof onUpdateReview === 'function') {
+          onUpdateReview(updateReview);
+        }
+      }
+
+    } catch (error) {
+      console.log("답변 삭제 중 오류 발생", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   
   useEffect(() => {
@@ -235,7 +280,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
                 <div className="mb-4">
                   <div className="text-sm text-gray-500 mb-1">리뷰 내용</div>
                   <div className="bg-gray-50 p-4 rounded-md text-gray-700 min-h-[100px]">
-                    {review?.reply || "-"}
+                    {review?.reviewContent || "-"}
                   </div>
                 </div>
                 
@@ -373,7 +418,10 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
                           >
                             답변 수정
                           </button>
-                          <button className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300 transition-colors">
+                          <button 
+                            className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300 transition-colors"
+                            onClick={() => handleDeleteReply(review)}
+                          >
                             답변 삭제
                           </button>
                         </>
@@ -389,10 +437,15 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
                       autoFocus 
                       className="w-full min-h-[150px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                       placeholder="답변을 작성해주세요..."
+                      value={newReplyText}
+                      onChange={(e) => setNewReplyText(e.target.value)}
                     />
                     
                     <div className="mt-4 flex justify-end">
-                      <button className="px-4 py-2 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors">
+                      <button 
+                        className="px-4 py-2 bg-amber-600 text-white rounded-md text-sm hover:bg-amber-700 transition-colors"
+                        onClick={() => handleInsertReply(review)}
+                      >
                         답변 등록
                       </button>
                     </div>
