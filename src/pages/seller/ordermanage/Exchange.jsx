@@ -39,7 +39,7 @@ function Exchange() {
       setCurrentPage(0);
 
       const response = await axios.get(
-        `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order/search`,
+        `${import.meta.env.VITE_SEARCH_REST_API_URL}/my/seller/order`,
         { params: modifiedParams }
       );
 
