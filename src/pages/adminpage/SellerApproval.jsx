@@ -42,7 +42,7 @@ const SellerApproval = () => {
         const token = getCookie("jwt_token");
         try {
             const response = await axios.patch(
-                `${import.meta.env.VITE_AUTH_REST_API_URL}/admin/user/approval/${sellerId}`,
+                `${import.meta.env.VITE_AUTH_REST_API_URL}/mypage/admin/user/approval/${sellerId}`,
                 {},
                 {
                     headers: {

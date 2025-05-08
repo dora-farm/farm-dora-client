@@ -348,7 +348,7 @@ function Orders() {
                 <div key={`${order.orderId}-${sale.saleId}`} className="flex items-center p-4 border-b last:border-b-0">
                   <div className="w-28 h-28 flex-shrink-0 overflow-hidden rounded">
                     <img 
-                      src={`/images/${sale.saveFile}`} 
+                      src={`${sale.saveFile}`} 
                       alt={sale.title}
                       className="w-full h-full object-cover"
                     />
