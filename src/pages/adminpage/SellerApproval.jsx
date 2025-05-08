@@ -19,7 +19,7 @@ const SellerApproval = () => {
         const token = getCookie("jwt_token");
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/admin/user/approval/request`,
+                `${import.meta.env.VITE_AUTH_REST_API_URL}/mypage/admin/user/approval/request`,
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const SellerApproval = () => {
         const token = getCookie("jwt_token");
         try {
             const response = await axios.patch(
-                `${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/admin/user/approval/${sellerId}`,
+                `${import.meta.env.VITE_AUTH_REST_API_URL}/admin/user/approval/${sellerId}`,
                 {},
                 {
                     headers: {
@@ -65,7 +65,7 @@ const SellerApproval = () => {
     };
 
     const handleFileClick = (saveFile) => {
-        const imageUrl = `https://yhqtxq7210079.edge.naverncp.com/W6V55b9lyf/seller/${saveFile}?type=m&w=595&h=842`;
+        const imageUrl = `https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/seller/${saveFile}?type=m&w=595&h=842`;
         setSelectedImageUrl(imageUrl);
         setIsImageModalOpen(true);
     };
