@@ -74,7 +74,7 @@ const InquiryDetailModal = ({
       setIsLoading(true);
   
       const response = await axios.post(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/question/insert`, {
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/question/insert`, {
           questionId: inquiry.questionId,
           reply: newReplyText
         }
