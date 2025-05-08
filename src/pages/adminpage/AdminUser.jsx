@@ -89,7 +89,7 @@ const AdminUser = () => {
 
   const handleStatusChange = async (userId) => {
     try {
-      const res = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/admin/user/blind`, {
+      const res = await fetchWithAuth(`${import.meta.env.VITE_AUTH_REST_API_URL}/mypage/admin/user/blind`, {
         method: 'PATCH',
         body: JSON.stringify({ userId: userId})
       });

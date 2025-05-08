@@ -7,6 +7,7 @@ export const registerSocial = async (provider) => {
     })
         .then((res) => res.json())
         .then((data) => {
+            console.log(data.data);
             window.location.href = data.data;
         })
         .catch((err) => {

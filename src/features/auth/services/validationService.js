@@ -29,7 +29,7 @@ export const validateId = async (setValid) => {
         return;
     }
 
-    const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/idcheck?id=${id}`);
+    const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/register/idcheck?id=${id}`);
     const result = await res.json();
     const isAvailable = result.status !== 409;
     const alertId = document.getElementById("alertId");
@@ -66,7 +66,7 @@ export const validateEmail = async (setValid) => {
         return;
     }
 
-    const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/emailcheck?email=${email}`);
+    const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/register/emailcheck?email=${email}`);
     const result = await res.json();
     const available = result.status !== 409;
     const alertEmail = document.getElementById("alertEmail");
@@ -77,7 +77,7 @@ export const validateEmail = async (setValid) => {
 
 export const sendVerificationEmail = async () => {
     const email = document.getElementById("email").value;
-    const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/send/email`, {
+    const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/register/send/email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -87,7 +87,7 @@ export const sendVerificationEmail = async () => {
 };
 
 export const verifyEmailCode = async (email, code, setValid) => {
-    const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/auth/register/verify/email`, {
+    const res = await fetch(`${import.meta.env.VITE_AUTH_REST_API_URL}/register/verify/email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code }),
