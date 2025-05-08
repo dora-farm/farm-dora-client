@@ -19,7 +19,7 @@ function OrderPage() {
     const fetchAddresses = async () => {
       try {
         const response = await fetchWithAuth(
-          `${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/user/depot/all`,
+          `${import.meta.env.VITE_AUTH_REST_API_URL}/mypage/user/depot/all`,
           { method: "GET" }
         );
         const result = await response.json();

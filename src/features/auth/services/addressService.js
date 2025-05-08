@@ -1,6 +1,6 @@
 import axios from '../../../common/utils/axiosInstance.js';
 
-const BASE_URL = `${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/user/depot`;
+const BASE_URL = `${import.meta.env.VITE_AUTH_REST_API_URL}/mypage/user/depot`;
 
 export const fetchAddresses = async () => {
     const response = await axios.get(`${BASE_URL}/all`,{

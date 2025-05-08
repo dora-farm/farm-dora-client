@@ -77,9 +77,10 @@ const JoinSellerForm = () => {
         formData.append("file", form.file); // ✅ 파일 추가
         formData.append("seller", new Blob([JSON.stringify(data)], { type: "application/json" }));
         try {
-            const result = await axios.post(`${import.meta.env.VITE_AUTH_REST_API_URL}/api/mypage/user/register/seller`, formData, {
+            const result = await axios.post(`${import.meta.env.VITE_AUTH_REST_API_URL}/mypage/user/register/seller`, formData, {
             });
-            if(result.data) {
+            console.log(result);
+            if(result.data.data) {
                 setNavigateOn(true);
                 setModalTitle('성공');
                 setModalMessage("입점 신청이 완료되었습니다.");
