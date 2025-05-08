@@ -38,7 +38,7 @@ const InquiryDetailModal = ({
       setIsLoading(true);
 
       const response = await axios.put(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/question/update`, {
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/question/update`, {
           questionId: inquiry.questionId,
           reply: replyText
         }
@@ -113,7 +113,7 @@ const InquiryDetailModal = ({
     setIsLoading(true);
 
     const response = await axios.delete(
-      `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/question/delete?questionId=${inquiry.questionId}`
+      `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/question/delete?questionId=${inquiry.questionId}`
     );
 
     if (response.status === 200) {

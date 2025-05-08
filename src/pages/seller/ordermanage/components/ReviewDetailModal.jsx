@@ -32,7 +32,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
       setIsLoading(true);
 
       const response = await axios.put(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/update`, {
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/review/update`, {
           reviewId: review.reviewId,
           reply: replyText
         }
@@ -57,7 +57,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
       setIsLoading(true);
 
       const response = await axios.post(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/insert`, {
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/review/insert`, {
           reviewId: review.reviewId,
           reply: newReplyText
         }
@@ -85,7 +85,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
       setIsLoading(true);
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/api/my/seller/order/review/delete?reviewId=${review.reviewId}`);
+        `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/my/seller/order/review/delete?reviewId=${review.reviewId}`);
 
       if (response.status === 200) {
         const updateReply = { ...review, reply: null };
