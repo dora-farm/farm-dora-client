@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import AddressSearchBox from '../../../features/auth/components/AddressSearchBox.jsx';
 import AlertModal2 from "@/common/components/modal/AlertModal2.jsx";
 
@@ -14,6 +14,29 @@ const ManageAddressModal = ({isOpen, onClose, form, handleChange, onSubmit, titl
         phoneNum: false,
         postNum: false,
     });
+
+    // title이 바뀔 때마다 초기화
+    useEffect(() => {
+        if (title === "배송지 수정") {
+            setFormValid({
+                deliveryName: true,
+                receiverName: true,
+                addr: true,
+                detailAddr: true,
+                phoneNum: true,
+                postNum: true,
+            });
+        } else {
+            setFormValid({
+                deliveryName: false,
+                receiverName: false,
+                addr: false,
+                detailAddr: false,
+                phoneNum: false,
+                postNum: false,
+            });
+        }
+    }, [title]);
 
     if (!isOpen) return null;
 
