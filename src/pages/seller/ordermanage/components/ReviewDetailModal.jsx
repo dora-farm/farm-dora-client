@@ -106,6 +106,7 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
   useEffect(() => {
     if (isOpen) {
       setIsVisible(false);
+      setImageErrors({});
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 10);
@@ -151,12 +152,11 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
 
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
-
   // 이미지 URL 포맷팅
   const formatImageUrl = (imagePath) => {
     if (!imagePath) return null;
 
-    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/review/";
+    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/";
     const params = "?type=m&w=220&h=180";
 
     return imagePath.startsWith("http")
@@ -221,18 +221,6 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
             >
               <CommentIcon className="mr-2" fontSize="small" />
               답변 관리
-            </button>
-            
-            <button
-              onClick={() => setActiveTab("product")}
-              className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center ${
-                activeTab === "product"
-                  ? "border-amber-600 text-amber-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              <ShoppingBagIcon className="mr-2" fontSize="small" />
-              상품 정보
             </button>
           </div>
         </div>
@@ -316,42 +304,6 @@ const ReviewDetailModal = ({ review, detail, loading, isOpen, onClose, onUpdateR
                     </div>
                   </div>
                 )}
-              </div>
-            </div>
-          )}
-
-          {/* 상품 정보 탭 */}
-          {activeTab === "product" && (
-            <div className="space-y-6">
-              <div className="mb-4">
-                <h3 className="text-lg font-bold text-gray-800 mb-3">상품 정보</h3>
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                  <div className="p-4">
-                    <div className="flex items-start">
-                      <div className="h-20 w-20 bg-gray-100 rounded-md mr-4 flex items-center justify-center overflow-hidden">
-                        {detail?.saveFile ? (
-                          <img 
-                            src={formatImageUrl(detail.saveFile)} 
-                            alt="상품 이미지" 
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = '/images/default-product.png';
-                            }}
-                          />
-                        ) : (
-                          <ShoppingBagIcon style={{ color: '#9CA3AF', fontSize: 32 }} />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 mb-1">{review?.saleTitle || "-"}</h4>
-                        <div className="text-sm text-gray-500">
-                          주문 번호: {Array.isArray(detail) && detail.length > 0 ? detail[0].orderId : "-"}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           )}
