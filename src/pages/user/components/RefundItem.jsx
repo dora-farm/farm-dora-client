@@ -28,13 +28,9 @@ function RefundItem({ sale }) {
           <div className="w-20 h-20 bg-gray-100 rounded overflow-hidden mr-3">
             {sale.saveFile ? (
               <img 
-                src={`/images/${sale.saveFile}`} 
+                src={`${sale.saveFile}`} 
                 alt={sale.title} 
-                className="w-full h-full object-cover" 
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = '/images/placeholder.png';
-                }}
+                className="w-full h-full object-cover"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-400">
