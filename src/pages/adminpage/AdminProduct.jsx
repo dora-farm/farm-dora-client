@@ -61,7 +61,7 @@ function AdminProduct() {
     handleItemCheck,
     getSelectedIds,
     setItems: setCheckboxItems
-  } = useCheckboxes([]);
+  } = useCheckboxes([], `saleId`);
 
   // 검색 결과가 변경되면 체크박스 상태 업데이트
   useEffect(() => {
