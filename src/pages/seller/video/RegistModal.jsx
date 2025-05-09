@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
+import { fetchWithAuthConvert } from '../../../common/utils/fetchWithAuthConvert';
 
 const RegistModal = ({ isOpen, onClose, loading, refreshProducts}) => {
   const [title, setTitle] = useState('');
@@ -18,7 +18,7 @@ const RegistModal = ({ isOpen, onClose, loading, refreshProducts}) => {
       formData.append('title', title);
       formData.append('desc', desc);
       
-      const response = await fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/register`, {
+      const response = await fetchWithAuthConvert(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/video/register`, {
         method: 'POST',
         body: formData
       });

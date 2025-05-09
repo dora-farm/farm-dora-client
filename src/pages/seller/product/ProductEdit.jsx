@@ -3,7 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import AlertModal from '../../../common/components/modal/AlertModal';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
+import { fetchWithAuthConvert } from '../../../common/utils/fetchWithAuthConvert';
 
 function ProductEdit() {
 
@@ -252,7 +252,7 @@ const handleMainImageChange = (e) => {
       }
     });
     
-    fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/update`, {
+    fetchWithAuthConvert(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/update`, {
       method: 'PUT',
       body: formData
     })
