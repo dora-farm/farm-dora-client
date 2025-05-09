@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { useLogin } from '../../features/auth/hooks/useLogin.js';
+import {useLogin} from '../../features/auth/hooks/useLogin.js';
 import {loginUser as loginUserService, loginSocial} from '../../features/auth/services/authService.js';
 import LoginForm from "../../features/auth/components/LoginForm.jsx";
 import SocialLoginButton from "../../features/auth/components/SocialLoginForm.jsx";
@@ -7,7 +7,7 @@ import {useLocation} from "react-router-dom";
 import AlertModal2 from "../../common/components/modal/AlertModal2.jsx";
 
 const Login = () => {
-    const { id, setId, saveIdChecked, setSaveIdChecked } = useLogin();
+    const {id, setId, saveIdChecked, setSaveIdChecked} = useLogin();
     const location = useLocation();
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
@@ -20,22 +20,32 @@ const Login = () => {
             setModalTitle("실패");
             setModalMessage("로그인 후 마이페이지에서 연동해주세요");
             setShowModal(true);
-        }else if (errorMessage === "fail") {
+        } else if (errorMessage === "fail") {
             setModalTitle("실패");
             setModalMessage("로그인 실패");
             setShowModal(true);
-        }else if (errorMessage === "expired") {
+        } else if (errorMessage === "expired") {
             setModalTitle("실패");
             setModalMessage("회원 탈퇴된 계정입니다.")
             setShowModal(true);
-        }else if (errorMessage === "blind") {
+        } else if (errorMessage === "blind") {
             setModalTitle("실패");
             setModalMessage("차단된 계정입니다.")
             setShowModal(true);
         }
     }, [location]);
 
-    const loginUser = () => loginUserService(id, saveIdChecked, setModalMessage, setShowModal, setModalTitle);
+    const loginUser = (e) => {
+        const key = e.key;
+        const type = e.type;
+
+        if (type === 'keyup' && key === 'Enter') {
+            loginUserService(id, saveIdChecked, setModalMessage, setShowModal, setModalTitle);
+        }
+        if (type === 'click') {
+            loginUserService(id, saveIdChecked, setModalMessage, setShowModal, setModalTitle)
+        }
+    };
 
     return (
         <div className="flex flex-col w-full items-center justify-center px-4 py-8">
@@ -54,7 +64,7 @@ const Login = () => {
                 <div className="hidden md:block w-px bg-gray-300 h-full"></div>
 
                 {/* 소셜 로그인 버튼 */}
-                <SocialLoginButton onLogin={loginSocial} title="간편 로그인" className="text-xl font-semibold text-center" />
+                <SocialLoginButton onLogin={loginSocial} title="간편 로그인" className="text-xl font-semibold text-center"/>
             </div>
             {showModal && (
                 <AlertModal2

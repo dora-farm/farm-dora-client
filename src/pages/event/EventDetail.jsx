@@ -15,7 +15,7 @@ const EventDetailPage = () => {
       try {
         setLoading(true);
         // 이벤트 상세 정보를 가져오는 API 엔드포인트
-        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/user/popup/${id}`);
         
         if (response.data && response.data.data) {
           setEvent(response.data.data);

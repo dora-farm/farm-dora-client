@@ -311,6 +311,7 @@ function Orders() {
 
   return (
     <div className="w-full m-7">
+      <h1 className="text-2xl font-bold text-center pb-5">주문 내역</h1>
       <DateFilter
         dateRange={dateRange}
         selectedRange={selectedRange}
@@ -348,7 +349,7 @@ function Orders() {
                 <div key={`${order.orderId}-${sale.saleId}`} className="flex items-center p-4 border-b last:border-b-0">
                   <div className="w-28 h-28 flex-shrink-0 overflow-hidden rounded">
                     <img 
-                      src={`/images/${sale.saveFile}`} 
+                      src={`${sale.saveFile}`} 
                       alt={sale.title}
                       className="w-full h-full object-cover"
                     />
