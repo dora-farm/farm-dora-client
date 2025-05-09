@@ -123,7 +123,8 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
                         name="id"
                         type="text"
                         value={id}
-                        onChange={(e) => setId(e.target.value)}
+                        onChange={(e) => {setId(e.target.value);}}
+                        onKeyUp={loginUser}
                         className="ml-2 py-2 w-3/4 focus:outline-none"
                     />
                 </div>
@@ -136,6 +137,7 @@ const LoginForm = ({ id, setId, saveIdChecked, setSaveIdChecked, loginUser }) =>
                         name="pwd"
                         type="password"
                         className="ml-2 py-2 w-3/4 focus:outline-none"
+                        onKeyUp={loginUser}
                     />
                 </div>
 
