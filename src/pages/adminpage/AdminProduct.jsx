@@ -234,6 +234,9 @@ function AdminProduct() {
       // fetch API를 사용하여 서버로 요청 보내기
       const response = await fetchWithAuthConvert(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/delete`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(request)
       });
 
