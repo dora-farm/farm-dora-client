@@ -86,7 +86,7 @@ function Refund() {
 
     const loadOrderDetail = async (orderId) => {
       if (!orderId) return;
-  
+
       try {
         setDetailLoading(true);
         const orderResponse = await axios.get(
@@ -120,12 +120,13 @@ function Refund() {
             };
             
             setRefundDetail(refundData);
+          } else {
+            setRefundDetail(null);
           }
           setModalOpen(true);
         } else {
           throw new Error(orderResponse.data?.message || '주문 정보를 가져오는데 실패했습니다.');
         }
-        setModalOpen(true);
       } catch (error) {
         console.log("주문 상세정보를 불러올 수 없습니다.", error.message);
         setError(error.message);
