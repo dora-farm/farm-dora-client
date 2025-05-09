@@ -115,13 +115,9 @@ function PaymentInfo({ isOpen, onClose, orderId, orderData }) {
                     <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden mr-3 flex-shrink-0">
                       {sale.saveFile && (
                         <img 
-                          src={`/images/products/${sale.saveFile}`} 
+                          src={`${sale.saveFile}`} 
                           alt={sale.title}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = '/images/placeholder.png';
-                          }}
                         />
                       )}
                     </div>
@@ -170,13 +166,9 @@ function PaymentInfo({ isOpen, onClose, orderId, orderData }) {
                     <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3 flex-shrink-0">
                       {paymentData.sellerDetail.saveFile && (
                         <img 
-                          src={`/images/sellers/${paymentData.sellerDetail.saveFile}`} 
+                          src={`${paymentData.sellerDetail.saveFile}`} 
                           alt={paymentData.sellerDetail.companyName}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = '/images/placeholder.png';
-                          }}
                         />
                       )}
                     </div>
@@ -195,13 +187,9 @@ function PaymentInfo({ isOpen, onClose, orderId, orderData }) {
                 <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden mr-3 flex-shrink-0">
                   {paymentData.saveFile && (
                     <img 
-                      src={`/images/products/${paymentData.saveFile}`} 
+                      src={`${paymentData.saveFile}`} 
                       alt={paymentData.title}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '/images/placeholder.png';
-                      }}
                     />
                   )}
                 </div>

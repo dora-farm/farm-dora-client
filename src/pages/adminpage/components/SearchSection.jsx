@@ -46,7 +46,7 @@ function SearchSection({
             onChange={handleSearchTypeChange}
           >
             <option value="PRODUCT_NAME">상품명</option>
-            <option value="USER_NAME">작성자명</option>
+            <option value="WRITER">작성자명</option>
           </select>
         </div>
       </div>
