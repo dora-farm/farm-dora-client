@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import AlertModal from '../../../common/components/modal/AlertModal';
-import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
+import { fetchWithAuthConvert } from '../../../common/utils/fetchWithAuthConvert';
 
 import { bigCategories, smallCategories } from '../../../common/js/categories';
 
@@ -180,7 +180,7 @@ const handleMainImageChange = (e) => {
       }
     });
     
-    fetch(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/register`, {
+    fetchWithAuthConvert(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/register`, {
       method: 'POST',
       body: formData
     })
