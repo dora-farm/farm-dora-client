@@ -111,10 +111,10 @@ function Category() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
         <h1 className="text-3xl font-bold">
-          {keyword ? `'${keyword}' 검색 결과` : (type_id > 0 ? subCategory?.name : mainCategory?.name)}
+          {keyword ? `'${keyword} 검색 결과` : (type_id > 0 ? subCategory?.name : mainCategory?.name)}
         </h1>
         <p className="text-gray-dark">
-          홈 &gt; {keyword ? `'${keyword}'` : <>
+          홈 &gt; {keyword ? `${keyword}` : <>
             {mainCategory?.name}
             {type_id > 0 && <> &gt; {subCategory?.name}</>}
           </>}
