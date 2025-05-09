@@ -61,7 +61,7 @@ function AdminProduct() {
     handleItemCheck,
     getSelectedIds,
     setItems: setCheckboxItems
-  } = useCheckboxes([]);
+  } = useCheckboxes([], `saleId`);
 
   // 검색 결과가 변경되면 체크박스 상태 업데이트
   useEffect(() => {
@@ -234,6 +234,9 @@ function AdminProduct() {
       // fetch API를 사용하여 서버로 요청 보내기
       const response = await fetchWithAuthConvert(`${import.meta.env.VITE_PRODUCT_REST_API_URL}/my/seller/item/delete`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(request)
       });
 
