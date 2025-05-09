@@ -47,11 +47,11 @@ const AdminPopup = () => {
       }
       
       if (searchParams.startDate) {
-        params.startDate = `${searchParams.startDate}T00:00:00`;
+        params.startDate = `${searchParams.startDate}`;
       }
       
       if (searchParams.endDate) {
-        params.endDate = `${searchParams.endDate}T23:59:59`;
+        params.endDate = `${searchParams.endDate}`;
       }
       
       const response = await axios.get(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup`, { params });
