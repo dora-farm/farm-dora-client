@@ -6,6 +6,7 @@ import ReviewDetailModal from './modal/ReviewDetailModal';
 import Loading from '../../common/components/Loading';
 import AlertModal2 from '../../common/components/modal/AlertModal2.jsx';
 import { fetchWithAuth } from '../../common/utils/fetchWithAuth.js';
+import { getCookie } from '../../common/utils/Cookies.jsx';
 
 function AdminReview() {
   // 검색 관련 상태
@@ -194,9 +195,11 @@ function AdminReview() {
   const handleDeleteReview = async (reviewId) => {
     try {
       const response = await fetchWithAuth(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/review/${reviewId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
-      
+      console.log('Token:', getCookie('jwt_token'));
+      console.log('URL:', `${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/review/${reviewId}`);
+
       if (response.ok) {
         setModal({
           show: true,

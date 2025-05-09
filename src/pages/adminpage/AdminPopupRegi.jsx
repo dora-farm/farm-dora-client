@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../common/utils/axiosInstance';
 import AlertModal2 from '../../common/components/modal/AlertModal2';
+import { getCookie } from '../../common/utils/Cookies';
 
 const AdminPopupRegi = () => {
   const navigate = useNavigate();
@@ -79,7 +80,14 @@ const AdminPopupRegi = () => {
       navigate('/admin/popup');
     }
   };
-  
+
+  // ISO 형식으로 날짜 변환
+  const formatDatetime = (date) => {
+    if (!date) return null;
+    const d = new Date(date);
+    return d.toISOString().substring(0, 19); // 밀리초와 Z 제거
+  };
+    
   // 폼 제출 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,14 +109,21 @@ const AdminPopupRegi = () => {
       const submitData = new FormData();
       submitData.append('typeId', formData.typeId);
       submitData.append('title', formData.title);
-      submitData.append('startDate', formData.startDate);
-      submitData.append('endDate', formData.endDate);
+      submitData.append('startDate', formatDatetime(formData.startDate));
+      submitData.append('endDate', formatDatetime(formData.endDate));
       submitData.append('file', file);
       
+      console.log('FormData 내용:');
+      console.log('typeId:', formData.typeId, typeof formData.typeId);
+      console.log('title:', formData.title);
+      console.log('startDate:', formData.startDate);
+      console.log('endDate:', formData.endDate);
+      console.log('file name:', file.name, 'size:', file.size);
+
       // API 호출
       await axios.post(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup`, submitData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          Authorization: `Bearer ${getCookie('jwt_token')}`
         }
       });
       
@@ -184,7 +199,7 @@ const AdminPopupRegi = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <input
-                  type="datetime-local"
+                  type="date"
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleChange}
@@ -195,7 +210,7 @@ const AdminPopupRegi = () => {
               <div className="flex items-center">
                 <span className="mx-2 text-gray-500">-</span>
                 <input
-                  type="datetime-local"
+                  type="date"
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleChange}
