@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Rating from '@mui/material/Rating';
+import { getCookie } from '../../../common/utils/Cookies';
 import { fetchWithAuth } from '../../../common/utils/fetchWithAuth';
+import { fetchWithAuthConvert } from '../../../common/utils/fetchWithAuthConvert';
 
 // orderId, orderData와 함께 saleData를 props로 받도록 수정
 const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) => {
@@ -89,7 +91,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) =
       // FormData를 사용하여 이미지와 함께 전송
       const formData = new FormData();
       formData.append('orderId', orderId);
-      formData.append('saleId', saleData.saleId); // orderId 대신 saleId 사용
+      formData.append('saleId', saleData?.saleId); // orderId 대신 saleId 사용
       formData.append('score', rating);
       formData.append('content', content);
       
@@ -98,9 +100,12 @@ const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) =
         formData.append('images', image);
       });
       
-      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/my/user/order/review`, {
+      const response = await fetch(`${import.meta.env.VITE_BUYER_REST_API_URL}/my/user/order/review`, {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${getCookie('jwt_token')}`
+        }
       });
       
       if (!response.ok) {
@@ -123,7 +128,7 @@ const ReviewModal = ({ isOpen, onClose, orderId, saleData, onReviewComplete }) =
   
   // 이미지 URL이 있으면 사용, 없으면 기본 이미지 경로 구성
   const productImage = saleData?.saveFile 
-    ? `/images/${saleData.saveFile}`
+    ? `${saleData.saveFile}`
     : 'https://via.placeholder.com/100';
   
   return (
