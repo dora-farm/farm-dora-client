@@ -311,6 +311,7 @@ function Orders() {
 
   return (
     <div className="w-full m-7">
+      <h1 className="text-2xl font-bold text-center pb-5">주문 내역</h1>
       <DateFilter
         dateRange={dateRange}
         selectedRange={selectedRange}

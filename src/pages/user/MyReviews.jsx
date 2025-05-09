@@ -259,6 +259,8 @@ function MyReviews() {
 
     return (
         <div className="w-full m-7">
+            <h1 className="text-2xl font-bold text-center pb-5">내 리뷰 목록</h1>
+
             {/* 날짜 필터 컴포넌트 */}
             <DateFilter 
                 dateRange={dateRange} 

@@ -120,9 +120,9 @@ const AddressManagePage = () => {
 
 
     return (
-        <div className="p-6 w-full flex-col items-center justify-center mx-auto">
-            <h2 className="text-xl font-bold text-center mb-6">나의 배송지</h2>
-            <div className="grid gap-4 mx-auto max-w-xl">
+        <div className="w-full m-7">
+            <h2 className="text-2xl font-bold text-center pb-5">나의 배송지</h2>
+            <div className="grid gap-4 mx-auto max-w-2xl">
                 {addresses.map((data) => (
                     <div key={data.depotId} className="border p-4 rounded">
                         <div className="font-medium mb-2">
