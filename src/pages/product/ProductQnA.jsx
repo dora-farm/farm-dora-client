@@ -10,6 +10,32 @@ const ProductQnA = ({ saleId }) => {
   const [hasPrev, setHasPrev] = useState(false);
   const [openQnaId, setOpenQnaId] = useState(null);
 
+  const [newQna, setNewQna] = useState({ title: '', content: '' });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewQna((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitQnA = async () => {
+    try {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_BUYER_REST_API_URL}/question/${saleId}`, {
+        method: 'POST',
+        body: JSON.stringify(newQna)
+      });
+      const result = await response.json();
+      if (result.status === 200) {
+        alert('문의가 등록되었습니다.');
+        setNewQna({ title: '', content: '' });
+        fetchQnAList(currentPage);
+      } else {
+        alert('문의 등록 실패');
+      }
+    } catch (error) {
+      console.error('문의 등록 에러:', error);
+    }
+  };
+
   useEffect(() => {
     fetchQnAList(currentPage);
   }, [currentPage]);
@@ -84,6 +110,32 @@ const ProductQnA = ({ saleId }) => {
           문의 내역이 없습니다.
         </div>
       )}
+
+      <div className="border rounded-md p-4 mt-10 mb-4 bg-white">
+        <h3 className="text-lg font-semibold mb-2">문의 등록</h3>
+        <input
+          type="text"
+          name="title"
+          placeholder="제목을 입력하세요"
+          value={newQna.title}
+          onChange={handleInputChange}
+          className="w-full border p-2 rounded mb-2"
+        />
+        <textarea
+          name="content"
+          placeholder="문의 내용을 입력하세요"
+          value={newQna.content}
+          onChange={handleInputChange}
+          className="w-full border p-2 rounded mb-2"
+          rows={4}
+        />
+        <button
+          onClick={handleSubmitQnA}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          등록하기
+        </button>
+      </div>
 
       {totalPages > 1 && (
         <div className="mt-6">

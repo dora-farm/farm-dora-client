@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../../common/utils/axiosInstance';
-import AlertModal from '../../common/components/modal/AlertModal'; // 경로는 실제 프로젝트 구조에 맞게 조정해주세요
+import AlertModal2 from '../../common/components/modal/AlertModal2';
+import { getCookie } from '../../common/utils/Cookies';
 
 const AdminPopupDetail = () => {
   const { id } = useParams();
@@ -77,19 +78,29 @@ const AdminPopupDetail = () => {
   // 삭제 확정
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`/api/popup/${id}`);
-      setModal({
+      await axios.delete(`${import.meta.env.VITE_ACTIVITY_REST_API_URL}/admin/popup/${id}`, {
+        headers: {
+          Authorization: `Bearer ${getCookie('jwt_token')}`
+        }
+      });
+
+      setModal({ show: false });
+
+      setTimeout(() => {setModal({
         show: true,
         title: '삭제 성공',
         message: '이벤트/배너가 성공적으로 삭제되었습니다.',
+        type: 'confirm',  // alert -> confirm으로 변경
         onConfirm: () => navigate('/admin/popup')
       });
+    }, 100);
     } catch (error) {
       console.error('이벤트/배너 삭제 중 오류가 발생했습니다:', error);
       setModal({
         show: true,
         title: '삭제 실패',
         message: '이벤트/배너 삭제 중 오류가 발생했습니다.',
+        type: 'alert'
       });
     }
   };
@@ -214,7 +225,7 @@ const AdminPopupDetail = () => {
       
       {/* 알림 모달 */}
       {modal.show && (
-        <AlertModal
+        <AlertModal2
           title={modal.title}
           message={modal.message}
           type={modal.type}
