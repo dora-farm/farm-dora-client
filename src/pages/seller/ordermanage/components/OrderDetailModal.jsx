@@ -103,7 +103,7 @@ const OrderDetailModal = ({ order, detail, refund, loading, isOpen, onClose }) =
   const formatImageUrl = (imagePath) => {
     if (!imagePath) return null;
 
-    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/product/";
+    const baseUrl = "https://zcbg41sa9729.edge.naverncp.com/O8XfcLSSm6/refund/";
     const params = "?type=m&w=220&h=180";
 
     return imagePath.startsWith("http")
